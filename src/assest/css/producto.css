@@ -1,0 +1,16 @@
+form {
+  padding: 20px;
+  border-radius: 15px;
+  position: relative;
+  top: 10px;
+}
+.col-5 .input-buscar {
+  border-radius: 15px;
+  text-align: center;
+  margin-bottom: 20px;
+  width: 530px;
+}
+.seccion-table-productos_all table img {
+  width: 45px;
+  height: 45px;
+}

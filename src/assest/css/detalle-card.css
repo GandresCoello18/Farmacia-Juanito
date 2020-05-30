@@ -1,0 +1,12 @@
+.detalles-compra{
+    width: 100%;
+    background-color: #fff;
+    color: #000;
+    padding: 20px;
+    border-bottom: 2px solid #cdcdcd;
+}
+.detalles-compra img{
+    width: 180px;
+    height: 180px;
+    background-color: red;
+}

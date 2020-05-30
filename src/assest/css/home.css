@@ -1,0 +1,18 @@
+.seccion-table-recien-vendidos {
+  height: 250px;
+  overflow-y: scroll;
+}
+
+.seccion-table-recien-vendidos .table-vendidos_recientes img {
+  width: 40px;
+  height: 40px;
+}
+
+.seccion-table-por-caducar {
+  max-height: 250px;
+  overflow-y: scroll;
+}
+.seccion-table-por-caducar .table-caducar img {
+  width: 40px;
+  height: 40px;
+}

@@ -1,56 +1,30 @@
-import React from 'react';
-import { useEffect, useState } from 'react';
-import './App.css';
+import React from "react";
+import { BrowserRouter, Switch, Route } from "react-router-dom";
+import Home from "./page/home";
+import Login from "./page/login";
+import Producto from "./page/producto";
+import Stock from "./page/stock";
+import Clientes from "./page/clientes";
+import Graficos from "./page/graficos";
+import Carrito from "./page/carrito";
+import Ventas from "./page/ventas";
 
 function App() {
-  const [date, setDate] = useState(null);
-  useEffect(() => {
-    async function getDate() {
-      const res = await fetch('/api/date');
-      const newDate = await res.text();
-      setDate(newDate);
-    }
-    getDate();
-  }, []);
   return (
-    <main>
-      <h1>Create React App + Go API</h1>
-      <h2>
-        Deployed with{' '}
-        <a
-          href="https://vercel.com/docs"
-          target="_blank"
-          rel="noreferrer noopener"
-        >
-          Vercel
-        </a>
-        !
-      </h2>
-      <p>
-        <a
-          href="https://github.com/vercel/vercel/tree/master/examples/create-react-app"
-          target="_blank"
-          rel="noreferrer noopener"
-        >
-          This project
-        </a>{' '}
-        was bootstrapped with{' '}
-        <a href="https://facebook.github.io/create-react-app/">
-          Create React App
-        </a>{' '}
-        and contains three directories, <code>/public</code> for static assets,{' '}
-        <code>/src</code> for components and content, and <code>/api</code>{' '}
-        which contains a serverless <a href="https://golang.org/">Go</a>{' '}
-        function. See{' '}
-        <a href="/api/date">
-          <code>api/date</code> for the Date API with Go
-        </a>
-        .
-      </p>
-      <br />
-      <h2>The date according to Go is:</h2>
-      <p>{date ? date : 'Loading date...'}</p>
-    </main>
+    <>
+      <BrowserRouter>
+        <Switch>
+          <Route exact path="/" component={Home} />
+          <Route exact path="/login" component={Login} />
+          <Route exact path="/producto" component={Producto} />
+          <Route exact path="/stock" component={Stock} />
+          <Route exact path="/graficos" component={Graficos} />
+          <Route exact path="/clientes" component={Clientes} />
+          <Route exact path="/carrito" component={Carrito} />
+          <Route exact path="/ventas" component={Ventas} />
+        </Switch>
+      </BrowserRouter>
+    </>
   );
 }
 
