@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import Cookie from "js-cookie";
 import Notificacion from "../componentes/notificacion";
 import { exist_token } from "../util/verifi-local-token";
-import { Redirect, useHistory} from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import Head from "../componentes/head";
 
 import * as ActionsUser from "../actions/usuariosActions";

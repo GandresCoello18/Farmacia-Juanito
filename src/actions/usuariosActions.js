@@ -1,12 +1,7 @@
 import axios from "axios";
 import { domain } from "../util/verifi-local-token";
-import {
-  TRAER_TODOS,
-  CREAR_USER,
-  CARGANDO,
-  ERROR,
-  TOKEN,
-} from "../types/usuariosTypes";
+import { TRAER_TODOS, CREAR_USER, CARGANDO, ERROR, TOKEN, } from "../types/usuariosTypes";
+import { TRAER_ULTIMOS_6, ERROR_HISTORY } from '../types/historySessionTypes';
 
 export const crear_cuenta = (data, autorizacion) => async (dispatch) => {
   try {
@@ -75,6 +70,7 @@ export const login = (email, password) => async (dispatch) => {
         payload: `Este email (${email}) no esta verificado, ingrese a su tablero de mensajes para confirmarlo`,
       });
     } else {
+      
       const login_user = await axios({
         method: "post",
         url: `${domain()}/api/login/autenticacion`,
@@ -88,6 +84,7 @@ export const login = (email, password) => async (dispatch) => {
         login_user.data.feeback != undefined ||
         login_user.data.feeback != null
       ) {
+        
         dispatch({
           type: ERROR,
           payload: login_user.data.feeback,
@@ -100,10 +97,12 @@ export const login = (email, password) => async (dispatch) => {
       }
     }
   } catch (error) {
+    
     dispatch({
       type: ERROR,
       payload: "Fallo en login, usuario Actions.",
     });
+  
   }
 };
 
@@ -142,4 +141,23 @@ export const restaurar_user = () => async (dispatch) => {
     type: TOKEN,
     payload: "",
   });
+};
+
+export const history_session = () => async (dispatch) => {
+  try {
+    const respuesta = await axios({
+      method: 'get',
+      url: `${domain()}/api/usuario/history-session?limite=6`,
+    });
+
+    dispatch({
+      type: TRAER_ULTIMOS_6,
+      payload: respuesta.data,
+    });
+  } catch (error) {
+    dispatch({
+      type: ERROR_HISTORY,
+      payload: `Error en history: ${error}`,
+    });
+  }
 };

@@ -25,7 +25,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "preelectron-pack": "yarn build",
+    "electron-pack": "build --w"
   },
   "browserslist": [
     ">0.2%",
@@ -34,7 +36,13 @@
     "not op_mini all"
   ],
   "devDependencies": {
+    "electron-builder": "^22.7.0",
     "prettier": "^2.0.5",
     "pretty-quick": "^2.0.1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
   }
 }

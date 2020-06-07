@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export function exist_token(cookie_token) {
-  console.log(cookie_token);
+  // console.log(cookie_token);
   if (cookie_token == undefined || cookie_token == "undefined") {
     return false;
   } else {

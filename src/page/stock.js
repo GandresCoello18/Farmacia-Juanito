@@ -4,15 +4,36 @@ import Nav from "../componentes/nav";
 import ConfirEliminar from "../componentes/confirmacion";
 import Footer from "../componentes/footer";
 import Cookie from 'js-cookie';
-import { useHistory } from "react-router-dom";
-import { exist_token } from "../util/verifi-local-token";
+import { connect } from 'react-redux';
+import { Redirect } from "react-router-dom";
+import { exist_token, domain } from "../util/verifi-local-token";
+
+import * as ProductoAction from '../actions/productoAction';
 
 class Stock extends React.Component {
   componentDidMount() {}
 
+  componentWillUpdate(nextProps, nextState) {
+    console.log(nextProps.ProductoReducer.mensaje);
+    if(nextProps.ProductoReducer.mensaje != ""){
+      document.getElementById('sms-name-product').innerText = `${nextProps.ProductoReducer.mensaje}`;
+    }
+  }
+
+  add_name_product = async () => {
+    let name = document.getElementById('nombre_producto');
+
+    if(name.value == ''){
+      alert('Campo vacio en nombre del producto');
+    }else{
+      this.props.create_name_product(name.value);
+      name.value = '';
+    }
+  }
+
   render() {
     if (exist_token(Cookie.get("access_token")) == false) {
-      window.location.href = '/login';
+      return <Redirect to='/login' />
     }
     return (
       <>
@@ -42,19 +63,21 @@ class Stock extends React.Component {
                   }}
                 >
                   <form className="p-2">
-                    <label>
+                    <label className='text-center'>
                       <b>Registrar producto:</b>
                     </label>
                     <input
                       type="text"
                       className="form-control"
+                      id='nombre_producto'
                       placeholder="Nombre del producto"
                     />
                     <input
                       type="button"
                       className="btn btn-primary mt-2"
                       value="Registrar"
-                    />
+                      onClick={this.add_name_product}
+                    /> &nbsp; &nbsp; <span style={{color: 'red'}} id='sms-name-product'></span>
                   </form>
                 </dialog>
               </x-button>
@@ -62,7 +85,7 @@ class Stock extends React.Component {
 
             <div className="col-2">
               <x-button>
-                <span class="material-icons">add_box</span> &nbsp;
+                <span className="material-icons">add_box</span> &nbsp;
                 <x-label>
                   <b style={{ fontSize: 15 }}>Add Laboratorio</b>
                 </x-label>
@@ -268,4 +291,9 @@ class Stock extends React.Component {
   }
 }
 
-export default Stock;
+const mapStateToProps = ({ ProductoReducer }) => {
+  console.log(ProductoReducer);
+  return { ProductoReducer };
+};
+
+export default connect(mapStateToProps, ProductoAction)(Stock);

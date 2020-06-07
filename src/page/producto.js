@@ -2,14 +2,15 @@ import React from "react";
 import { Redirect } from "react-router-dom";
 import Head from "../componentes/head";
 import Nav from "../componentes/nav";
+import Cookie from 'js-cookie';
 import { exist_token } from "../util/verifi-local-token";
 import "../assest/css/producto.css";
 
 class Productos extends React.Component {
   render() {
-    if (exist_token() === false) {
-      return <Redirect to="/login" />;
-    }
+    if (exist_token(Cookie.get("access_token")) == false) {
+      return <Redirect to='/login' />
+     }
     return (
       <>
         <Head titulo="Productos" />

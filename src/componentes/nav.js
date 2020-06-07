@@ -1,7 +1,12 @@
 import React from "react";
 import Cookie from "js-cookie";
 import moment from "moment";
+import { domain } from '../util/verifi-local-token';
+import { connect } from 'react-redux';
 import { Link } from "react-router-dom";
+import Alerta from '../componentes/alert';
+import * as ActionsUser from "../actions/usuariosActions";
+
 
 class Nav extends React.Component {
   state = {
@@ -31,14 +36,16 @@ class Nav extends React.Component {
   };
 
   componentDidMount() {
+    moment.lang('es');
+
+    this.props.history_session();
+
     if (this.state.cantidad_carrito == 0) {
       document.getElementById("btn-carrito").classList.add("btn-negative");
     }
 
     let pathnombre = window.location.pathname;
     let item_menu = document.querySelectorAll(".tab-item");
-
-    console.log(pathnombre);
 
     switch (pathnombre) {
       case "/":
@@ -63,6 +70,7 @@ class Nav extends React.Component {
   }
 
   componentWillUpdate(nextProps, nextState) {
+
     let btn_carrito = document.getElementById("btn-carrito");
     if (nextState.cantidad_carrito == 0) {
       btn_carrito.classList.add("btn-negative");
@@ -165,57 +173,26 @@ class Nav extends React.Component {
               <dialog style={this.styles.dialog}>
                 <h3 className="text-center p-2">Historial Session</h3>
                 <ul className="list-group">
-                  <li className="list-group-item">
-                    <img
-                      className="img-circle media-object pull-left"
-                      src="img/avatar.jfif"
-                      width="32"
-                      height="32"
-                    />
-                    <div className="media-body">
-                      <strong>Andres Coello Goyes</strong>
-                      <p>
-                        <b>
-                          Ultima coneccion: {moment(new Date()).format("LLL")}
-                        </b>
-                        .
-                      </p>
-                    </div>
-                  </li>
-                  <li className="list-group-item">
-                    <img
-                      className="img-circle media-object pull-left"
-                      src="img/avatar.jfif"
-                      width="32"
-                      height="32"
-                    />
-                    <div className="media-body">
-                      <strong>Andres Coello Goyes</strong>
-                      <p>
-                        <b>
-                          Ultima coneccion: {moment(new Date()).format("LLL")}
-                        </b>
-                        .
-                      </p>
-                    </div>
-                  </li>
-                  <li className="list-group-item">
-                    <img
-                      className="img-circle media-object pull-left"
-                      src="img/avatar.jfif"
-                      width="32"
-                      height="32"
-                    />
-                    <div className="media-body">
-                      <strong>Andres Coello Goyes</strong>
-                      <p>
-                        <b>
-                          Ultima coneccion: {moment(new Date()).format("LLL")}
-                        </b>
-                        .
-                      </p>
-                    </div>
-                  </li>
+                  {this.props.historySession ? this.props.historySession.map( valor => (
+                    <li className="list-group-item" key={valor.id_historial_session}>
+                      <img
+                        className="img-circle media-object pull-left"
+                        src={`${domain()}/static/${valor.foto}`}
+                        width="32"
+                        height="32"
+                      />
+                      <div className="media-body">
+                        <strong>{valor.nombres} {valor.apellidos}</strong> &nbsp; &nbsp;
+                        <span className='p-1'>Email: <b>{valor.email}</b></span>
+                        <p>
+                          <b>
+                            Ultima coneccion: {moment(valor.fecha_session).format("LLL")}
+                          </b>
+                          .
+                        </p>
+                      </div>
+                    </li>
+                  )): <Alerta titulo='Aviso' contenido='Registro de sesiones vacio.' />}
                 </ul>
               </dialog>
             </x-button>
@@ -248,4 +225,8 @@ class Nav extends React.Component {
   }
 }
 
-export default Nav;
+const mapStateToProps = (state) => {
+  return state.userHistoryReducer;
+};
+
+export default connect(mapStateToProps, ActionsUser)(Nav);
