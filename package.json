@@ -27,7 +27,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "preelectron-pack": "yarn build",
-    "electron-pack": "build --w"
+    "electron-pack": "build --w",
+    "format": "pretty-quick"
   },
   "browserslist": [
     ">0.2%",
