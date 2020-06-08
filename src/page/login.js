@@ -26,7 +26,7 @@ class Login extends React.Component {
   };
 
   componentDidMount() {
-    this.props.traerTodos();
+    // this.props.traerTodos();
   }
 
   componentWillUpdate(nextProps, nextState) {
@@ -116,7 +116,7 @@ class Login extends React.Component {
 
   render() {
     if (exist_token(Cookie.get("access_token")) == true) {
-      return <Redirect to='/' />
+      return <Redirect to="/" />;
     }
     return (
       <>
