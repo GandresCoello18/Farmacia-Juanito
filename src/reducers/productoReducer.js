@@ -1,7 +1,9 @@
 import {
   TRAER_PRODUCTO,
   CREAR_PRODUCTO,
+  BUSCAR_PRODUCTO,
   ERROR_PRODUCTO_COMPLETE,
+  ELIMINAR_PRODUCTO,
   CREAR_NAME_PRODUCTO,
   TRAER_NAME_PRODUCTO,
   ERROR_PRODUCTO,
@@ -13,6 +15,7 @@ import {
 
 const INITIAL_STATE = {
   Producto: [],
+  Busqueda_producto: [],
   Producto_Name: [],
   Laboratorio_Name: [],
   ////////////////
@@ -89,6 +92,18 @@ export default (state = INITIAL_STATE, action) => {
         cargando: false,
         error_laboratorio: action.payload,
         mensaje_laboratorio: action.payload,
+      };
+
+    case BUSCAR_PRODUCTO:
+      return {
+        ...state,
+        Busqueda_producto: action.payload,
+      };
+
+    case ELIMINAR_PRODUCTO:
+      return {
+        ...state,
+        mensaje_producto_complete: action.payload,
       };
 
     default:

@@ -1,5 +1,7 @@
 import React from "react";
 import Notificacion from "../componentes/notificacion";
+import { connect } from "react-redux";
+import * as ProductAction from "../actions/productoAction";
 
 class confirmacion extends React.Component {
   state = {
@@ -21,6 +23,12 @@ class confirmacion extends React.Component {
   close = () => {
     for (var i = 0; i < document.querySelectorAll("dialog").length; i++) {
       document.querySelectorAll("dialog")[i].close();
+    }
+  };
+
+  eliminar = (id, tabla) => {
+    if (tabla == "productos") {
+      this.props.eliminar_producto(id);
     }
   };
 
@@ -53,13 +61,19 @@ class confirmacion extends React.Component {
                   onClick={() => {
                     this.close();
                     this.setState({ notificacion: true });
-                    setTimeout(
+                    /*setTimeout(
                       () => this.setState({ notificacion: false }),
                       3000
-                    );
+                    );*/
                   }}
                 >
-                  <x-button toggled id="agree-button">
+                  <x-button
+                    toggled
+                    id="agree-button"
+                    onClick={() =>
+                      this.eliminar(this.props.id, this.props.tabla)
+                    }
+                  >
                     <x-label>Si eliminar</x-label>
                   </x-button>
                 </span>
@@ -74,4 +88,4 @@ class confirmacion extends React.Component {
   }
 }
 
-export default confirmacion;
+export default connect(null, ProductAction)(confirmacion);

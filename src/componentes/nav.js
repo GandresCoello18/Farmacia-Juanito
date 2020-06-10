@@ -1,16 +1,16 @@
 import React from "react";
 import Cookie from "js-cookie";
 import moment from "moment";
-import { domain } from '../util/verifi-local-token';
-import { connect } from 'react-redux';
+import { domain } from "../util/verifi-local-token";
+import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import Alerta from '../componentes/alert';
+import Alerta from "../componentes/alert";
 import * as ActionsUser from "../actions/usuariosActions";
-
 
 class Nav extends React.Component {
   state = {
     cantidad_carrito: 0,
+    notificaciones_de_actividades: [],
   };
 
   styles = {
@@ -36,7 +36,7 @@ class Nav extends React.Component {
   };
 
   componentDidMount() {
-    moment.lang('es');
+    moment.lang("es");
 
     this.props.history_session();
 
@@ -70,7 +70,6 @@ class Nav extends React.Component {
   }
 
   componentWillUpdate(nextProps, nextState) {
-
     let btn_carrito = document.getElementById("btn-carrito");
     if (nextState.cantidad_carrito == 0) {
       btn_carrito.classList.add("btn-negative");
@@ -160,7 +159,7 @@ class Nav extends React.Component {
         </div>
 
         <div className="row justify-content-end" style={{ padding: 10 }}>
-          <div className="col-9">
+          <div className="col-4">
             <x-button
               style={{
                 cursor: "pointer",
@@ -173,26 +172,66 @@ class Nav extends React.Component {
               <dialog style={this.styles.dialog}>
                 <h3 className="text-center p-2">Historial Session</h3>
                 <ul className="list-group">
-                  {this.props.historySession ? this.props.historySession.map( valor => (
-                    <li className="list-group-item" key={valor.id_historial_session}>
-                      <img
-                        className="img-circle media-object pull-left"
-                        src={`${domain()}/static/${valor.foto}`}
-                        width="32"
-                        height="32"
-                      />
-                      <div className="media-body">
-                        <strong>{valor.nombres} {valor.apellidos}</strong> &nbsp; &nbsp;
-                        <span className='p-1'>Email: <b>{valor.email}</b></span>
-                        <p>
-                          <b>
-                            Ultima coneccion: {moment(valor.fecha_session).format("LLL")}
-                          </b>
-                          .
-                        </p>
-                      </div>
-                    </li>
-                  )): <Alerta titulo='Aviso' contenido='Registro de sesiones vacio.' />}
+                  {this.props.userHistoryReducer.historySession ? (
+                    this.props.userHistoryReducer.historySession.map(
+                      (valor) => (
+                        <li
+                          className="list-group-item"
+                          key={valor.id_historial_session}
+                        >
+                          <img
+                            className="img-circle media-object pull-left"
+                            src={`${domain()}/static/${valor.foto}`}
+                            width="32"
+                            height="32"
+                          />
+                          <div className="media-body">
+                            <strong>
+                              {valor.nombres} {valor.apellidos}
+                            </strong>{" "}
+                            &nbsp; &nbsp;
+                            <span className="p-1">
+                              Email: <b>{valor.email}</b>
+                            </span>
+                            <p>
+                              <b>
+                                Ultima coneccion:{" "}
+                                {moment(valor.fecha_session).format("LL, LT")}
+                              </b>
+                              .
+                            </p>
+                          </div>
+                        </li>
+                      )
+                    )
+                  ) : (
+                    <Alerta
+                      titulo="Aviso"
+                      contenido="Registro de sesiones vacio."
+                    />
+                  )}
+                </ul>
+              </dialog>
+            </x-button>
+          </div>
+
+          <div className="col-5">
+            <x-button
+              style={{
+                cursor: "pointer",
+              }}
+            >
+              <span className="material-icons" style={{ marginRight: 5 }}>
+                sort
+              </span>
+              <x-label>Notificacion de actividades</x-label>
+              <dialog style={this.styles.dialog}>
+                <h3 className="text-center p-2">Actividades</h3>
+                <ul className="list-group">
+                  {this.state.notificaciones_de_actividades &&
+                    this.state.notificaciones_de_actividades.map((valor) => (
+                      <li className="list-group-item"></li>
+                    ))}
                 </ul>
               </dialog>
             </x-button>
@@ -225,8 +264,8 @@ class Nav extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  return state.userHistoryReducer;
+const mapStateToProps = ({ userHistoryReducer }) => {
+  return { userHistoryReducer };
 };
 
 export default connect(mapStateToProps, ActionsUser)(Nav);

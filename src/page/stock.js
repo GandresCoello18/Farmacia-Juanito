@@ -138,22 +138,20 @@ class Stock extends React.Component {
     const respaldo = this.props.ProductoReducer.Producto;
     let nuevo = [];
 
-    /*const result = respaldo.find(
-      (item) => item.product_name.indexOf(e.target.value) != -1
-    );
-    console.log(result);*/
-
     if (e.target.value == "") {
-      console.log(respaldo);
-      this.props.ProductoReducer.Producto = respaldo;
+      this.props.busqueda_en_producto(
+        this.props.ProductoReducer.Busqueda_producto
+      );
     } else {
       for (let i = 0; i < respaldo.length; i++) {
-        if (respaldo[i].product_name.indexOf(e.target.value) != -1) {
-          console.log(respaldo[i]);
+        if (
+          respaldo[i].product_name.indexOf(e.target.value) != -1 ||
+          respaldo[i].nombre_laboratorio.indexOf(e.target.value) != -1
+        ) {
           nuevo.push(respaldo[i]);
-          this.props.ProductoReducer.Producto = nuevo;
         }
       }
+      this.props.busqueda_en_producto(nuevo);
     }
   };
 
@@ -265,7 +263,7 @@ class Stock extends React.Component {
                   {" "}
                   <b style={{ fontSize: 15 }}> Add Stock</b>{" "}
                 </x-label>
-                <dialog style={{ position: "relative", top: 200 }}>
+                <dialog style={{ position: "relative", top: 130 }}>
                   <h3
                     className="text-center p-2"
                     style={{
@@ -339,6 +337,7 @@ class Stock extends React.Component {
                           name="cantidad"
                           onChange={this.handleInputChange}
                           placeholder="100"
+                          defaultValue={1}
                         />
                       </div>
                       <div className="col p-2">
@@ -459,7 +458,7 @@ class Stock extends React.Component {
                 type="text"
                 onChange={this.search_product}
                 className="form-control input-buscar"
-                placeholder="Buscar Producto por: ----- Nombre ----- Laboratorio ----- Presentacion"
+                placeholder="Buscar producto por: ----- Nombre ----- Laboratorio ----- "
               />
             </div>
 
@@ -511,7 +510,10 @@ class Stock extends React.Component {
                             Modificar
                           </button>
                           <span>
-                            <ConfirEliminar />
+                            <ConfirEliminar
+                              id={valor.id_producto}
+                              tabla="productos"
+                            />
                           </span>
                         </td>
                       </tr>

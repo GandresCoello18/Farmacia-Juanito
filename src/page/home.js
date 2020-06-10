@@ -72,7 +72,9 @@ class Home extends React.Component {
 
         <section className="container-fluid">
           <div className="row justify-content-center">
-            <h4 className="p-2 text-left">Vendidos Recientemente</h4>
+            <h4 className="p-2 text-left" style={{ fontWeight: "bold" }}>
+              Vendidos Recientemente
+            </h4>
 
             <div className="col-12 seccion-table-recien-vendidos">
               <table className="table-striped mt-2 table-vendidos_recientes text-center">
@@ -149,7 +151,7 @@ class Home extends React.Component {
               </table>
             </div>
             <hr />
-            <h4>Productos por caducar</h4>
+            <h4 style={{ fontWeight: "bold" }}>Productos por caducar</h4>
             <div className="col-12 seccion-table-por-caducar">
               <table className="table-striped mt-2 table-caducar text-center">
                 <thead>

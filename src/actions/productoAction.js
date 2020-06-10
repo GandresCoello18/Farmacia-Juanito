@@ -4,6 +4,8 @@ import { domain } from "../util/verifi-local-token";
 import {
   ERROR_PRODUCTO,
   ERROR_PRODUCTO_COMPLETE,
+  BUSCAR_PRODUCTO,
+  ELIMINAR_PRODUCTO,
   CREAR_NAME_PRODUCTO,
   CREAR_NAME_LABORATORIO,
   CREAR_PRODUCTO,
@@ -144,10 +146,42 @@ export const obtener_producto_completos = () => async (dispatch) => {
       type: TRAER_PRODUCTO,
       payload: i.data,
     });
+
+    dispatch({
+      type: BUSCAR_PRODUCTO,
+      payload: i.data,
+    });
   } catch (error) {
     dispatch({
       type: ERROR_PRODUCTO_COMPLETE,
       payload: `Error en obtener el producto: ${error}`,
+    });
+  }
+};
+
+export const busqueda_en_producto = (array) => async (dispatch) => {
+  dispatch({
+    type: TRAER_PRODUCTO,
+    payload: array,
+  });
+};
+
+export const eliminar_producto = (id) => async (dispatch) => {
+  try {
+    const i = await axios({
+      method: "delete",
+      url: `${domain()}/api/producto/${id}`,
+      headers: { "access-token": Cookie.get("access_token") },
+    });
+
+    dispatch({
+      type: ELIMINAR_PRODUCTO,
+      payload: "Producto eliminado",
+    });
+  } catch (error) {
+    dispatch({
+      type: ERROR_PRODUCTO_COMPLETE,
+      payload: `Error ha eliminar el producto: ${error}`,
     });
   }
 };

@@ -2,22 +2,44 @@ import React from "react";
 import { Redirect } from "react-router-dom";
 import Head from "../componentes/head";
 import Nav from "../componentes/nav";
-import Cookie from 'js-cookie';
-import { exist_token } from "../util/verifi-local-token";
+import Cookie from "js-cookie";
+import Load from "../componentes/preload";
+import { connect } from "react-redux";
+import { exist_token, domain } from "../util/verifi-local-token";
 import "../assest/css/producto.css";
 
+import * as ProductoAction from "../actions/productoAction";
+
 class Productos extends React.Component {
+  componentDidMount() {
+    if (this.props.ProductoReducer.Producto_Name.length == 0) {
+      this.props.obterner_name_productos();
+    }
+    if (this.props.ProductoReducer.Laboratorio_Name.length == 0) {
+      this.props.obterner_name_laboratorio();
+    }
+    if (this.props.ProductoReducer.Producto.length == 0) {
+      this.props.obtener_producto_completos();
+    }
+  }
+
+  load = () => {
+    return <Load />;
+  };
+
   render() {
     if (exist_token(Cookie.get("access_token")) == false) {
-      return <Redirect to='/login' />
-     }
+      return <Redirect to="/login" />;
+    }
     return (
       <>
         <Head titulo="Productos" />
         <Nav />
 
         <section className="container-fluid">
-          <h4 className="p-1 text-center">Todo los productos ingresados</h4>
+          <h4 className="p-1 text-center" style={{ fontWeight: "bold" }}>
+            Todo los productos ingresados
+          </h4>
           <div className="row justify-content-center">
             <div className="col-5">
               <input
@@ -33,45 +55,54 @@ class Productos extends React.Component {
                   <tr>
                     <th>Imagen</th>
                     <th>Nombre</th>
-                    <th>Lote</th>
-                    <th>Reg Sani</th>
                     <th>Laboratorio</th>
-                    <th>Stock</th>
+                    <th>Cantidad</th>
                     <th>Presentacion</th>
-                    <th>Miligramos</th>
+                    <th>Medidas</th>
+                    <th>Tipo Medidas</th>
+                    <th># Lote</th>
+                    <th>Reg - Sanitario</th>
                     <th>Fecha de elaboracion</th>
                     <th>Fecha de caducidad</th>
-                    <th>Fecha de Ingreso</th>
                     <th>Opciones</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13].map((valor) => (
-                    <tr key={valor}>
-                      <td>
-                        {" "}
-                        <img src="img/medicamento/paracetamol.jpg" />{" "}
-                      </td>
-                      <td>Paracetamol</td>
-                      <td>200000633</td>
-                      <td>01182-mac-1-04-11</td>
-                      <td>Mi favorito</td>
-                      <td># 5</td>
-                      <td>Tabletas</td>
-                      <td>500</td>
-                      <td>20/02/2020</td>
-                      <td>12/05/2021</td>
-                      <td>15/01/2020</td>
-                      <td>
-                        <button
-                          className="btn btn-mini btn-positive"
-                          style={{ cursor: "pointer" }}
-                        >
-                          Agregar al carrito
-                        </button>
+                  {this.props.ProductoReducer.Producto.length == 0 ? (
+                    <tr>
+                      <td colSpan="13" className="p-2">
+                        {this.load()}
                       </td>
                     </tr>
-                  ))}
+                  ) : (
+                    this.props.ProductoReducer.Producto.map((valor) => (
+                      <tr key={valor.id_producto}>
+                        <td>
+                          <img
+                            src={`${domain()}/static/productos/${valor.imagen}`}
+                          />
+                        </td>
+                        <td>{valor.product_name}</td>
+                        <td>{valor.nombre_laboratorio}</td>
+                        <td>{valor.cantidad}</td>
+                        <td>{valor.presentacion}</td>
+                        <td>{valor.medida}</td>
+                        <td>{valor.tipo_medida}</td>
+                        <td>{valor.lote}</td>
+                        <td>{valor.registro_sanitario}</td>
+                        <td>{valor.fecha_elaboracion}</td>
+                        <td>{valor.fecha_caducidad}</td>
+                        <td>
+                          <button
+                            className="btn btn-mini btn-positive"
+                            style={{ cursor: "pointer" }}
+                          >
+                            Agregar al carrito
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  )}
                 </tbody>
               </table>
             </div>
@@ -82,4 +113,8 @@ class Productos extends React.Component {
   }
 }
 
-export default Productos;
+const mapStateToProps = ({ ProductoReducer }) => {
+  return { ProductoReducer };
+};
+
+export default connect(mapStateToProps, ProductoAction)(Productos);
