@@ -4,6 +4,7 @@ import Nav from "../componentes/nav";
 import ConfirEliminar from "../componentes/confirmacion";
 import Footer from "../componentes/footer";
 import Cookie from "js-cookie";
+import Load from "../componentes/preload";
 import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
 import { exist_token, domain } from "../util/verifi-local-token";
@@ -31,6 +32,9 @@ class Stock extends React.Component {
     if (this.props.ProductoReducer.Laboratorio_Name.length == 0) {
       this.props.obterner_name_laboratorio();
     }
+    if (this.props.ProductoReducer.Producto.length == 0) {
+      this.props.obtener_producto_completos();
+    }
   }
 
   componentWillUpdate(nextProps, nextState) {
@@ -38,6 +42,7 @@ class Stock extends React.Component {
       document.getElementById(
         "sms-name-product"
       ).innerText = `${nextProps.ProductoReducer.mensaje}`;
+      this.limpiar_sms("sms-name-product");
       this.props.obterner_name_productos();
     }
 
@@ -45,9 +50,24 @@ class Stock extends React.Component {
       document.getElementById(
         "sms-name-laboratorio"
       ).innerText = `${nextProps.ProductoReducer.mensaje_laboratorio}`;
+      this.limpiar_sms("sms-name-laboratorio");
       this.props.obterner_name_laboratorio();
     }
+
+    if (nextProps.ProductoReducer.mensaje_producto_complete != "") {
+      document.getElementById(
+        "sms_product_complete"
+      ).innerText = `${nextProps.ProductoReducer.mensaje_producto_complete}`;
+      this.limpiar_sms("sms_product_complete");
+      this.props.obtener_producto_completos();
+    }
   }
+
+  limpiar_sms = (sms_span) => {
+    setTimeout(() => {
+      document.getElementById(sms_span).value = "";
+    }, 3000);
+  };
 
   handleInputChange = (event) => {
     const target = event.target;
@@ -114,6 +134,33 @@ class Stock extends React.Component {
     }
   };
 
+  search_product = (e) => {
+    const respaldo = this.props.ProductoReducer.Producto;
+    let nuevo = [];
+
+    /*const result = respaldo.find(
+      (item) => item.product_name.indexOf(e.target.value) != -1
+    );
+    console.log(result);*/
+
+    if (e.target.value == "") {
+      console.log(respaldo);
+      this.props.ProductoReducer.Producto = respaldo;
+    } else {
+      for (let i = 0; i < respaldo.length; i++) {
+        if (respaldo[i].product_name.indexOf(e.target.value) != -1) {
+          console.log(respaldo[i]);
+          nuevo.push(respaldo[i]);
+          this.props.ProductoReducer.Producto = nuevo;
+        }
+      }
+    }
+  };
+
+  load = () => {
+    return <Load />;
+  };
+
   render() {
     if (exist_token(Cookie.get("access_token")) == false) {
       return <Redirect to="/login" />;
@@ -124,7 +171,7 @@ class Stock extends React.Component {
         <Nav />
 
         <section className="container-fluid">
-          <h4 className="p-1 text-center">
+          <h4 className="p-1 text-center" style={{ fontWeight: "bold" }}>
             Agregar y Actualizar Productos en Stock
           </h4>
 
@@ -162,7 +209,10 @@ class Stock extends React.Component {
                       onClick={this.add_name_product}
                     />{" "}
                     &nbsp; &nbsp;{" "}
-                    <span style={{ color: "red" }} id="sms-name-product"></span>
+                    <span
+                      style={{ color: "#229954", fontWeight: "bold" }}
+                      id="sms-name-product"
+                    ></span>
                   </form>
                 </dialog>
               </x-button>
@@ -200,7 +250,7 @@ class Stock extends React.Component {
                     />{" "}
                     &nbsp; &nbsp;{" "}
                     <span
-                      style={{ color: "red" }}
+                      style={{ color: "#229954", fontWeight: "bold" }}
                       id="sms-name-laboratorio"
                     ></span>
                   </form>
@@ -300,9 +350,10 @@ class Stock extends React.Component {
                           name="presentacion"
                           onChange={this.handleInputChange}
                         >
-                          <option>Option one</option>
-                          <option>Option two</option>
-                          <option>Option three</option>
+                          <option>Tabletas</option>
+                          <option>Suero</option>
+                          <option>Jarabe</option>
+                          <option>Ampollas</option>
                         </select>
                       </div>
                     </div>
@@ -317,7 +368,7 @@ class Stock extends React.Component {
                           name="lote"
                           onChange={this.handleInputChange}
                           className="form-control"
-                          placeholder="20004893"
+                          placeholder="0000000"
                         />
                       </div>
                       <div className="col p-2">
@@ -329,12 +380,12 @@ class Stock extends React.Component {
                           name="registro_sanitario"
                           onChange={this.handleInputChange}
                           className="form-control"
-                          placeholder="011862-1-04-11"
+                          placeholder="000-000-000"
                         />
                       </div>
                       <div className="col p-2">
                         <label>
-                          <b>Dosis:</b>
+                          <b>Medidas:</b>
                         </label>
                         <input
                           type="number"
@@ -346,15 +397,17 @@ class Stock extends React.Component {
                       </div>
                       <div className="col p-2">
                         <label>
-                          <b>Tipo de dosis:</b>
+                          <b>Tipo de medidas:</b>
                         </label>
                         <select
                           className="form-control"
                           name="tipo_dosis"
                           onChange={this.handleInputChange}
                         >
-                          <option>-----</option>
                           <option>Miligramos</option>
+                          <option>Gramos</option>
+                          <option>Litros</option>
+                          <option>Mililitros</option>
                         </select>
                       </div>
                       <div className="col p-2">
@@ -376,6 +429,8 @@ class Stock extends React.Component {
                           type="date"
                           className="form-control"
                           name="fecha_caducidad"
+                          disabled={this.state.fecha_elaboracion == "" && true}
+                          min={this.state.fecha_elaboracion}
                           onChange={this.handleInputChange}
                         />
                       </div>
@@ -388,7 +443,12 @@ class Stock extends React.Component {
                         className="btn btn-mini btn-primary mt-2 ml-2"
                       >
                         Guardar
-                      </button>
+                      </button>{" "}
+                      &nbsp; &nbsp;{" "}
+                      <span
+                        style={{ color: "#229954", fontWeight: "bold" }}
+                        id="sms_product_complete"
+                      ></span>
                     </div>
                   </form>
                 </dialog>
@@ -397,6 +457,7 @@ class Stock extends React.Component {
             <div className="col-5">
               <input
                 type="text"
+                onChange={this.search_product}
                 className="form-control input-buscar"
                 placeholder="Buscar Producto por: ----- Nombre ----- Laboratorio ----- Presentacion"
               />
@@ -409,41 +470,53 @@ class Stock extends React.Component {
                     <th>Imagen</th>
                     <th>Nombre</th>
                     <th>Laboratorio</th>
-                    <th>Stock</th>
+                    <th>Cantidad</th>
                     <th>Presentacion</th>
-                    <th>Miligramos</th>
+                    <th>Medidas</th>
+                    <th>Tipo Medidas</th>
+                    <th># Lote</th>
+                    <th>Reg - Sanitario</th>
                     <th>Fecha de elaboracion</th>
                     <th>Fecha de caducidad</th>
-                    <th>Fecha de Ingreso</th>
-                    <th>Ingresado Por</th>
                     <th>Opciones</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13].map((valor) => (
-                    <tr key={valor}>
-                      <td>
-                        <img src="img/medicamento/paracetamol.jpg" />
-                      </td>
-                      <td>Paracetamol</td>
-                      <td>Mi favorito</td>
-                      <td># 5</td>
-                      <td>Tabletas</td>
-                      <td>500</td>
-                      <td>20/02/2020</td>
-                      <td>12/05/2021</td>
-                      <td>15/01/2020</td>
-                      <td>Andres coello</td>
-                      <td>
-                        <button className="btn btn-mini btn-warning">
-                          Modificar
-                        </button>
-                        <span>
-                          <ConfirEliminar />
-                        </span>
+                  {this.props.ProductoReducer.Producto.length == 0 ? (
+                    <tr>
+                      <td colSpan="13" className="p-2">
+                        {this.load()}
                       </td>
                     </tr>
-                  ))}
+                  ) : (
+                    this.props.ProductoReducer.Producto.map((valor) => (
+                      <tr key={valor.id_producto}>
+                        <td>
+                          <img
+                            src={`${domain()}/static/productos/${valor.imagen}`}
+                          />
+                        </td>
+                        <td>{valor.product_name}</td>
+                        <td>{valor.nombre_laboratorio}</td>
+                        <td>{valor.cantidad}</td>
+                        <td>{valor.presentacion}</td>
+                        <td>{valor.medida}</td>
+                        <td>{valor.tipo_medida}</td>
+                        <td>{valor.lote}</td>
+                        <td>{valor.registro_sanitario}</td>
+                        <td>{valor.fecha_elaboracion}</td>
+                        <td>{valor.fecha_caducidad}</td>
+                        <td>
+                          <button className="btn btn-mini btn-warning">
+                            Modificar
+                          </button>
+                          <span>
+                            <ConfirEliminar />
+                          </span>
+                        </td>
+                      </tr>
+                    ))
+                  )}
                 </tbody>
               </table>
             </div>

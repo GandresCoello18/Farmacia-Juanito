@@ -2,7 +2,7 @@ import React from "react";
 import Head from "../componentes/head";
 import Nav from "../componentes/nav";
 import Footer from "../componentes/footer";
-import { Redirect, useHistory } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import DetalleCard from "../componentes/card-detalles";
 import Alerta from "../componentes/alert";
 import Load from "../componentes/preload";
@@ -63,7 +63,7 @@ class Home extends React.Component {
 
   render() {
     if (exist_token(Cookie.get("access_token")) == false) {
-     return <Redirect to='/login' />
+      return <Redirect to="/login" />;
     }
     return (
       <>

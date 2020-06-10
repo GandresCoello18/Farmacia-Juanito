@@ -10,6 +10,7 @@ import {
   TRAER_NAME_LABORATORIO,
   TRAER_NAME_PRODUCTO,
   ERROR_NAME_LABORATORIO,
+  TRAER_PRODUCTO,
 } from "../types/ProductoTypes";
 
 export const create_product = (data) => async (dispatch) => {
@@ -127,6 +128,26 @@ export const obterner_name_laboratorio = () => async (dispatch) => {
     dispatch({
       type: ERROR_NAME_LABORATORIO,
       payload: `Error en obtener name laboratorio: ${error}`,
+    });
+  }
+};
+
+export const obtener_producto_completos = () => async (dispatch) => {
+  try {
+    const i = await axios({
+      method: "get",
+      url: `${domain()}/api/producto`,
+      headers: { "access-token": Cookie.get("access_token") },
+    });
+
+    dispatch({
+      type: TRAER_PRODUCTO,
+      payload: i.data,
+    });
+  } catch (error) {
+    dispatch({
+      type: ERROR_PRODUCTO_COMPLETE,
+      payload: `Error en obtener el producto: ${error}`,
     });
   }
 };

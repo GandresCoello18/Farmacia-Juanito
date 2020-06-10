@@ -1,11 +1,12 @@
 import {
   TRAER_PRODUCTO,
   CREAR_PRODUCTO,
+  ERROR_PRODUCTO_COMPLETE,
+  CREAR_NAME_PRODUCTO,
+  TRAER_NAME_PRODUCTO,
   ERROR_PRODUCTO,
   CARGANDO_PRODUCTO,
-  CREAR_NAME_PRODUCTO,
   TRAER_NAME_LABORATORIO,
-  TRAER_NAME_PRODUCTO,
   CREAR_NAME_LABORATORIO,
   ERROR_NAME_LABORATORIO,
 } from "../types/ProductoTypes";
@@ -21,6 +22,9 @@ const INITIAL_STATE = {
   ///////////////
   mensaje_laboratorio: "",
   error_laboratorio: "",
+  //////////////
+  mensaje_producto_complete: "",
+  error_producto_complete: "",
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -31,7 +35,7 @@ export default (state = INITIAL_STATE, action) => {
         Producto_Name: [],
         cargando: false,
         error: "",
-        mensaje: "Producto creado exitosamente",
+        mensaje: "Producto name creado exitosamente",
       };
 
     case CREAR_PRODUCTO:
@@ -39,6 +43,15 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         Producto: [],
         error: "",
+        mensaje_producto_complete: "Producto creado exitosamente",
+      };
+
+    case ERROR_PRODUCTO_COMPLETE:
+      return {
+        ...state,
+        Producto: [],
+        error: action.payload,
+        mensaje_producto_complete: "",
       };
 
     case CARGANDO_PRODUCTO:
