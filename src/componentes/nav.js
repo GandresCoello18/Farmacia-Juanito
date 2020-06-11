@@ -5,12 +5,12 @@ import { domain } from "../util/verifi-local-token";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import Alerta from "../componentes/alert";
+import "../assest/css/nav.css";
 import * as ActionsUser from "../actions/usuariosActions";
 
 class Nav extends React.Component {
   state = {
     cantidad_carrito: 0,
-    notificaciones_de_actividades: [],
   };
 
   styles = {
@@ -80,6 +80,11 @@ class Nav extends React.Component {
     }
   }
 
+  limpiar_busqueda = () => {
+    let busqueda_producto = document.getElementById("search_producto");
+    busqueda_producto.value = "";
+  };
+
   cerrar_session = () => {
     Cookie.remove("access_token");
     window.location.href = "/login";
@@ -89,7 +94,7 @@ class Nav extends React.Component {
     return (
       <>
         <div className="tab-group">
-          <Link to="/" className="tab-item">
+          <Link to="/" className="tab-item" onClick={this.limpiar_busqueda}>
             <span
               className="material-icons"
               style={{ position: "absolute", left: 50, fontSize: 20 }}
@@ -227,11 +232,36 @@ class Nav extends React.Component {
               <x-label>Notificacion de actividades</x-label>
               <dialog style={this.styles.dialog}>
                 <h3 className="text-center p-2">Actividades</h3>
+
                 <ul className="list-group">
-                  {this.state.notificaciones_de_actividades &&
-                    this.state.notificaciones_de_actividades.map((valor) => (
-                      <li className="list-group-item"></li>
-                    ))}
+                  {this.props.ProductoReducer.notificaciones_actividades
+                    .length > 0 ? (
+                    this.props.ProductoReducer.notificaciones_actividades.map(
+                      (valor) => (
+                        <li className="list-group-item" key={valor.text}>
+                          {valor.tipo == "ERROR" ? (
+                            <div className="media-body alert alert-danger">
+                              <p>
+                                {" "}
+                                <strong>{valor.tipo}:</strong> {valor.text}
+                              </p>
+                            </div>
+                          ) : (
+                            <div className="media-body alert alert-success">
+                              <p>
+                                {" "}
+                                <strong>{valor.tipo}:</strong> {valor.text}
+                              </p>
+                            </div>
+                          )}
+                        </li>
+                      )
+                    )
+                  ) : (
+                    <div className="alert alert-danger">
+                      <strong>No hay actividades por el momento.</strong>
+                    </div>
+                  )}
                 </ul>
               </dialog>
             </x-button>
@@ -264,8 +294,8 @@ class Nav extends React.Component {
   }
 }
 
-const mapStateToProps = ({ userHistoryReducer }) => {
-  return { userHistoryReducer };
+const mapStateToProps = ({ userHistoryReducer, ProductoReducer }) => {
+  return { userHistoryReducer, ProductoReducer };
 };
 
 export default connect(mapStateToProps, ActionsUser)(Nav);

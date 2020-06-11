@@ -4,6 +4,7 @@ import {
   BUSCAR_PRODUCTO,
   ERROR_PRODUCTO_COMPLETE,
   ELIMINAR_PRODUCTO,
+  NOTIFICACION_ACTIVIVDAD,
   CREAR_NAME_PRODUCTO,
   TRAER_NAME_PRODUCTO,
   ERROR_PRODUCTO,
@@ -28,7 +29,11 @@ const INITIAL_STATE = {
   //////////////
   mensaje_producto_complete: "",
   error_producto_complete: "",
+  //////////////
+  notificaciones_actividades: [],
 };
+
+const array_actividad = [];
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
@@ -105,6 +110,10 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         mensaje_producto_complete: action.payload,
       };
+
+    case NOTIFICACION_ACTIVIVDAD:
+      array_actividad.push(action.payload);
+      return { ...state, notificaciones_actividades: array_actividad };
 
     default:
       return state;

@@ -8,6 +8,7 @@ import {
   ELIMINAR_PRODUCTO,
   CREAR_NAME_PRODUCTO,
   CREAR_NAME_LABORATORIO,
+  NOTIFICACION_ACTIVIVDAD,
   CREAR_PRODUCTO,
   TRAER_NAME_LABORATORIO,
   TRAER_NAME_PRODUCTO,
@@ -28,10 +29,20 @@ export const create_product = (data) => async (dispatch) => {
       type: CREAR_PRODUCTO,
       payload: i.data,
     });
+
+    dispatch({
+      type: NOTIFICACION_ACTIVIVDAD,
+      payload: "Producto creado correctamente",
+    });
   } catch (error) {
     dispatch({
       type: ERROR_PRODUCTO_COMPLETE,
       payload: `Error en crear producto: ${error}`,
+    });
+
+    dispatch({
+      type: NOTIFICACION_ACTIVIVDAD,
+      payload: `Error al crear producto: ${error}`,
     });
   }
 };
@@ -52,16 +63,34 @@ export const create_name_product = (name) => async (dispatch) => {
         type: ERROR_PRODUCTO,
         payload: `${i.data.feeback}`,
       });
+
+      dispatch({
+        type: NOTIFICACION_ACTIVIVDAD,
+        payload: { tipo: "ERROR", text: `${i.data.feeback}` },
+      });
     } else {
       dispatch({
         type: CREAR_NAME_PRODUCTO,
         payload: i.data,
+      });
+
+      dispatch({
+        type: NOTIFICACION_ACTIVIVDAD,
+        payload: { tipo: "EXITO", text: `Nombre del producto creado` },
       });
     }
   } catch (error) {
     dispatch({
       type: ERROR_PRODUCTO,
       payload: `Error en create name producto: ${error}`,
+    });
+
+    dispatch({
+      type: NOTIFICACION_ACTIVIVDAD,
+      payload: {
+        tipo: "ERROR",
+        text: `Error en create name producto: ${error}`,
+      },
     });
   }
 };

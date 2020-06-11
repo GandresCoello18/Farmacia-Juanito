@@ -23,6 +23,29 @@ class Productos extends React.Component {
     }
   }
 
+  componentWillUpdate(nextProps, nextState) {}
+
+  search_product = (e) => {
+    const respaldo = this.props.ProductoReducer.Producto;
+    let nuevo = [];
+
+    if (e.target.value == "") {
+      this.props.busqueda_en_producto(
+        this.props.ProductoReducer.Busqueda_producto
+      );
+    } else {
+      for (let i = 0; i < respaldo.length; i++) {
+        if (
+          respaldo[i].product_name.indexOf(e.target.value) != -1 ||
+          respaldo[i].nombre_laboratorio.indexOf(e.target.value) != -1
+        ) {
+          nuevo.push(respaldo[i]);
+        }
+      }
+      this.props.busqueda_en_producto(nuevo);
+    }
+  };
+
   load = () => {
     return <Load />;
   };
@@ -44,8 +67,10 @@ class Productos extends React.Component {
             <div className="col-5">
               <input
                 type="text"
+                id="search_producto"
+                onChange={this.search_product}
                 className="form-control input-buscar"
-                placeholder="Buscar Producto por: ----- Nombre ----- Laboratorio ----- Presentacion"
+                placeholder="Buscar producto por: ----- Nombre ----- Laboratorio -----"
               />
             </div>
 
