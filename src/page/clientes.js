@@ -26,27 +26,15 @@ class Clientes extends React.Component {
     if (this.props.clienteReducer.clientes.length == 0) {
       this.props.traer_clientes();
     }
-    setTimeout(() => {
-      this.setState({
-        data_clientes: [
-          { id: "1" },
-          { id: "2" },
-          { id: "3" },
-          { id: "4" },
-          { id: "5" },
-          { id: "6" },
-          { id: "7" },
-          { id: "8" },
-          { id: "9" },
-          { id: "10" },
-          { id: "11" },
-          { id: "12" },
-          { id: "13" },
-          { id: "14" },
-          { id: "15" },
-        ],
-      });
-    }, 4000);
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    if (nextProps.clienteReducer.mensaje_cliente != "") {
+      alert(`${nextProps.clienteReducer.mensaje_cliente}`);
+    }
+    if (nextProps.clienteReducer.mensaje_cliente == "Se creo el cliente") {
+      this.props.traer_clientes();
+    }
   }
 
   handleInputChange = (event) => {
@@ -67,7 +55,6 @@ class Clientes extends React.Component {
       this.state.correo == "" ||
       this.state.direccion == ""
     ) {
-      alert("Campos vacios, revise y vuelva ha intentarlo");
     } else {
       this.props.crear_cliente(
         this.state.nombres,
@@ -77,6 +64,29 @@ class Clientes extends React.Component {
         this.state.direccion
       );
       document.getElementById("client_form").reset();
+    }
+  };
+
+  search_client = (e) => {
+    const respaldo = this.props.clienteReducer.clientes;
+    let nuevo = [];
+
+    if (e.target.value == "") {
+      this.props.busqueda_en_clientes(
+        this.props.clienteReducer.busqueda_cliente
+      );
+    } else {
+      for (let i = 0; i < respaldo.length; i++) {
+        if (
+          respaldo[i].nombres.indexOf(e.target.value) != -1 ||
+          respaldo[i].apellidos.indexOf(e.target.value) != -1 ||
+          respaldo[i].correo.indexOf(e.target.value) != -1
+          // respaldo[i].identificacion.indexOf(e.target.value) != -1
+        ) {
+          nuevo.push(respaldo[i]);
+        }
+      }
+      this.props.busqueda_en_clientes(nuevo);
     }
   };
 
@@ -91,17 +101,33 @@ class Clientes extends React.Component {
     return (
       <>
         <Head titulo="Clientes | Medical" />
-        <Nav />
 
         <section className="container-fluid p-3">
           <div className="window">
+            <Nav />
             <div className="window-content">
               <div className="pane-group">
                 <div className="pane-sm sidebar" style={{ width: 400 }}>
-                  <h4 className="mt-3 p-2 text-center">Registrar</h4>
+                  <div
+                    style={{
+                      backgroundColor: "#0866dc",
+                      color: "#fff",
+                      width: "100%",
+                      padding: 5,
+                    }}
+                  >
+                    <strong
+                      className="text-center"
+                      style={{
+                        marginLeft: 30,
+                      }}
+                    >
+                      Nuevo Cliente
+                    </strong>
+                  </div>
 
                   <form className="p-2" id="client_form">
-                    <label className="mt-2"> Nombres:</label>
+                    <label className="mt-0"> Nombres:</label>
                     <input
                       type="text"
                       name="nombres"
@@ -149,7 +175,7 @@ class Clientes extends React.Component {
                     <button
                       onClick={this.add_cliente}
                       type="button"
-                      className="btn btn-primary form-control mt-4"
+                      className="btn btn-primary form-control mt-1"
                     >
                       Guardar
                     </button>
@@ -164,6 +190,7 @@ class Clientes extends React.Component {
                     <div className="col-5">
                       <input
                         type="text"
+                        onChange={this.search_client}
                         className="form-control input-buscar mt-5"
                         placeholder="Buscar cliente por: ----- Nombre ----- Cedula / Ruc ------"
                       />
@@ -189,17 +216,20 @@ class Clientes extends React.Component {
                             </tr>
                           ) : (
                             this.props.clienteReducer.clientes.map((valor) => (
-                              <tr key={valor}>
-                                <td>Andres Roberto</td>
-                                <td>coello Goyes</td>
-                                <td>1207345768</td>
-                                <td>goyeselcoca@gmail.com</td>
-                                <td>San juan ( KLM 1 ) via a vinces</td>
+                              <tr key={valor.id_cliente}>
+                                <td>{valor.nombres}</td>
+                                <td>{valor.apellidos}</td>
+                                <td>{valor.identificacion}</td>
+                                <td>{valor.correo}</td>
+                                <td>{valor.direccion}</td>
                                 <td>
                                   <button className="btn btn-mini btn-warning">
                                     Modificar
                                   </button>
-                                  <Confir />
+                                  <Confir
+                                    id={valor.id_cliente}
+                                    tabla="cliente"
+                                  />
                                   <button className="btn btn-mini btn-primary">
                                     Detalles
                                   </button>

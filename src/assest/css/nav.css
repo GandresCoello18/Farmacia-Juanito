@@ -1,5 +1,6 @@
 .alert {
   position: relative;
+  height: auto;
   padding: 0.75rem 1.25rem;
   margin-bottom: 1rem;
   border: 1px solid transparent;
@@ -14,4 +15,8 @@
   color: #155724;
   background-color: #d4edda;
   border-color: #c3e6cb;
+}
+.list-notification {
+  overflow-y: scroll;
+  height: 350px;
 }

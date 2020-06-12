@@ -80,10 +80,10 @@ class Nav extends React.Component {
     }
   }
 
-  limpiar_busqueda = () => {
+  /*limpiar_busqueda = () => {
     let busqueda_producto = document.getElementById("search_producto");
     busqueda_producto.value = "";
-  };
+  };*/
 
   cerrar_session = () => {
     Cookie.remove("access_token");
@@ -94,7 +94,7 @@ class Nav extends React.Component {
     return (
       <>
         <div className="tab-group">
-          <Link to="/" className="tab-item" onClick={this.limpiar_busqueda}>
+          <Link to="/" className="tab-item">
             <span
               className="material-icons"
               style={{ position: "absolute", left: 50, fontSize: 20 }}
@@ -231,23 +231,30 @@ class Nav extends React.Component {
               </span>
               <x-label>Notificacion de actividades</x-label>
               <dialog style={this.styles.dialog}>
-                <h3 className="text-center p-2">Actividades</h3>
+                <h3 className="text-center p-2">Notificacion de actividades</h3>
 
-                <ul className="list-group">
+                <ul className="list-group list-notification">
                   {this.props.ProductoReducer.notificaciones_actividades
                     .length > 0 ? (
-                    this.props.ProductoReducer.notificaciones_actividades.map(
-                      (valor) => (
-                        <li className="list-group-item" key={valor.text}>
+                    this.props.ProductoReducer.notificaciones_actividades
+                      .reverse()
+                      .map((valor) => (
+                        <li className="list-group-item" key={valor.date}>
                           {valor.tipo == "ERROR" ? (
-                            <div className="media-body alert alert-danger">
+                            <div className="alert alert-danger">
                               <p>
                                 {" "}
                                 <strong>{valor.tipo}:</strong> {valor.text}
                               </p>
+                              <span>
+                                Fecha: <i>{moment(valor.date).format("LTS")}</i>
+                              </span>
                             </div>
                           ) : (
-                            <div className="media-body alert alert-success">
+                            <div
+                              className="alert alert-success"
+                              key={valor.text}
+                            >
                               <p>
                                 {" "}
                                 <strong>{valor.tipo}:</strong> {valor.text}
@@ -255,8 +262,7 @@ class Nav extends React.Component {
                             </div>
                           )}
                         </li>
-                      )
-                    )
+                      ))
                   ) : (
                     <div className="alert alert-danger">
                       <strong>No hay actividades por el momento.</strong>

@@ -1,7 +1,8 @@
 import React from "react";
 import Notificacion from "../componentes/notificacion";
 import { connect } from "react-redux";
-import * as ProductAction from "../actions/productoAction";
+import { eliminar_producto } from "../actions/productoAction";
+import { eliminar_cliente } from "../actions/clienteAction";
 
 class confirmacion extends React.Component {
   state = {
@@ -27,8 +28,13 @@ class confirmacion extends React.Component {
   };
 
   eliminar = (id, tabla) => {
-    if (tabla == "productos") {
-      this.props.eliminar_producto(id);
+    switch (tabla) {
+      case "productos":
+        this.props.eliminar_producto(id);
+        break;
+      case "cliente":
+        this.props.eliminar_cliente(id);
+        break;
     }
   };
 
@@ -88,4 +94,9 @@ class confirmacion extends React.Component {
   }
 }
 
-export default connect(null, ProductAction)(confirmacion);
+const mapDispachToProps = {
+  eliminar_producto,
+  eliminar_cliente,
+};
+
+export default connect(null, mapDispachToProps)(confirmacion);
