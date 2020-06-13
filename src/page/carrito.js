@@ -1,7 +1,9 @@
 import React from "react";
 import Load from "../componentes/preload";
 import Head from "../componentes/head";
-import { exist_token } from "../util/verifi-local-token";
+import Cookie from "js-cookie";
+import { connect } from "react-redux";
+import { exist_token, domain } from "../util/verifi-local-token";
 import Nav from "../componentes/nav";
 import Notificacion from "../componentes/notificacion";
 import { Redirect } from "react-router-dom";
@@ -12,6 +14,7 @@ class Carrito extends React.Component {
     data_productos_sale_recientes: [],
     notificacion: false,
     total_compra: 300,
+    validar_formato: false,
   };
 
   styles = {
@@ -36,28 +39,21 @@ class Carrito extends React.Component {
     },
   };
 
-  componentDidMount() {
-    setTimeout(() => {
-      this.setState({
-        data_productos_sale_recientes: [
-          { id: "1" },
-          { id: "2" },
-          { id: "3" },
-          { id: "4" },
-          { id: "5" },
-          { id: "6" },
-          { id: "7" },
-        ],
-      });
-    }, 4000);
-  }
+  componentDidMount() {}
+
+  /*validar_formato = (e, id) => {
+    console.log(id);
+    if (e.target.value != "Por Unidad") {
+      document.getElementById(`validar-formato_${id}`).disabled = true;
+    }
+  };*/
 
   load = () => {
     return <Load />;
   };
 
   render() {
-    if (exist_token() === false) {
+    if (exist_token(Cookie.get("access_token")) == false) {
       return <Redirect to="/login" />;
     }
     return (
@@ -67,58 +63,63 @@ class Carrito extends React.Component {
 
         <section className="container-fluid p-2">
           <div className="row justify-content-center">
-            <h4 className="p-2 text-left">Productos Seleccionados</h4>
+            <h4 className="p-2 text-left" style={{ fontWeight: "bold" }}>
+              Productos Seleccionados
+            </h4>
 
             <div className="col-12 seccion-table-recien-vendidos">
               <table className="table-striped mt-2 table-vendidos_recientes text-center">
                 <thead>
                   <tr>
-                    <th>Imagen</th>
                     <th>Nombre</th>
-                    <th>Lote</th>
-                    <th>Reg Sani</th>
                     <th>Laboratorio</th>
-                    <th>Stock</th>
+                    <th>Cant</th>
                     <th>Presentacion</th>
-                    <th>Miligramos</th>
-                    <th>Fecha de elaboracion</th>
-                    <th>Fecha de caducidad</th>
-                    <th>P / U</th>
+                    <th>Medida</th>
+                    <th>Tipo Medida</th>
+                    <th>Lote</th>
+                    <th>Reg-Sanit</th>
+                    <th>PVP</th>
+                    <th>Elaboracion</th>
+                    <th>Caducidad</th>
+                    <th>Formato</th>
                     <th>Cantidad</th>
                     <th>Opciones</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {this.state.data_productos_sale_recientes == false ? (
+                  {this.props.carritoReducer.carrito == false ? (
                     <tr>
-                      <td colSpan="13" className="p-2">
+                      <td colSpan="14" className="p-2">
                         {this.load()}
                       </td>
                     </tr>
                   ) : (
-                    this.state.data_productos_sale_recientes.map((valor) => (
-                      <tr key={valor}>
+                    this.props.carritoReducer.carrito.map((valor) => (
+                      <tr key={valor.id_producto}>
+                        <td>{valor.product_name}</td>
+                        <td>{valor.nombre_laboratorio}</td>
+                        <td>{valor.cantidad}</td>
+                        <td>{valor.presentacion}</td>
+                        <td>{valor.medida}</td>
+                        <td>{valor.tipo_medida}</td>
+                        <td>{valor.lote}</td>
+                        <td>{valor.registro_sanitario}</td>
+                        <td>{valor.pvp}</td>
+                        <td>{valor.fecha_elaboracion}</td>
+                        <td>{valor.fecha_caducidad}</td>
                         <td>
-                          <img
-                            src="img/medicamento/paracetamol.jpg"
-                            alt="product"
-                          />
+                          <select className="form-control">
+                            <option value="Por Unidad">Por Unidad</option>
+                            <option value="Por Paquete">Por Paquete</option>
+                          </select>
                         </td>
-                        <td>Paracetamol</td>
-                        <td>200000633</td>
-                        <td>01182-mac-1-04-11</td>
-                        <td>Mi favorito</td>
-                        <td># 5</td>
-                        <td>Tabletas</td>
-                        <td>500</td>
-                        <td>20/02/2020</td>
-                        <td>12/05/2021</td>
-                        <td>$ 0.20</td>
                         <td>
                           <input
                             type="number"
                             className="form-control"
                             placeholder="Cantidad"
+                            style={{ width: 60 }}
                             defaultValue={1}
                           />
                         </td>
@@ -184,4 +185,8 @@ class Carrito extends React.Component {
   }
 }
 
-export default Carrito;
+const mapStateToProps = ({ carritoReducer }) => {
+  return { carritoReducer };
+};
+
+export default connect(mapStateToProps, null)(Carrito);

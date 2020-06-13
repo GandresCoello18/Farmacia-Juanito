@@ -9,9 +9,7 @@ import "../assest/css/nav.css";
 import * as ActionsUser from "../actions/usuariosActions";
 
 class Nav extends React.Component {
-  state = {
-    cantidad_carrito: 0,
-  };
+  state = {};
 
   styles = {
     dialog: {
@@ -71,7 +69,7 @@ class Nav extends React.Component {
 
   componentWillUpdate(nextProps, nextState) {
     let btn_carrito = document.getElementById("btn-carrito");
-    if (nextState.cantidad_carrito == 0) {
+    if (nextProps.carritoReducer.carrito.length == 0) {
       btn_carrito.classList.add("btn-negative");
       btn_carrito.classList.remove("btn-positive");
     } else {
@@ -282,7 +280,9 @@ class Nav extends React.Component {
             >
               {" "}
               <span className="material-icons">local_grocery_store</span>
-              <b style={{ fontSize: 24 }}>{this.state.cantidad_carrito}</b>
+              <b style={{ fontSize: 24 }}>
+                {this.props.carritoReducer.carrito.length}
+              </b>
             </Link>
           </div>
 
@@ -300,8 +300,12 @@ class Nav extends React.Component {
   }
 }
 
-const mapStateToProps = ({ userHistoryReducer, ProductoReducer }) => {
-  return { userHistoryReducer, ProductoReducer };
+const mapStateToProps = ({
+  userHistoryReducer,
+  ProductoReducer,
+  carritoReducer,
+}) => {
+  return { userHistoryReducer, ProductoReducer, carritoReducer };
 };
 
 export default connect(mapStateToProps, ActionsUser)(Nav);

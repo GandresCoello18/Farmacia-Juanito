@@ -80,6 +80,7 @@ class Login extends React.Component {
           };
 
           this.props.crear_cuenta(data, this.state.Autorizacion);
+          document.getElementById("create_cuenta").reset();
         } else {
           this.cambio_notificacion(
             true,

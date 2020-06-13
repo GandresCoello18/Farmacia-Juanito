@@ -8,10 +8,18 @@ import { connect } from "react-redux";
 import { exist_token, domain } from "../util/verifi-local-token";
 import "../assest/css/producto.css";
 
-import * as ProductoAction from "../actions/productoAction";
+import {
+  obtener_producto_completos,
+  busqueda_en_producto,
+  obterner_name_productos,
+  obterner_name_laboratorio,
+} from "../actions/productoAction";
+import { add_carrito } from "../actions/carritoAction";
 
 class Productos extends React.Component {
   componentDidMount() {
+    const datos_carrito = this.props.carritoReducer.carrito;
+
     if (this.props.ProductoReducer.Producto_Name.length == 0) {
       this.props.obterner_name_productos();
     }
@@ -20,6 +28,17 @@ class Productos extends React.Component {
     }
     if (this.props.ProductoReducer.Producto.length == 0) {
       this.props.obtener_producto_completos();
+    }
+
+    if (datos_carrito.length > 0) {
+      for (let i = 0; i < datos_carrito.length; i++) {
+        let elemento_btn = document.getElementById(
+          `btn_${datos_carrito[i].id_producto}`
+        );
+        elemento_btn.classList.remove("btn-positive");
+        elemento_btn.classList.add("btn-primary");
+        elemento_btn.disabled = true;
+      }
     }
   }
 
@@ -44,6 +63,10 @@ class Productos extends React.Component {
       }
       this.props.busqueda_en_producto(nuevo);
     }
+  };
+
+  agregar_a_carrito = (id_producto) => {
+    this.props.add_carrito(id_producto);
   };
 
   load = () => {
@@ -78,7 +101,6 @@ class Productos extends React.Component {
               <table className="table-striped mt-1 text-center">
                 <thead>
                   <tr>
-                    <th>Imagen</th>
                     <th>Nombre</th>
                     <th>Laboratorio</th>
                     <th>Cantidad</th>
@@ -87,8 +109,10 @@ class Productos extends React.Component {
                     <th>Tipo Medidas</th>
                     <th># Lote</th>
                     <th>Reg - Sanitario</th>
-                    <th>Fecha de elaboracion</th>
-                    <th>Fecha de caducidad</th>
+                    <th>PVP</th>
+                    <th>PVF</th>
+                    <th>Elaboracion</th>
+                    <th>Caducidad</th>
                     <th>Opciones</th>
                   </tr>
                 </thead>
@@ -102,11 +126,6 @@ class Productos extends React.Component {
                   ) : (
                     this.props.ProductoReducer.Producto.map((valor) => (
                       <tr key={valor.id_producto}>
-                        <td>
-                          <img
-                            src={`${domain()}/static/productos/${valor.imagen}`}
-                          />
-                        </td>
                         <td>{valor.product_name}</td>
                         <td>{valor.nombre_laboratorio}</td>
                         <td>{valor.cantidad}</td>
@@ -115,12 +134,21 @@ class Productos extends React.Component {
                         <td>{valor.tipo_medida}</td>
                         <td>{valor.lote}</td>
                         <td>{valor.registro_sanitario}</td>
+                        <td>{valor.pvp}</td>
+                        <td>{valor.pvf}</td>
                         <td>{valor.fecha_elaboracion}</td>
                         <td>{valor.fecha_caducidad}</td>
                         <td>
                           <button
                             className="btn btn-mini btn-positive"
+                            id={`btn_${valor.id_producto}`}
                             style={{ cursor: "pointer" }}
+                            onClick={(e) => {
+                              e.target.disabled = true;
+                              e.target.classList.remove("btn-positive");
+                              e.target.classList.add("btn-primary");
+                              this.agregar_a_carrito(valor.id_producto);
+                            }}
                           >
                             Agregar al carrito
                           </button>
@@ -138,8 +166,16 @@ class Productos extends React.Component {
   }
 }
 
-const mapStateToProps = ({ ProductoReducer }) => {
-  return { ProductoReducer };
+const mapStateToProps = ({ ProductoReducer, carritoReducer }) => {
+  return { ProductoReducer, carritoReducer };
 };
 
-export default connect(mapStateToProps, ProductoAction)(Productos);
+const mapDispachToProps = {
+  obtener_producto_completos,
+  obterner_name_productos,
+  busqueda_en_producto,
+  obterner_name_laboratorio,
+  add_carrito,
+};
+
+export default connect(mapStateToProps, mapDispachToProps)(Productos);

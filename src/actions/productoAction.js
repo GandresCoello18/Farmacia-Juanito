@@ -32,7 +32,11 @@ export const create_product = (data) => async (dispatch) => {
 
     dispatch({
       type: NOTIFICACION_ACTIVIVDAD,
-      payload: "Producto creado correctamente",
+      payload: {
+        tipo: "EXITO",
+        text: "Producto creado correctamente",
+        date: new Date(),
+      },
     });
   } catch (error) {
     dispatch({
@@ -42,7 +46,11 @@ export const create_product = (data) => async (dispatch) => {
 
     dispatch({
       type: NOTIFICACION_ACTIVIVDAD,
-      payload: `Error al crear producto: ${error}`,
+      payload: {
+        tipo: "ERROR",
+        text: `Error al crear producto: ${error}`,
+        date: new Date(),
+      },
     });
   }
 };
@@ -66,7 +74,7 @@ export const create_name_product = (name) => async (dispatch) => {
 
       dispatch({
         type: NOTIFICACION_ACTIVIVDAD,
-        payload: { tipo: "ERROR", text: `${i.data.feeback}` },
+        payload: { tipo: "ERROR", text: `${i.data.feeback}`, date: new Date() },
       });
     } else {
       dispatch({
@@ -76,20 +84,25 @@ export const create_name_product = (name) => async (dispatch) => {
 
       dispatch({
         type: NOTIFICACION_ACTIVIVDAD,
-        payload: { tipo: "EXITO", text: `Nombre del producto creado` },
+        payload: {
+          tipo: "EXITO",
+          text: `Nombre del producto creado`,
+          date: new Date(),
+        },
       });
     }
   } catch (error) {
     dispatch({
       type: ERROR_PRODUCTO,
-      payload: `Error en create name producto: ${error}`,
+      payload: `Error en create name producto: ${error.message}`,
     });
 
     dispatch({
       type: NOTIFICACION_ACTIVIVDAD,
       payload: {
         tipo: "ERROR",
-        text: `Error en create name producto: ${error}`,
+        text: `Error en create name producto: ${error.message}`,
+        date: new Date(),
       },
     });
   }
@@ -111,16 +124,43 @@ export const create_name_laboratorio = (name) => async (dispatch) => {
         type: ERROR_NAME_LABORATORIO,
         payload: `${res.data.feeback}`,
       });
+
+      dispatch({
+        type: NOTIFICACION_ACTIVIVDAD,
+        payload: {
+          tipo: "ERROR",
+          text: `${res.data.feeback}`,
+          date: new Date(),
+        },
+      });
     } else {
       dispatch({
         type: CREAR_NAME_LABORATORIO,
         payload: res.data,
       });
+
+      dispatch({
+        type: NOTIFICACION_ACTIVIVDAD,
+        payload: {
+          tipo: "EXITO",
+          text: `Se creo el nombre del producto`,
+          date: new Date(),
+        },
+      });
     }
   } catch (error) {
     dispatch({
       type: ERROR_NAME_LABORATORIO,
-      payload: `Error en create name laboratorio: ${error}`,
+      payload: `Error en create name laboratorio: ${error.message}`,
+    });
+
+    dispatch({
+      type: NOTIFICACION_ACTIVIVDAD,
+      payload: {
+        tipo: "ERROR",
+        text: `Error en create name laboratorio: ${error.message}`,
+        date: new Date(),
+      },
     });
   }
 };
@@ -139,7 +179,16 @@ export const obterner_name_productos = () => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: ERROR_PRODUCTO,
-      payload: `Error en obtener name producto: ${error}`,
+      payload: `Error en obtener name producto: ${error.message}`,
+    });
+
+    dispatch({
+      type: NOTIFICACION_ACTIVIVDAD,
+      payload: {
+        tipo: "ERROR",
+        text: `Error en obtener name producto: ${error.message}`,
+        date: new Date(),
+      },
     });
   }
 };
@@ -158,7 +207,16 @@ export const obterner_name_laboratorio = () => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: ERROR_NAME_LABORATORIO,
-      payload: `Error en obtener name laboratorio: ${error}`,
+      payload: `Error en obtener name laboratorio: ${error.message}`,
+    });
+
+    dispatch({
+      type: NOTIFICACION_ACTIVIVDAD,
+      payload: {
+        tipo: "ERROR",
+        text: `Error en obtener name laboratorio: ${error.message}`,
+        date: new Date(),
+      },
     });
   }
 };
@@ -183,7 +241,16 @@ export const obtener_producto_completos = () => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: ERROR_PRODUCTO_COMPLETE,
-      payload: `Error en obtener el producto: ${error}`,
+      payload: `Error en obtener el producto: ${error.message}`,
+    });
+
+    dispatch({
+      type: NOTIFICACION_ACTIVIVDAD,
+      payload: {
+        tipo: "ERROR",
+        text: `Error en obtener el producto: ${error.message}`,
+        date: new Date(),
+      },
     });
   }
 };
@@ -207,10 +274,28 @@ export const eliminar_producto = (id) => async (dispatch) => {
       type: ELIMINAR_PRODUCTO,
       payload: "Producto eliminado",
     });
+
+    dispatch({
+      type: NOTIFICACION_ACTIVIVDAD,
+      payload: {
+        tipo: "EXITO",
+        text: `Producto eliminado`,
+        date: new Date(),
+      },
+    });
   } catch (error) {
     dispatch({
       type: ERROR_PRODUCTO_COMPLETE,
-      payload: `Error ha eliminar el producto: ${error}`,
+      payload: `Error ha eliminar el producto: ${error.message}`,
+    });
+
+    dispatch({
+      type: NOTIFICACION_ACTIVIVDAD,
+      payload: {
+        tipo: "ERROR",
+        text: `Error ha eliminar el producto: ${error.message}`,
+        date: new Date(),
+      },
     });
   }
 };

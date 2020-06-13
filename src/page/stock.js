@@ -23,6 +23,9 @@ class Stock extends React.Component {
     tipo_dosis: "",
     fecha_elaboracion: "",
     fecha_caducidad: "",
+    pvp: 0,
+    pvf: 0,
+    limpiar_a_tiempo: null,
   };
 
   componentDidMount() {
@@ -64,10 +67,14 @@ class Stock extends React.Component {
   }
 
   limpiar_sms = (sms_span) => {
-    setTimeout(() => {
-      document.getElementById(sms_span).value = "";
+    this.state.limpiar_a_tiempo = setTimeout(() => {
+      document.getElementById(sms_span).innerText = "";
     }, 3000);
   };
+
+  componentWillUnmount() {
+    clearTimeout(this.state.limpiar_a_tiempo);
+  }
 
   handleInputChange = (event) => {
     const target = event.target;
@@ -110,15 +117,17 @@ class Stock extends React.Component {
       this.state.registro_sanitario == "" ||
       this.state.dosis == "" ||
       this.state.tipo_dosis == "-----" ||
+      this.state.presentacion == "-----" ||
       this.state.fecha_elaboracion == "" ||
-      this.state.fecha_caducidad == ""
+      this.state.fecha_caducidad == "" ||
+      this.state.pvp == ""
     ) {
       alert("Campos vacios en agregar productos a stock");
     } else {
       let data = new FormData();
 
-      let file = document.getElementById("foto-producto").files[0];
-      data.append("file", file);
+      // let file = document.getElementById("foto-producto").files[0];
+      // data.append("file", file);
       data.append("id_name_product", this.state.producto);
       data.append("id_name_laboratorio", this.state.laboratorio);
       data.append("cantidad", this.state.cantidad);
@@ -129,6 +138,8 @@ class Stock extends React.Component {
       data.append("tipo_dosis", this.state.tipo_dosis);
       data.append("fecha_elaboracion", this.state.fecha_elaboracion);
       data.append("fecha_caducidad", this.state.fecha_caducidad);
+      data.append("pvp", this.state.pvp);
+      data.append("pvf", this.state.pvf);
 
       this.props.create_product(data);
     }
@@ -279,12 +290,6 @@ class Stock extends React.Component {
                     <div className="row justify-content-center">
                       <div className="col p-2">
                         <label>
-                          <b>Imagen:</b>
-                        </label>
-                        <input type="file" id="foto-producto" />
-                      </div>
-                      <div className="col p-2">
-                        <label>
                           <b>Producto:</b>
                         </label>
                         <select
@@ -349,11 +354,32 @@ class Stock extends React.Component {
                           name="presentacion"
                           onChange={this.handleInputChange}
                         >
+                          <option>-----</option>
                           <option>Tabletas</option>
                           <option>Suero</option>
                           <option>Jarabe</option>
                           <option>Ampollas</option>
                         </select>
+                      </div>
+                      <div className="col p-2">
+                        <label>PVP:</label>
+                        <input
+                          type="number"
+                          onChange={this.handleInputChange}
+                          className="form-control"
+                          name="pvp"
+                          placeholder="0.00"
+                        />
+                      </div>
+                      <div className="col p-2">
+                        <label>PVF:</label>
+                        <input
+                          type="number"
+                          onChange={this.handleInputChange}
+                          className="form-control"
+                          name="pvf"
+                          placeholder="0.00"
+                        />
                       </div>
                     </div>
 
@@ -403,6 +429,7 @@ class Stock extends React.Component {
                           name="tipo_dosis"
                           onChange={this.handleInputChange}
                         >
+                          <option>-----</option>
                           <option>Miligramos</option>
                           <option>Gramos</option>
                           <option>Litros</option>
@@ -466,17 +493,18 @@ class Stock extends React.Component {
               <table className="table-striped mt-1 text-center">
                 <thead>
                   <tr>
-                    <th>Imagen</th>
                     <th>Nombre</th>
                     <th>Laboratorio</th>
-                    <th>Cantidad</th>
+                    <th>Cant</th>
                     <th>Presentacion</th>
                     <th>Medidas</th>
                     <th>Tipo Medidas</th>
                     <th># Lote</th>
                     <th>Reg - Sanitario</th>
-                    <th>Fecha de elaboracion</th>
-                    <th>Fecha de caducidad</th>
+                    <th>PVP</th>
+                    <th>PVF</th>
+                    <th>Elaboracion</th>
+                    <th>Caducidad</th>
                     <th>Opciones</th>
                   </tr>
                 </thead>
@@ -490,11 +518,6 @@ class Stock extends React.Component {
                   ) : (
                     this.props.ProductoReducer.Producto.map((valor) => (
                       <tr key={valor.id_producto}>
-                        <td>
-                          <img
-                            src={`${domain()}/static/productos/${valor.imagen}`}
-                          />
-                        </td>
                         <td>{valor.product_name}</td>
                         <td>{valor.nombre_laboratorio}</td>
                         <td>{valor.cantidad}</td>
@@ -503,6 +526,8 @@ class Stock extends React.Component {
                         <td>{valor.tipo_medida}</td>
                         <td>{valor.lote}</td>
                         <td>{valor.registro_sanitario}</td>
+                        <td>{valor.pvp}</td>
+                        <td>{valor.pvf}</td>
                         <td>{valor.fecha_elaboracion}</td>
                         <td>{valor.fecha_caducidad}</td>
                         <td>

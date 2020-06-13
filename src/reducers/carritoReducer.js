@@ -10,12 +10,15 @@ const INITIAL_STATE = {
   mensaje_carrito: "",
 };
 
+const array = [];
+
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case ADD_AL_CARRITO:
+      array.push(action.payload);
       return {
         ...state,
-        carrito: action.payload,
+        carrito: array,
         error_carrito: "",
       };
 
