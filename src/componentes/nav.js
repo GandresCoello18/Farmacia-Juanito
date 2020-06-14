@@ -257,6 +257,9 @@ class Nav extends React.Component {
                                 {" "}
                                 <strong>{valor.tipo}:</strong> {valor.text}
                               </p>
+                              <span>
+                                Fecha: <i>{moment(valor.date).format("LTS")}</i>
+                              </span>
                             </div>
                           )}
                         </li>

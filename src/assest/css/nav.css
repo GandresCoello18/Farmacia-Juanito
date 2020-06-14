@@ -1,3 +1,20 @@
+body {
+  width: 100% !important;
+  height: 100vh !important;
+  background: linear-gradient(
+      rgba(255, 255, 255, 0.8),
+      rgba(255, 255, 255, 0.8)
+    ),
+    url("../logo-farmacia.jpeg") !important;
+  background-position: center;
+  background-repeat: no-repeat !important;
+  background-size: 100% 760px !important;
+}
+#root {
+  width: 100% !important;
+  height: 100vh !important;
+  /*background-color: #cdcdcd !important;*/
+}
 .alert {
   position: relative;
   height: auto;
@@ -19,4 +36,92 @@
 .list-notification {
   overflow-y: scroll;
   height: 350px;
+}
+.badge-info {
+  color: #fff;
+  background-color: #17a2b8;
+}
+.badge-warning {
+  color: #212529;
+  background-color: #ffc107;
+}
+.badge-light {
+  color: #212529;
+  background-color: #f8f9fa;
+}
+.badge-success {
+  color: #fff;
+  background-color: #28a745;
+}
+.badge {
+  display: inline-block;
+  padding: 0.25em 0.4em;
+  font-size: 75%;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: 0.25rem;
+  transition: color 0.15s ease-in-out;
+  background-color: 0.15s ease-in-out;
+  border-color: 0.15s ease-in-out;
+  box-shadow: 0.15s ease-in-out;
+}
+.card {
+  position: relative;
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word;
+  background-color: #fff;
+  background-clip: border-box;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  border-radius: 0.25rem;
+}
+.card-img-overlay {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 1.25rem;
+}
+.card-img,
+.card-img-bottom,
+.card-img-top {
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  width: 100%;
+}
+.card-img,
+.card-img-top {
+  border-top-left-radius: calc(0.25rem - 1px);
+  border-top-right-radius: calc(0.25rem - 1px);
+}
+.card-img,
+.card-img-bottom {
+  border-bottom-right-radius: calc(0.25rem - 1px);
+  border-bottom-left-radius: calc(0.25rem - 1px);
+}
+.card-deck .card {
+  margin-bottom: 15px;
+}
+@media (min-width: 576px) {
+  .card-deck {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-flow: row wrap;
+    flex-flow: row wrap;
+    margin-right: -15px;
+    margin-left: -15px;
+  }
+  .card-deck .card {
+    -ms-flex: 1 0 0%;
+    flex: 1 0 0%;
+    margin-right: 15px;
+    margin-bottom: 0;
+    margin-left: 15px;
+  }
 }

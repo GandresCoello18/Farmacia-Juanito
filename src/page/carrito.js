@@ -2,19 +2,22 @@ import React from "react";
 import Load from "../componentes/preload";
 import Head from "../componentes/head";
 import Cookie from "js-cookie";
+import moment from "moment";
 import { connect } from "react-redux";
-import { exist_token, domain } from "../util/verifi-local-token";
+import { exist_token } from "../util/verifi-local-token";
+import ImgFact from "../assest/logo-farmacia.jpeg";
 import Nav from "../componentes/nav";
 import Notificacion from "../componentes/notificacion";
 import { Redirect } from "react-router-dom";
 import Footer from "../componentes/footer";
 
+import { quitar_del_carrito } from "../actions/carritoAction";
 class Carrito extends React.Component {
   state = {
     data_productos_sale_recientes: [],
     notificacion: false,
-    total_compra: 300,
-    validar_formato: false,
+    subTotalCompra: 300,
+    descuento: 0,
   };
 
   styles = {
@@ -34,19 +37,38 @@ class Carrito extends React.Component {
       paddingLeft: 10,
       paddingRight: 10,
       cursor: "pointer",
-      marginTop: 60,
+      marginTop: 40,
       color: "#fff",
     },
   };
 
-  componentDidMount() {}
+  componentDidMount() {
+    moment.lang("es");
 
-  /*validar_formato = (e, id) => {
-    console.log(id);
-    if (e.target.value != "Por Unidad") {
-      document.getElementById(`validar-formato_${id}`).disabled = true;
+    let sub = 0;
+    let datosCarrito = this.props.carritoReducer.carrito;
+    for (let i = 0; i < datosCarrito.length; i++) {
+      sub = sub + Number(datosCarrito[i].pvp);
     }
-  };*/
+
+    this.setState({
+      subTotalCompra: sub,
+    });
+  }
+
+  handleInputChange = (event) => {
+    const target = event.target;
+    const value = target.value;
+    const name = target.name;
+
+    this.setState({
+      [name]: value,
+    });
+  };
+
+  remover_del_carrito = (id_producto) => {
+    this.props.quitar_del_carrito(id_producto);
+  };
 
   load = () => {
     return <Load />;
@@ -88,7 +110,7 @@ class Carrito extends React.Component {
                   </tr>
                 </thead>
                 <tbody>
-                  {this.props.carritoReducer.carrito == false ? (
+                  {this.props.carritoReducer.carrito.length == 0 ? (
                     <tr>
                       <td colSpan="14" className="p-2">
                         {this.load()}
@@ -109,7 +131,11 @@ class Carrito extends React.Component {
                         <td>{valor.fecha_elaboracion}</td>
                         <td>{valor.fecha_caducidad}</td>
                         <td>
-                          <select className="form-control">
+                          <select
+                            className="form-control"
+                            disabled={valor.presentacion != "Tabletas"}
+                          >
+                            <option value="Por Unidad">-----</option>
                             <option value="Por Unidad">Por Unidad</option>
                             <option value="Por Paquete">Por Paquete</option>
                           </select>
@@ -126,9 +152,10 @@ class Carrito extends React.Component {
                         <td>
                           <button
                             className="btn btn-mini btn-negative"
-                            onClick={() =>
-                              this.setState({ notificacion: true })
-                            }
+                            onClick={() => {
+                              this.setState({ notificacion: true });
+                              this.remover_del_carrito(valor.id_producto);
+                            }}
                           >
                             Remover
                           </button>
@@ -148,24 +175,45 @@ class Carrito extends React.Component {
             <div className="col-8">
               <x-card>
                 <div className="row text-center">
-                  <div className="col">
-                    <h3 className="p-1">
-                      SUBTOTAL: $ <b>{this.state.total_compra}</b>
-                    </h3>
+                  <div className="col mt-1">
+                    <span
+                      style={{ fontSize: 25 }}
+                      className="p-1 badge badge-warning"
+                    >
+                      SUBTOTAL: $ <b>{this.state.subTotalCompra}</b>
+                    </span>
                   </div>
-                  <div className="col">
-                    <h3 className="p-1">
+                  <div className="col mt-1">
+                    <span
+                      style={{ fontSize: 25 }}
+                      className="p-1 badge badge-info"
+                    >
                       IVA: <b>12</b> %
-                    </h3>
+                    </span>
                   </div>
-                  <div className="col">
-                    <h3 className="p-1">
+                  <div className="col mt-1">
+                    <span
+                      style={{ fontSize: 25 }}
+                      className="p-1 badge badge-light"
+                    >
                       TOTAL: ${" "}
                       <b>
-                        {this.state.total_compra +
-                          (this.state.total_compra * 12) / 100}
+                        {(
+                          this.state.subTotalCompra +
+                          (this.state.subTotalCompra * 12) / 100
+                        ).toFixed(2)}
                       </b>
-                    </h3>
+                    </span>
+                  </div>
+                  <div className="col mt-1">
+                    <input
+                      type="number"
+                      style={{ width: 100 }}
+                      name="descuento"
+                      onChange={this.handleInputChange}
+                      className="form-control"
+                      placeholder="Descuento  %"
+                    />
                   </div>
                 </div>
               </x-card>
@@ -173,7 +221,69 @@ class Carrito extends React.Component {
             <div className="col-1">
               <x-button style={this.styles.btn_verde}>
                 <x-label>Continuar</x-label>
-                <dialog style={this.styles.dialogo}></dialog>
+                <dialog style={this.styles.dialogo}>
+                  <div className="card">
+                    <img
+                      src={ImgFact}
+                      className="card-img-top p-2"
+                      style={{ height: 220 }}
+                    />
+                    <ul className="list-group list-group-flush">
+                      <li className="list-group-item">
+                        Fecha: <b>{moment(new Date()).format("LL")}</b>
+                      </li>
+                      <li className="list-group-item">
+                        <button className="btn btn-primary">
+                          Agregar nuevo cliente
+                        </button>
+                      </li>
+                      <li className="list-group-item">
+                        <select className="form-control">
+                          <option>Clientes</option>
+                          {this.props.clienteReducer.clientes.map((item) => (
+                            <option
+                              key={item.identificacion}
+                              value={item.identificacion}
+                            >
+                              {item.nombres} {item.apellidos}
+                            </option>
+                          ))}
+                        </select>
+                      </li>
+                      <li className="list-group-item">
+                        <textarea
+                          rows="3"
+                          className="form-control"
+                          placeholder="Descripcion de la compra..."
+                        ></textarea>
+                      </li>
+                      <li className="list-group-item">
+                        Descuento: <b>{this.state.descuento} %</b>
+                      </li>
+                      <li className="list-group-item">
+                        Iva: <b>12 %</b>
+                      </li>
+                      <li className="list-group-item">
+                        Total a pagar: &nbsp; &nbsp;
+                        <span
+                          style={{ fontSize: 13 }}
+                          className="badge-success p-1 mt-1"
+                        >
+                          <b>
+                            ${" "}
+                            {(
+                              this.state.subTotalCompra +
+                              (this.state.subTotalCompra * 12) / 100
+                            ).toFixed(2)}
+                          </b>
+                        </span>
+                      </li>
+                    </ul>
+                    <button className="btn btn-positive form-control mt-2">
+                      Confirmar Pago
+                    </button>
+                  </div>
+                </dialog>
               </x-button>
             </div>
           </div>
@@ -185,8 +295,12 @@ class Carrito extends React.Component {
   }
 }
 
-const mapStateToProps = ({ carritoReducer }) => {
-  return { carritoReducer };
+const mapStateToProps = ({ carritoReducer, clienteReducer }) => {
+  return { carritoReducer, clienteReducer };
 };
 
-export default connect(mapStateToProps, null)(Carrito);
+const mapDispachToProps = {
+  quitar_del_carrito,
+};
+
+export default connect(mapStateToProps, mapDispachToProps)(Carrito);

@@ -26,17 +26,28 @@ export const add_carrito = (id_producto) => async (dispatch, getState) => {
   });
 };
 
-export const quitar_del_carrito = (id) => async (dispatch) => {
+export const quitar_del_carrito = (id_producto) => async (
+  dispatch,
+  getState
+) => {
+  const datos_carrito = getState().carritoReducer.carrito;
+  for (let i = 0; i < datos_carrito.length; i++) {
+    if (datos_carrito[i].id_producto.indexOf(id_producto) != -1) {
+      //console.log(datos_carrito[i]);
+      datos_carrito.splice(i, 1);
+    }
+  }
+
   dispatch({
     type: QUITAR_DEL_CARRITO,
-    payload: id,
+    payload: datos_carrito,
   });
 
   dispatch({
     type: NOTIFICACION_ACTIVIVDAD,
     payload: {
       tipo: "EXITO",
-      text: "Se quito producto al carrito",
+      text: "Se quito producto del carrito",
       date: new Date(),
     },
   });

@@ -3,9 +3,10 @@ import { Redirect } from "react-router-dom";
 import Head from "../componentes/head";
 import Nav from "../componentes/nav";
 import Cookie from "js-cookie";
+import Footer from "../componentes/footer";
 import Load from "../componentes/preload";
 import { connect } from "react-redux";
-import { exist_token, domain } from "../util/verifi-local-token";
+import { exist_token } from "../util/verifi-local-token";
 import "../assest/css/producto.css";
 
 import {
@@ -161,6 +162,8 @@ class Productos extends React.Component {
             </div>
           </div>
         </section>
+
+        <Footer />
       </>
     );
   }
