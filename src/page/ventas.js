@@ -2,10 +2,14 @@ import React from "react";
 import { exist_token } from "../util/verifi-local-token";
 import Head from "../componentes/head";
 import Load from "../componentes/preload";
+import Cookie from "js-cookie";
+import { connect } from "react-redux";
 import moment from "moment";
 import Nav from "../componentes/nav";
 import { Redirect } from "react-router-dom";
 import Footer from "../componentes/footer";
+
+import { traer_ventas } from "../actions/ventasActios";
 
 class Ventas extends React.Component {
   state = {
@@ -13,19 +17,9 @@ class Ventas extends React.Component {
   };
 
   componentDidMount() {
-    setTimeout(() => {
-      this.setState({
-        data_ventas: [
-          { id: "1" },
-          { id: "2" },
-          { id: "3" },
-          { id: "4" },
-          { id: "5" },
-          { id: "6" },
-          { id: "7" },
-        ],
-      });
-    }, 4000);
+    if (this.props.ventasReducer.ventas.length == 0) {
+      this.props.traer_ventas();
+    }
   }
 
   load = () => {
@@ -33,7 +27,7 @@ class Ventas extends React.Component {
   };
 
   render() {
-    if (exist_token() === false) {
+    if (exist_token(Cookie.get("access_token")) == false) {
       return <Redirect to="/login" />;
     }
     return (
@@ -52,7 +46,7 @@ class Ventas extends React.Component {
 
             <div className="col-3">
               <h4 className="p-2 text-left">
-                Ventas: <b>{moment(`${new Date()}`).format("LLL")}</b>
+                Ventas: <b>{moment(`${new Date()}`).format("LL")}</b>
               </h4>
             </div>
 
@@ -60,31 +54,31 @@ class Ventas extends React.Component {
               <table className="table-striped mt-1 text-center">
                 <thead>
                   <tr>
-                    <th>Imagen</th>
-                    <th>Nombre</th>
-                    <th>Laboratorio</th>
-                    <th>Presentacion</th>
-                    <th>Fecha de elaboracion</th>
-                    <th>Fecha de caducidad</th>
+                    <th>Descripcion</th>
+                    <th>Fecha</th>
+                    <th>Desc</th>
+                    <th>Iva</th>
+                    <th>Total</th>
+                    <th>Correo</th>
+                    <th>Ruc / Ced</th>
                     <th>Opciones</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {this.state.data_ventas == 0 ? (
+                  {this.props.ventasReducer.ventas.length == 0 ? (
                     <tr>
-                      <td colSpan="7">{this.load()}</td>
+                      <td colSpan="8">{this.load()}</td>
                     </tr>
                   ) : (
-                    this.state.data_ventas.map((valor) => (
-                      <tr key={valor.id}>
-                        <td>
-                          <img src="img/medicamento/paracetamol.jpg" />
-                        </td>
-                        <td>Paracetamol</td>
-                        <td>Mi favorito</td>
-                        <td>Tabletas</td>
-                        <td>20/02/2020</td>
-                        <td>12/05/2021</td>
+                    this.props.ventasReducer.ventas.map((valor) => (
+                      <tr key={valor.id_factura}>
+                        <td>{valor.descripcion_f}</td>
+                        <td>{moment(valor.fecha_factura).format("LL, LTS")}</td>
+                        <td>{valor.descuento}</td>
+                        <td>{valor.iva}</td>
+                        <td>{valor.total}</td>
+                        <td>{valor.correo}</td>
+                        <td>{valor.identificacion}</td>
                         <td>
                           <button className="btn btn-mini btn-primary">
                             Detallles
@@ -105,4 +99,12 @@ class Ventas extends React.Component {
   }
 }
 
-export default Ventas;
+const mapStateToProps = ({ ventasReducer }) => {
+  return { ventasReducer };
+};
+
+const mapDispatchToProps = {
+  traer_ventas,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Ventas);

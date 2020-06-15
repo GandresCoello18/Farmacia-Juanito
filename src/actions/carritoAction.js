@@ -2,6 +2,7 @@ import {
   ADD_AL_CARRITO,
   ERRROR_CARRITO,
   QUITAR_DEL_CARRITO,
+  LIMPIAR_CARRITO,
 } from "../types/carritoTypes";
 import { NOTIFICACION_ACTIVIVDAD } from "../types/ProductoTypes";
 
@@ -48,6 +49,25 @@ export const quitar_del_carrito = (id_producto) => async (
     payload: {
       tipo: "EXITO",
       text: "Se quito producto del carrito",
+      date: new Date(),
+    },
+  });
+};
+
+export const limpiar_carrito = () => async (dispatch, getState) => {
+  const array = getState().carritoReducer.carrito;
+  array.splice(0, array.length);
+
+  dispatch({
+    type: LIMPIAR_CARRITO,
+    payload: array,
+  });
+
+  dispatch({
+    type: NOTIFICACION_ACTIVIVDAD,
+    payload: {
+      tipo: "EXITO",
+      text: "Se limpio el carrito",
       date: new Date(),
     },
   });

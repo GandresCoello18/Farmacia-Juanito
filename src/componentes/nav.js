@@ -236,8 +236,12 @@ class Nav extends React.Component {
                     .length > 0 ? (
                     this.props.ProductoReducer.notificaciones_actividades
                       .reverse()
+                      .sort((a, b) => a.date > b.date)
                       .map((valor) => (
-                        <li className="list-group-item" key={valor.date}>
+                        <li
+                          className="list-group-item"
+                          key={(Math.random() * 100).toString()}
+                        >
                           {valor.tipo == "ERROR" ? (
                             <div className="alert alert-danger">
                               <p>

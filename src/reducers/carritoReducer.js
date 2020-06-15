@@ -2,6 +2,7 @@ import {
   ADD_AL_CARRITO,
   QUITAR_DEL_CARRITO,
   ERRROR_CARRITO,
+  LIMPIAR_CARRITO,
 } from "../types/carritoTypes";
 
 const INITIAL_STATE = {
@@ -28,6 +29,12 @@ export default (state = INITIAL_STATE, action) => {
         clientes: [],
         error_carrito: "",
         mensaje_carrito: "Se quito producto del carrito",
+      };
+
+    case LIMPIAR_CARRITO:
+      return {
+        ...state,
+        clientes: action.payload,
       };
 
     case ERRROR_CARRITO:

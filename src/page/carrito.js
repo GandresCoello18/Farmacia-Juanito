@@ -1,23 +1,35 @@
 import React from "react";
+import PropsType from "prop-types";
 import Load from "../componentes/preload";
 import Head from "../componentes/head";
 import Cookie from "js-cookie";
 import moment from "moment";
+import { Link, his, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import { exist_token } from "../util/verifi-local-token";
 import ImgFact from "../assest/logo-farmacia.jpeg";
 import Nav from "../componentes/nav";
 import Notificacion from "../componentes/notificacion";
-import { Redirect } from "react-router-dom";
 import Footer from "../componentes/footer";
 
-import { quitar_del_carrito } from "../actions/carritoAction";
+import { quitar_del_carrito, limpiar_carrito } from "../actions/carritoAction";
+import { traer_clientes } from "../actions/clienteAction";
+import { crear_venta, limpiar_ventas } from "../actions/ventasActios";
+
 class Carrito extends React.Component {
   state = {
     data_productos_sale_recientes: [],
     notificacion: false,
-    subTotalCompra: 300,
+    /////////////
+    subTotalCompra: 0,
     descuento: 0,
+    Total: 0,
+    iva: 12,
+    /////////////
+    cliente_pago: "",
+    descripcion_pago: "",
+    efectivo_pago: 0,
+    cambio_pago: "$: Cambio",
   };
 
   styles = {
@@ -45,15 +57,28 @@ class Carrito extends React.Component {
   componentDidMount() {
     moment.lang("es");
 
+    if (this.props.clienteReducer.clientes.length == 0) {
+      this.props.traer_clientes();
+    }
+
     let sub = 0;
     let datosCarrito = this.props.carritoReducer.carrito;
     for (let i = 0; i < datosCarrito.length; i++) {
       sub = sub + Number(datosCarrito[i].pvp);
     }
 
+    let total = (sub + (sub * this.state.iva) / 100).toFixed(2);
+
     this.setState({
-      subTotalCompra: sub,
+      subTotalCompra: sub.toFixed(2),
+      Total: total,
     });
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    if (nextProps.ventasReducer.mensaje_ventas != "") {
+      this.props.history.push("/producto");
+    }
   }
 
   handleInputChange = (event) => {
@@ -68,6 +93,26 @@ class Carrito extends React.Component {
 
   remover_del_carrito = (id_producto) => {
     this.props.quitar_del_carrito(id_producto);
+  };
+
+  clear_carrito = () => this.props.limpiar_carrito();
+
+  confirmar_pago = () => {
+    const obj = {
+      id_cliente: this.state.cliente_pago,
+      descripcion: this.state.descripcion_pago,
+      descuento: this.state.descuento,
+      iva: this.state.iva,
+      total: Number(this.state.Total),
+      efectivo: this.state.efectivo_pago,
+      cambio: this.state.cambio_pago,
+    };
+
+    if (obj.cambio == "$: Cambio") obj.cambio = 0;
+
+    this.props.crear_venta(obj);
+
+    this.props.limpiar_carrito();
   };
 
   load = () => {
@@ -188,7 +233,7 @@ class Carrito extends React.Component {
                       style={{ fontSize: 25 }}
                       className="p-1 badge badge-info"
                     >
-                      IVA: <b>12</b> %
+                      IVA: <b>{this.state.iva}</b> %
                     </span>
                   </div>
                   <div className="col mt-1">
@@ -196,13 +241,7 @@ class Carrito extends React.Component {
                       style={{ fontSize: 25 }}
                       className="p-1 badge badge-light"
                     >
-                      TOTAL: ${" "}
-                      <b>
-                        {(
-                          this.state.subTotalCompra +
-                          (this.state.subTotalCompra * 12) / 100
-                        ).toFixed(2)}
-                      </b>
+                      TOTAL: $ <b>{this.state.Total}</b>
                     </span>
                   </div>
                   <div className="col mt-1">
@@ -233,12 +272,12 @@ class Carrito extends React.Component {
                         Fecha: <b>{moment(new Date()).format("LL")}</b>
                       </li>
                       <li className="list-group-item">
-                        <button className="btn btn-primary">
+                        <Link to="/clientes" className="btn btn-primary">
                           Agregar nuevo cliente
-                        </button>
+                        </Link>
                       </li>
                       <li className="list-group-item">
-                        <select className="form-control">
+                        <select className="form-control" name="cliente_pago">
                           <option>Clientes</option>
                           {this.props.clienteReducer.clientes.map((item) => (
                             <option
@@ -253,15 +292,38 @@ class Carrito extends React.Component {
                       <li className="list-group-item">
                         <textarea
                           rows="3"
+                          name="descripcion_pago"
                           className="form-control"
                           placeholder="Descripcion de la compra..."
                         ></textarea>
                       </li>
                       <li className="list-group-item">
-                        Descuento: <b>{this.state.descuento} %</b>
+                        Descuento:{" "}
+                        <b className="badge-info p-1">
+                          {this.state.descuento} %
+                        </b>{" "}
+                        &nbsp; &nbsp; &nbsp; &nbsp; Iva:{" "}
+                        <b className="badge-info p-1">{this.state.iva} %</b>
                       </li>
                       <li className="list-group-item">
-                        Iva: <b>12 %</b>
+                        <input
+                          type="number"
+                          name="efectivo_pago"
+                          onChange={this.handleInputChange}
+                          className="form-control"
+                          placeholder="$: Efectivo"
+                          style={{ width: 100 }}
+                        />
+                        &nbsp; &nbsp; &nbsp; &nbsp;
+                        <input
+                          type="number"
+                          name="cambio_pago"
+                          onChange={this.handleInputChange}
+                          className="form-control"
+                          disabled={true}
+                          placeholder={this.state.cambio_pago}
+                          style={{ width: 100 }}
+                        />
                       </li>
                       <li className="list-group-item">
                         Total a pagar: &nbsp; &nbsp;
@@ -269,22 +331,29 @@ class Carrito extends React.Component {
                           style={{ fontSize: 13 }}
                           className="badge-success p-1 mt-1"
                         >
-                          <b>
-                            ${" "}
-                            {(
-                              this.state.subTotalCompra +
-                              (this.state.subTotalCompra * 12) / 100
-                            ).toFixed(2)}
-                          </b>
+                          <b>$ {this.state.Total}</b>
                         </span>
                       </li>
                     </ul>
-                    <button className="btn btn-positive form-control mt-2">
+                    <button
+                      disabled={this.props.carritoReducer.carrito.length == 0}
+                      className="btn btn-positive form-control mt-2"
+                      onClick={this.confirmar_pago}
+                    >
                       Confirmar Pago
                     </button>
                   </div>
                 </dialog>
               </x-button>
+            </div>
+            <div className="col-1">
+              <button
+                className="btn btn-negative"
+                onClick={this.clear_carrito}
+                style={{ marginTop: 40 }}
+              >
+                Limpiar Carrito
+              </button>
             </div>
           </div>
         </section>
@@ -295,12 +364,27 @@ class Carrito extends React.Component {
   }
 }
 
-const mapStateToProps = ({ carritoReducer, clienteReducer }) => {
-  return { carritoReducer, clienteReducer };
+Carrito.prototypes = {
+  carritoReducer: PropsType.object,
+  clienteReducer: PropsType.object,
+  history: PropsType.object.isRequired,
+  quitar_del_carrito: PropsType.func,
+  traer_clientes: PropsType.func,
+  limpiar_carrito: PropsType.func,
+  crear_venta: PropsType.func,
+  limpiar_ventas: PropsType.func,
+};
+
+const mapStateToProps = ({ carritoReducer, clienteReducer, ventasReducer }) => {
+  return { carritoReducer, clienteReducer, ventasReducer };
 };
 
 const mapDispachToProps = {
   quitar_del_carrito,
+  traer_clientes,
+  limpiar_carrito,
+  crear_venta,
+  limpiar_ventas,
 };
 
 export default connect(mapStateToProps, mapDispachToProps)(Carrito);
