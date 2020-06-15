@@ -1,4 +1,5 @@
 import React from "react";
+import PropsType from "prop-types";
 import Head from "../componentes/head";
 import Nav from "../componentes/nav";
 import ConfirEliminar from "../componentes/confirmacion";
@@ -7,7 +8,7 @@ import Cookie from "js-cookie";
 import Load from "../componentes/preload";
 import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
-import { exist_token, domain } from "../util/verifi-local-token";
+import { exist_token } from "../util/verifi-local-token";
 
 import * as ProductoAction from "../actions/productoAction";
 
@@ -555,6 +556,10 @@ class Stock extends React.Component {
     );
   }
 }
+
+Stock.prototypes = {
+  ProductoReducer: PropsType.object,
+};
 
 const mapStateToProps = ({ ProductoReducer }) => {
   return { ProductoReducer };

@@ -4,7 +4,7 @@ import Load from "../componentes/preload";
 import Head from "../componentes/head";
 import Cookie from "js-cookie";
 import moment from "moment";
-import { Link, his, Redirect } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import { exist_token } from "../util/verifi-local-token";
 import ImgFact from "../assest/logo-farmacia.jpeg";

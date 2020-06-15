@@ -1,4 +1,5 @@
 import React from "react";
+import PropsType from "prop-types";
 import { connect } from "react-redux";
 import Cookie from "js-cookie";
 import Notificacion from "../componentes/notificacion";
@@ -270,6 +271,10 @@ class Login extends React.Component {
       </>
     );
   }
+}
+
+Login.prototypes = {
+  
 }
 
 const mapStateToProps = (state) => {

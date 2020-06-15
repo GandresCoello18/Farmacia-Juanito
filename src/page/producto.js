@@ -1,4 +1,5 @@
 import React from "react";
+import PropsType from "prop-types";
 import { Redirect } from "react-router-dom";
 import Head from "../componentes/head";
 import Nav from "../componentes/nav";
@@ -168,6 +169,16 @@ class Productos extends React.Component {
     );
   }
 }
+
+Productos.prototypes = {
+  ProductoReducer: PropsType.object,
+  carritoReducer: PropsType.object,
+  obtener_producto_completos: PropsType.func,
+  obterner_name_productos: PropsType.func,
+  busqueda_en_producto: PropsType.func,
+  obterner_name_laboratorio: PropsType.func,
+  add_carrito: PropsType.func,
+};
 
 const mapStateToProps = ({ ProductoReducer, carritoReducer }) => {
   return { ProductoReducer, carritoReducer };

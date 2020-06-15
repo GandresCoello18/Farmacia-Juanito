@@ -1,4 +1,5 @@
 import React from "react";
+import PropsType from "prop-types";
 import Cookie from "js-cookie";
 import moment from "moment";
 import { domain } from "../util/verifi-local-token";
@@ -6,7 +7,7 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import Alerta from "../componentes/alert";
 import "../assest/css/nav.css";
-import * as ActionsUser from "../actions/usuariosActions";
+import { history_session } from "../actions/usuariosActions";
 
 class Nav extends React.Component {
   state = {};
@@ -307,6 +308,13 @@ class Nav extends React.Component {
   }
 }
 
+Nav.prototypes = {
+  userHistoryReducer: PropsType.object,
+  ProductoReducer: PropsType.object,
+  carritoReducer: PropsType.object,
+  history_session: PropsType.func,
+};
+
 const mapStateToProps = ({
   userHistoryReducer,
   ProductoReducer,
@@ -315,4 +323,8 @@ const mapStateToProps = ({
   return { userHistoryReducer, ProductoReducer, carritoReducer };
 };
 
-export default connect(mapStateToProps, ActionsUser)(Nav);
+const mapDispchToProps = {
+  history_session,
+};
+
+export default connect(mapStateToProps, mapDispchToProps)(Nav);

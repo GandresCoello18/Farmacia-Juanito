@@ -1,4 +1,5 @@
 import React from "react";
+import PropsType from "prop-types";
 import { exist_token } from "../util/verifi-local-token";
 import Nav from "../componentes/nav";
 import Cookie from "js-cookie";
@@ -9,8 +10,11 @@ import Footer from "../componentes/footer";
 import Head from "../componentes/head";
 import { Redirect } from "react-router-dom";
 
-import * as clienteActios from "../actions/clienteAction";
-import clientesReducer from "../reducers/clientesReducer";
+import {
+  traer_clientes,
+  crear_cliente,
+  busqueda_en_clientes,
+} from "../actions/clienteAction";
 
 class Clientes extends React.Component {
   state = {
@@ -253,8 +257,21 @@ class Clientes extends React.Component {
   }
 }
 
+Clientes.prototypes = {
+  clienteReducer: PropsType.object,
+  crear_cliente: PropsType.func,
+  traer_clientes: PropsType.func,
+  busqueda_en_clientes: PropsType.func,
+};
+
 const mapStateToProps = ({ clienteReducer }) => {
   return { clienteReducer };
 };
 
-export default connect(mapStateToProps, clienteActios)(Clientes);
+const mapDispchToProps = {
+  crear_cliente,
+  traer_clientes,
+  busqueda_en_clientes,
+};
+
+export default connect(mapStateToProps, mapDispchToProps)(Clientes);
