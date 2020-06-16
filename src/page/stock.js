@@ -10,12 +10,24 @@ import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
 import { exist_token } from "../util/verifi-local-token";
 
-import * as ProductoAction from "../actions/productoAction";
+import {
+  create_name_laboratorio,
+  create_product,
+  create_name_product,
+  create_name_princ_activo,
+  obterner_name_laboratorio,
+  obterner_name_productos,
+  obtener_producto_completos,
+  obtener_principio_activo,
+  busqueda_en_producto,
+  eliminar_producto,
+} from "../actions/productoAction";
 
 class Stock extends React.Component {
   state = {
     producto: "",
     laboratorio: "",
+    principio_activo: "",
     cantidad: 0,
     presentacion: "",
     lote: "",
@@ -38,6 +50,9 @@ class Stock extends React.Component {
     }
     if (this.props.ProductoReducer.Producto.length == 0) {
       this.props.obtener_producto_completos();
+    }
+    if (this.props.ProductoReducer.Principio_activo.length == 0) {
+      this.props.obtener_principio_activo();
     }
   }
 
@@ -109,6 +124,17 @@ class Stock extends React.Component {
     }
   };
 
+  add_name_prin_activo = () => {
+    let name = document.getElementById("principio_activo");
+
+    if (name.value == "") {
+      alert("Campo vacio en principio activo");
+    } else {
+      this.props.create_name_princ_activo(name.value);
+      name.value = "";
+    }
+  };
+
   save_product = () => {
     if (
       this.state.producto == "-----" ||
@@ -121,7 +147,8 @@ class Stock extends React.Component {
       this.state.presentacion == "-----" ||
       this.state.fecha_elaboracion == "" ||
       this.state.fecha_caducidad == "" ||
-      this.state.pvp == ""
+      this.state.pvp == "" ||
+      this.state.pvf == ""
     ) {
       alert("Campos vacios en agregar productos a stock");
     } else {
@@ -141,6 +168,7 @@ class Stock extends React.Component {
       data.append("fecha_caducidad", this.state.fecha_caducidad);
       data.append("pvp", this.state.pvp);
       data.append("pvf", this.state.pvf);
+      data.append("id_principio_activo,", this.state.principio_activo);
 
       this.props.create_product(data);
     }
@@ -335,6 +363,28 @@ class Stock extends React.Component {
                       </div>
                       <div className="col p-2">
                         <label>
+                          <b>Princ Activo:</b>
+                        </label>
+                        <select
+                          className="form-control"
+                          name="principio_activo"
+                          onChange={this.handleInputChange}
+                        >
+                          <option>------</option>
+                          {this.props.ProductoReducer.Principio_activo.map(
+                            (item) => (
+                              <option
+                                key={item.id_principio_activo}
+                                value={item.id_principio_activo}
+                              >
+                                {item.principio_activo}
+                              </option>
+                            )
+                          )}
+                        </select>
+                      </div>
+                      <div className="col p-2">
+                        <label>
                           <b>Cantidad:</b>
                         </label>
                         <input
@@ -481,29 +531,70 @@ class Stock extends React.Component {
                 </dialog>
               </x-button>
             </div>
-            <div className="col-5">
+            <div className="col-2">
+              <x-button>
+                <span className="material-icons">local_pharmacy</span> &nbsp;
+                <x-label>
+                  <b style={{ fontSize: 15 }}>Add Activo</b>
+                </x-label>
+                <dialog
+                  style={{
+                    position: "relative",
+                    top: 200,
+                    height: 120,
+                    width: 400,
+                  }}
+                >
+                  <form className="p-2">
+                    <label>
+                      <b>Registra Principio Activo:</b>
+                    </label>
+                    <input
+                      type="text"
+                      id="principio_activo"
+                      className="form-control"
+                      placeholder="Nombre del principio activo"
+                    />
+                    <input
+                      type="button"
+                      className="btn btn-primary mt-2"
+                      value="Registrar"
+                      onClick={this.add_name_prin_activo}
+                    />{" "}
+                    &nbsp; &nbsp;{" "}
+                    <span
+                      style={{ color: "#229954", fontWeight: "bold" }}
+                      id="sms-name-laboratorio"
+                    ></span>
+                  </form>
+                </dialog>
+              </x-button>
+            </div>
+            <div className="col-3">
               <input
                 type="text"
+                style={{ borderRadius: 10 }}
                 onChange={this.search_product}
                 className="form-control input-buscar"
-                placeholder="Buscar producto por: ----- Nombre ----- Laboratorio ----- "
+                placeholder="Buscar por: ----- Nombre ----- Laboratorio"
               />
             </div>
 
-            <div className="col-12 seccion-table-productos_all">
+            <div className="col-12 seccion-table-productos_all mt-4">
               <table className="table-striped mt-1 text-center">
                 <thead>
                   <tr>
+                    <th>Activo</th>
                     <th>Nombre</th>
                     <th>Laboratorio</th>
                     <th>Cant</th>
-                    <th>Presentacion</th>
+                    <th>Present</th>
                     <th>Medidas</th>
-                    <th>Tipo Medidas</th>
                     <th># Lote</th>
                     <th>Reg - Sanitario</th>
                     <th>PVP</th>
                     <th>PVF</th>
+                    <th>Status</th>
                     <th>Elaboracion</th>
                     <th>Caducidad</th>
                     <th>Opciones</th>
@@ -518,21 +609,34 @@ class Stock extends React.Component {
                     </tr>
                   ) : (
                     this.props.ProductoReducer.Producto.map((valor) => (
-                      <tr key={valor.id_producto}>
+                      <tr
+                        key={valor.id_producto}
+                        className={
+                          valor.estado == "Disponible"
+                            ? "alert-success"
+                            : "alert-danger"
+                        }
+                      >
+                        <td>{valor.principio_activo}</td>
                         <td>{valor.product_name}</td>
                         <td>{valor.nombre_laboratorio}</td>
                         <td>{valor.cantidad}</td>
                         <td>{valor.presentacion}</td>
-                        <td>{valor.medida}</td>
-                        <td>{valor.tipo_medida}</td>
+                        <td>
+                          {valor.medida} {valor.tipo_medida}
+                        </td>
                         <td>{valor.lote}</td>
                         <td>{valor.registro_sanitario}</td>
                         <td>{valor.pvp}</td>
                         <td>{valor.pvf}</td>
+                        <td>{valor.estado}</td>
                         <td>{valor.fecha_elaboracion}</td>
                         <td>{valor.fecha_caducidad}</td>
                         <td>
-                          <button className="btn btn-mini btn-warning">
+                          <button
+                            className="btn btn-mini btn-warning"
+                            disabled={valor.estado != "Disponible" && true}
+                          >
                             Modificar
                           </button>
                           <span>
@@ -559,10 +663,33 @@ class Stock extends React.Component {
 
 Stock.prototypes = {
   ProductoReducer: PropsType.object,
+  create_name_laboratorio: PropsType.func,
+  create_product: PropsType.func,
+  create_name_product: PropsType.func,
+  obterner_name_laboratorio: PropsType.func,
+  obterner_name_productos: PropsType.func,
+  obtener_producto_completos: PropsType.func,
+  obtener_principio_activo: PropsType.func,
+  busqueda_en_producto: PropsType.func,
+  eliminar_producto: PropsType.func,
+  create_name_princ_activo: PropsType.func,
 };
 
 const mapStateToProps = ({ ProductoReducer }) => {
   return { ProductoReducer };
 };
 
-export default connect(mapStateToProps, ProductoAction)(Stock);
+const mapDispachToProps = {
+  create_name_laboratorio,
+  create_product,
+  create_name_product,
+  create_name_princ_activo,
+  obterner_name_laboratorio,
+  obterner_name_productos,
+  obtener_producto_completos,
+  obtener_principio_activo,
+  busqueda_en_producto,
+  eliminar_producto,
+};
+
+export default connect(mapStateToProps, mapDispachToProps)(Stock);

@@ -103,12 +103,12 @@ class Productos extends React.Component {
               <table className="table-striped mt-1 text-center">
                 <thead>
                   <tr>
+                    <th>Activo</th>
                     <th>Nombre</th>
                     <th>Laboratorio</th>
                     <th>Cantidad</th>
-                    <th>Presentacion</th>
+                    <th>Present</th>
                     <th>Medidas</th>
-                    <th>Tipo Medidas</th>
                     <th># Lote</th>
                     <th>Reg - Sanitario</th>
                     <th>PVP</th>
@@ -126,14 +126,18 @@ class Productos extends React.Component {
                       </td>
                     </tr>
                   ) : (
-                    this.props.ProductoReducer.Producto.map((valor) => (
+                    this.props.ProductoReducer.Producto.filter(
+                      (item) => item.estado == "Disponible"
+                    ).map((valor) => (
                       <tr key={valor.id_producto}>
+                        <td>{valor.principio_activo}</td>
                         <td>{valor.product_name}</td>
                         <td>{valor.nombre_laboratorio}</td>
                         <td>{valor.cantidad}</td>
                         <td>{valor.presentacion}</td>
-                        <td>{valor.medida}</td>
-                        <td>{valor.tipo_medida}</td>
+                        <td>
+                          {valor.medida} {valor.tipo_medida}
+                        </td>
                         <td>{valor.lote}</td>
                         <td>{valor.registro_sanitario}</td>
                         <td>{valor.pvp}</td>

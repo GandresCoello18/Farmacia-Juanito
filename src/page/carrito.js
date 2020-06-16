@@ -70,8 +70,8 @@ class Carrito extends React.Component {
     let total = (sub + (sub * this.state.iva) / 100).toFixed(2);
 
     this.setState({
-      subTotalCompra: sub.toFixed(2),
-      Total: total,
+      subTotalCompra: Number(sub.toFixed(2)),
+      Total: Number(total),
     });
   }
 
@@ -95,7 +95,45 @@ class Carrito extends React.Component {
     this.props.quitar_del_carrito(id_producto);
   };
 
-  clear_carrito = () => this.props.limpiar_carrito();
+  clear_carrito = () => {
+    this.props.limpiar_carrito();
+
+    this.setState({
+      descuento: 0,
+      subTotalCompra: 0,
+      Total: 0,
+    });
+  };
+
+  formato = (e, id_producto) =>
+    (document.getElementById(`cantidad_${id_producto}`).value = 0);
+
+  cantidad = (e, id_producto) => {
+    let sub = 0;
+
+    let datosCarrito = this.props.carritoReducer.carrito;
+    let data = datosCarrito.find((item) => item.id_producto == id_producto);
+
+    if (
+      document.getElementById(`formato_${id_producto}`).value == "Por Paquete"
+    ) {
+      sub = sub + Number(data.pvp);
+    } else {
+      sub = Number(data.pvp) / Number(data.cantidad);
+    }
+
+    sub = sub * (Number(e.target.value) - 1);
+
+    let total = sub + (sub * this.state.iva) / 100;
+
+    total = (this.state.Total + total).toFixed(2);
+    sub = (this.state.subTotalCompra + sub).toFixed(2);
+
+    this.setState({
+      subTotalCompra: Number(sub),
+      Total: Number(total),
+    });
+  };
 
   confirmar_pago = () => {
     const obj = {
@@ -138,12 +176,12 @@ class Carrito extends React.Component {
               <table className="table-striped mt-2 table-vendidos_recientes text-center">
                 <thead>
                   <tr>
+                    <th>Activo</th>
                     <th>Nombre</th>
                     <th>Laboratorio</th>
                     <th>Cant</th>
-                    <th>Presentacion</th>
+                    <th>Present</th>
                     <th>Medida</th>
-                    <th>Tipo Medida</th>
                     <th>Lote</th>
                     <th>Reg-Sanit</th>
                     <th>PVP</th>
@@ -164,12 +202,14 @@ class Carrito extends React.Component {
                   ) : (
                     this.props.carritoReducer.carrito.map((valor) => (
                       <tr key={valor.id_producto}>
+                        <td>{valor.principio_activo}</td>
                         <td>{valor.product_name}</td>
                         <td>{valor.nombre_laboratorio}</td>
                         <td>{valor.cantidad}</td>
                         <td>{valor.presentacion}</td>
-                        <td>{valor.medida}</td>
-                        <td>{valor.tipo_medida}</td>
+                        <td>
+                          {valor.medida} {valor.tipo_medida}
+                        </td>
                         <td>{valor.lote}</td>
                         <td>{valor.registro_sanitario}</td>
                         <td>{valor.pvp}</td>
@@ -178,16 +218,22 @@ class Carrito extends React.Component {
                         <td>
                           <select
                             className="form-control"
+                            onChange={(e) => this.formato(e, valor.id_producto)}
+                            id={`formato_${valor.id_producto}`}
                             disabled={valor.presentacion != "Tabletas"}
                           >
-                            <option value="Por Unidad">-----</option>
-                            <option value="Por Unidad">Por Unidad</option>
                             <option value="Por Paquete">Por Paquete</option>
+                            <option value="Por Unidad">Por Unidad</option>
                           </select>
                         </td>
                         <td>
                           <input
                             type="number"
+                            min="1"
+                            onChange={(e) =>
+                              this.cantidad(e, valor.id_producto)
+                            }
+                            id={`cantidad_${valor.id_producto}`}
                             className="form-control"
                             placeholder="Cantidad"
                             style={{ width: 60 }}

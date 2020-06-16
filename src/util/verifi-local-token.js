@@ -8,6 +8,6 @@ export function exist_token(cookie_token) {
 }
 
 export function domain() {
-  return "https://api-laboratorio-juanito.herokuapp.com";
-  //return "http://127.0.0.1:7000";
+  //return "https://api-laboratorio-juanito.herokuapp.com";
+  return "http://127.0.0.1:7000";
 }

@@ -14,6 +14,9 @@ import {
   TRAER_NAME_PRODUCTO,
   ERROR_NAME_LABORATORIO,
   TRAER_PRODUCTO,
+  CREAR_PRINCIPIO_ACTIVO,
+  TRAER_PRINCIPIO_ACTIVO,
+  ERROR_PRINCIPIO_ACTIVO,
 } from "../types/ProductoTypes";
 
 export const create_product = (data) => async (dispatch) => {
@@ -41,14 +44,14 @@ export const create_product = (data) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: ERROR_PRODUCTO_COMPLETE,
-      payload: `Error en crear producto: ${error}`,
+      payload: `(Create producto): ${error}`,
     });
 
     dispatch({
       type: NOTIFICACION_ACTIVIVDAD,
       payload: {
         tipo: "ERROR",
-        text: `Error al crear producto: ${error}`,
+        text: `(Create producto): ${error}`,
         date: new Date(),
       },
     });
@@ -94,14 +97,14 @@ export const create_name_product = (name) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: ERROR_PRODUCTO,
-      payload: `Error en create name producto: ${error.message}`,
+      payload: `(Name producto): ${error.message}`,
     });
 
     dispatch({
       type: NOTIFICACION_ACTIVIVDAD,
       payload: {
         tipo: "ERROR",
-        text: `Error en create name producto: ${error.message}`,
+        text: `(Name producto): ${error.message}`,
         date: new Date(),
       },
     });
@@ -151,14 +154,99 @@ export const create_name_laboratorio = (name) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: ERROR_NAME_LABORATORIO,
-      payload: `Error en create name laboratorio: ${error.message}`,
+      payload: `(Name laboratorio): ${error.message}`,
     });
 
     dispatch({
       type: NOTIFICACION_ACTIVIVDAD,
       payload: {
         tipo: "ERROR",
-        text: `Error en create name laboratorio: ${error.message}`,
+        text: `(Name laboratorio): ${error.message}`,
+        date: new Date(),
+      },
+    });
+  }
+};
+
+export const create_name_princ_activo = (name) => async (dispatch) => {
+  try {
+    const i = await axios({
+      method: "POST",
+      url: `${domain()}/api/producto/principio_activo`,
+      data: {
+        name_principio_activo: name,
+      },
+      headers: { "access-token": Cookie.get("access_token") },
+    });
+
+    if (i.data.feeback) {
+      dispatch({
+        type: ERROR_PRINCIPIO_ACTIVO,
+        payload: `${i.data.feeback}`,
+      });
+
+      dispatch({
+        type: NOTIFICACION_ACTIVIVDAD,
+        payload: {
+          tipo: "ERROR",
+          text: `${i.data.feeback}`,
+          date: new Date(),
+        },
+      });
+    } else {
+      dispatch({
+        type: CREAR_PRINCIPIO_ACTIVO,
+        payload: i.data,
+      });
+
+      dispatch({
+        type: NOTIFICACION_ACTIVIVDAD,
+        payload: {
+          tipo: "EXITO",
+          text: `Se creo neuvo (Principio activo)`,
+          date: new Date(),
+        },
+      });
+    }
+  } catch (error) {
+    dispatch({
+      type: ERROR_PRINCIPIO_ACTIVO,
+      payload: `(Principio activo): ${error.message}`,
+    });
+
+    dispatch({
+      type: NOTIFICACION_ACTIVIVDAD,
+      payload: {
+        tipo: "ERROR",
+        text: `(Principio activo): ${error.message}`,
+        date: new Date(),
+      },
+    });
+  }
+};
+
+export const obtener_principio_activo = () => async (dispatch) => {
+  try {
+    const i = await axios({
+      method: "GET",
+      url: `${domain()}/api/producto/principio_activo`,
+    });
+
+    dispatch({
+      type: TRAER_PRINCIPIO_ACTIVO,
+      payload: i.data,
+    });
+  } catch (error) {
+    dispatch({
+      type: ERROR_PRINCIPIO_ACTIVO,
+      payload: `(Principio activo): ${error.message}`,
+    });
+
+    dispatch({
+      type: NOTIFICACION_ACTIVIVDAD,
+      payload: {
+        tipo: "ERROR",
+        text: `(Principio activo): ${error.message}`,
         date: new Date(),
       },
     });

@@ -12,6 +12,9 @@ import {
   TRAER_NAME_LABORATORIO,
   CREAR_NAME_LABORATORIO,
   ERROR_NAME_LABORATORIO,
+  CREAR_PRINCIPIO_ACTIVO,
+  TRAER_PRINCIPIO_ACTIVO,
+  ERROR_PRINCIPIO_ACTIVO,
 } from "../types/ProductoTypes";
 
 const INITIAL_STATE = {
@@ -19,6 +22,7 @@ const INITIAL_STATE = {
   Busqueda_producto: [],
   Producto_Name: [],
   Laboratorio_Name: [],
+  Principio_activo: [],
   ////////////////
   cargando: false,
   error: "",
@@ -29,6 +33,9 @@ const INITIAL_STATE = {
   //////////////
   mensaje_producto_complete: "",
   error_producto_complete: "",
+  //////////////
+  error_principio_activo: "",
+  mensaje_principio_activo: "",
   //////////////
   notificaciones_actividades: [],
 };
@@ -52,6 +59,19 @@ export default (state = INITIAL_STATE, action) => {
         Producto: [],
         error: "",
         mensaje_producto_complete: "Producto creado exitosamente",
+      };
+
+    case CREAR_PRINCIPIO_ACTIVO:
+      return {
+        ...state,
+        Principio_activo: [],
+        mensaje_principio_activo: "principio activo creado exitosamente",
+      };
+
+    case ERROR_PRINCIPIO_ACTIVO:
+      return {
+        ...state,
+        error_principio_activo: action.payload,
       };
 
     case ERROR_PRODUCTO_COMPLETE:
@@ -81,6 +101,14 @@ export default (state = INITIAL_STATE, action) => {
 
     case TRAER_NAME_LABORATORIO:
       return { ...state, Laboratorio_Name: action.payload, cargando: false };
+
+    case TRAER_PRINCIPIO_ACTIVO:
+      return {
+        ...state,
+        Principio_activo: action.payload,
+        error_principio_activo: "",
+        mensaje_principio_activo: "",
+      };
 
     case CREAR_NAME_LABORATORIO:
       return {
