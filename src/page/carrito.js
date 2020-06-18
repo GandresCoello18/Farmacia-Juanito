@@ -3,6 +3,7 @@ import PropsType from "prop-types";
 import Load from "../componentes/preload";
 import Head from "../componentes/head";
 import Cookie from "js-cookie";
+import Alerta from "../componentes/alert";
 import moment from "moment";
 import { Link, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
@@ -77,6 +78,7 @@ class Carrito extends React.Component {
 
   componentWillUpdate(nextProps, nextState) {
     if (nextProps.ventasReducer.mensaje_ventas != "") {
+      console.log(this.props.history);
       this.props.history.push("/producto");
     }
   }
@@ -136,6 +138,17 @@ class Carrito extends React.Component {
   };
 
   confirmar_pago = () => {
+    const datosCarrito = this.props.carritoReducer.carrito;
+
+    for (let i = 0; i < datosCarrito.length; i++) {
+      datosCarrito[i].formato = document.getElementById(
+        `formato_${datosCarrito[i].id_producto}`
+      ).value;
+      datosCarrito[i].unidades = document.getElementById(
+        `cantidad_${datosCarrito[i].id_producto}`
+      ).value;
+    }
+
     const obj = {
       id_cliente: this.state.cliente_pago,
       descripcion: this.state.descripcion_pago,
@@ -144,13 +157,14 @@ class Carrito extends React.Component {
       total: Number(this.state.Total),
       efectivo: this.state.efectivo_pago,
       cambio: this.state.cambio_pago,
+      productos: datosCarrito,
     };
 
     if (obj.cambio == "$: Cambio") obj.cambio = 0;
 
-    this.props.crear_venta(obj);
+    console.log(obj);
 
-    this.props.limpiar_carrito();
+    this.props.crear_venta(obj);
   };
 
   load = () => {
@@ -193,10 +207,22 @@ class Carrito extends React.Component {
                   </tr>
                 </thead>
                 <tbody>
-                  {this.props.carritoReducer.carrito.length == 0 ? (
+                  {this.props.carritoReducer.cargar_carrito ? (
                     <tr>
-                      <td colSpan="14" className="p-2">
-                        {this.load()}
+                      <td colSpan="14">
+                        <Alerta
+                          titulo="No existen datos para mostrar"
+                          contenido="Por el momento no existen Productos almacenados en carrito."
+                        />
+                      </td>
+                    </tr>
+                  ) : this.props.carritoReducer.carrito.length == 0 ? (
+                    <tr>
+                      <td colSpan="14">
+                        <Alerta
+                          titulo="No existen datos para mostrar"
+                          contenido="Por el momento no existen Productos almacenados en carrito."
+                        />
                       </td>
                     </tr>
                   ) : (

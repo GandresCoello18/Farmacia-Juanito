@@ -9,6 +9,7 @@ const INITIAL_STATE = {
   carrito: [],
   error_carrito: "",
   mensaje_carrito: "",
+  cargar_carrito: true,
 };
 
 const array = [];
@@ -21,6 +22,7 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         carrito: array,
         error_carrito: "",
+        cargar_carrito: false,
       };
 
     case QUITAR_DEL_CARRITO:
@@ -35,6 +37,7 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         clientes: action.payload,
+        cargar_carrito: true,
       };
 
     case ERRROR_CARRITO:

@@ -5,9 +5,11 @@ import Nav from "../componentes/nav";
 import ConfirEliminar from "../componentes/confirmacion";
 import Footer from "../componentes/footer";
 import Cookie from "js-cookie";
+import Alerta from "../componentes/alert";
 import Load from "../componentes/preload";
 import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
+import { validar_status } from "../util/util-status";
 import { exist_token } from "../util/verifi-local-token";
 
 import {
@@ -195,9 +197,7 @@ class Stock extends React.Component {
     }
   };
 
-  load = () => {
-    return <Load />;
-  };
+  load = () => <Load />;
 
   render() {
     if (exist_token(Cookie.get("access_token")) == false) {
@@ -601,21 +601,26 @@ class Stock extends React.Component {
                   </tr>
                 </thead>
                 <tbody>
-                  {this.props.ProductoReducer.Producto.length == 0 ? (
+                  {this.props.ProductoReducer.Producto.cargando ? (
                     <tr>
                       <td colSpan="13" className="p-2">
                         {this.load()}
+                      </td>
+                    </tr>
+                  ) : this.props.ProductoReducer.Producto.length == 0 ? (
+                    <tr>
+                      <td colSpan="8">
+                        <Alerta
+                          titulo="No existen datos para mostrar"
+                          contenido="Por el momento no existen Productos."
+                        />
                       </td>
                     </tr>
                   ) : (
                     this.props.ProductoReducer.Producto.map((valor) => (
                       <tr
                         key={valor.id_producto}
-                        className={
-                          valor.estado == "Disponible"
-                            ? "alert-success"
-                            : "alert-danger"
-                        }
+                        className={validar_status(valor.estado)}
                       >
                         <td>{valor.principio_activo}</td>
                         <td>{valor.product_name}</td>

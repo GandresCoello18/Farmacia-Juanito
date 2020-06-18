@@ -1,10 +1,12 @@
 import React from "react";
+import PropType from "prop-types";
 import Notificacion from "../componentes/notificacion";
 import { connect } from "react-redux";
 import { eliminar_producto } from "../actions/productoAction";
 import { eliminar_cliente } from "../actions/clienteAction";
+import { eliminar_venta } from "../actions/ventasActios";
 
-class confirmacion extends React.Component {
+class Confirmacion extends React.Component {
   state = {
     styles: {
       btn_rojo: {
@@ -35,6 +37,8 @@ class confirmacion extends React.Component {
       case "cliente":
         this.props.eliminar_cliente(id);
         break;
+      case "producto_factura":
+        this.props.eliminar_venta(id);
     }
   };
 
@@ -94,9 +98,16 @@ class confirmacion extends React.Component {
   }
 }
 
+Confirmacion.prototypes = {
+  eliminar_producto: PropType.func,
+  eliminar_cliente: PropType.func,
+  eliminar_venta: PropType.func,
+};
+
 const mapDispachToProps = {
   eliminar_producto,
   eliminar_cliente,
+  eliminar_venta,
 };
 
-export default connect(null, mapDispachToProps)(confirmacion);
+export default connect(null, mapDispachToProps)(Confirmacion);

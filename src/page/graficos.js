@@ -18,7 +18,7 @@ class Graficos extends React.Component {
       ],
       datasets: [
         {
-          label: "Productos vendidos en la semana",
+          label: "Productos vendidos al dia",
           data: [
             Math.round(Math.random() * 20),
             Math.round(Math.random() * 18),
@@ -41,6 +41,35 @@ class Graficos extends React.Component {
             "rgba(54, 162, 235, 1)",
             "rgba(255, 206, 86, 1)",
             "rgba(75, 192, 192, 1)",
+            "rgba(153, 102, 255, 1)",
+            "rgba(255, 159, 64, 1)",
+          ],
+          borderWidth: 1,
+        },
+        {
+          label: "Monto del dia",
+          data: [
+            Math.round(Math.random() * 20),
+            Math.round(Math.random() * 18),
+            Math.round(Math.random() * 20),
+            Math.round(Math.random() * 19),
+            Math.round(Math.random() * 20),
+            Math.round(Math.random() * 20),
+            Math.round(Math.random() * 30),
+          ],
+          backgroundColor: [
+            "rgba(75, 192, 192, 0.2)",
+            "rgba(255, 206, 86, 0.2)",
+            "rgba(255, 99, 132, 0.2)",
+            "rgba(54, 162, 235, 0.2)",
+            "rgba(153, 102, 255, 0.2)",
+            "rgba(255, 159, 64, 0.2)",
+          ],
+          borderColor: [
+            "rgba(75, 192, 192, 1)",
+            "rgba(255, 99, 132, 1)",
+            "rgba(54, 162, 235, 1)",
+            "rgba(255, 206, 86, 1)",
             "rgba(153, 102, 255, 1)",
             "rgba(255, 159, 64, 1)",
           ],
@@ -127,7 +156,7 @@ class Graficos extends React.Component {
         <section className="container-fluid">
           <div className="row justify-content-center p-2">
             <div className="col-12 col-md-6">
-              <h4 className="text-center p-2">Ventas de producto semanal</h4>
+              <h4 className="text-center p-2">Ventas de la semana</h4>
 
               <Line data={this.state.data} />
             </div>

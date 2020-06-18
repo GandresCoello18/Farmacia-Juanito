@@ -1,4 +1,5 @@
 import React from "react";
+import PropsType from "prop-types";
 import Head from "../componentes/head";
 import Nav from "../componentes/nav";
 import Footer from "../componentes/footer";
@@ -6,18 +7,25 @@ import { Redirect } from "react-router-dom";
 import DetalleCard from "../componentes/card-detalles";
 import Alerta from "../componentes/alert";
 import Load from "../componentes/preload";
+import moment from "moment";
 import { connect } from "react-redux";
 import Cookie from "js-cookie";
-import Confir from "../componentes/confirmacion";
+import Confirmacion from "../componentes/confirmacion";
 import { exist_token } from "../util/verifi-local-token";
+import {
+  fecha_actual,
+  restar_fecha,
+  diferencias_de_dias_por_fecha,
+} from "../util/fecha";
+import { validar_status } from "../util/util-status";
 import "../assest/css/home.css";
 
-import * as ActionsUser from "../actions/usuariosActions";
+import { traer_ventas } from "../actions/ventasActios";
+import { obtener_producto_completos } from "../actions/productoAction";
 
 class Home extends React.Component {
   state = {
-    data_producto_por_caducar: [],
-    data_productos_sale_recientes: [],
+    one_factura: 0,
   };
 
   styles = {
@@ -41,21 +49,27 @@ class Home extends React.Component {
   };
 
   componentDidMount() {
-    this.props.traerTodos();
-    setTimeout(() => {
-      this.setState({
-        data_productos_sale_recientes: [
-          { id: "1" },
-          { id: "2" },
-          { id: "3" },
-          { id: "4" },
-          { id: "5" },
-          { id: "6" },
-          { id: "7" },
-        ],
-      });
-    }, 4000);
+    if (this.props.ventasReducer.ventas.length == 0) {
+      this.props.traer_ventas();
+    }
+    if (this.props.ProductoReducer.Producto.length == 0) {
+      this.props.obtener_producto_completos();
+    }
   }
+
+  validar_caducidad = (fecha_caducidad) => {
+    if (
+      Math.abs(
+        diferencias_de_dias_por_fecha(
+          fecha_caducidad,
+          restar_fecha(fecha_actual(), -30)
+        )
+      ) > 30
+    ) {
+      return true;
+    }
+    return false;
+  };
 
   load = () => {
     return <Load />;
@@ -80,72 +94,76 @@ class Home extends React.Component {
               <table className="table-striped mt-2 table-vendidos_recientes text-center">
                 <thead>
                   <tr>
-                    <th>Imagen</th>
-                    <th>Nombre</th>
-                    <th>Lote</th>
-                    <th>Reg Sani</th>
-                    <th>Laboratorio</th>
-                    <th>Cantidad</th>
-                    <th>Presentacion</th>
-                    <th>Miligramos</th>
-                    <th>Fecha de elaboracion</th>
-                    <th>Fecha de caducidad</th>
+                    <th>Descripcion</th>
                     <th>Cliente</th>
+                    <th>Correo</th>
+                    <th>Cedula / Ruc</th>
+                    <th>Desc</th>
                     <th>Total</th>
+                    <th>Efectivo</th>
+                    <th>Cambio</th>
+                    <th>Fecha</th>
                     <th>Opciones</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {this.state.data_productos_sale_recientes == 0 ? (
+                  {this.props.ventasReducer.carga_ventas ? (
                     <tr>
-                      <td colSpan="13" className="p-2">
-                        {this.load()}
+                      <td colSpan="8">{this.load()}</td>
+                    </tr>
+                  ) : this.props.ventasReducer.ventas.length == 0 ? (
+                    <tr>
+                      <td colSpan="8">
+                        <Alerta
+                          titulo="No existen datos para mostrar"
+                          contenido="Por el momento no existen ventas en esta fecha."
+                        />
                       </td>
                     </tr>
                   ) : (
-                    this.state.data_productos_sale_recientes.map((valor) => (
-                      <tr key={valor.id}>
-                        <td>
-                          {" "}
-                          <img src="img/medicamento/paracetamol.jpg" />{" "}
-                        </td>
-                        <td>Paracetamol</td>
-                        <td>200000633</td>
-                        <td>01182-mac-1-04-11</td>
-                        <td>Mi favorito</td>
-                        <td># 5</td>
-                        <td>Tabletas</td>
-                        <td>500</td>
-                        <td>20/02/2020</td>
-                        <td>12/05/2021</td>
-                        <td>Andres coello</td>
-                        <td>$ 18.50</td>
-                        <td>
-                          <button className="btn btn-mini btn-warning">
-                            Modificar
-                          </button>
-                          <span onClick={this.llamar}>
-                            <Confir />
-                          </span>
-                          <button
-                            className="btn btn-mini"
-                            style={{ backgroundColor: "trasparent" }}
-                          >
-                            <x-button style={this.styles.btn_azul}>
-                              <x-label>Detalles</x-label>
-                              <dialog style={this.styles.dialogo}>
-                                <DetalleCard />
-                                <DetalleCard />
-                                <DetalleCard />
-                                <DetalleCard />
-                                <DetalleCard />
-                                <DetalleCard />
-                              </dialog>
-                            </x-button>
-                          </button>
-                        </td>
-                      </tr>
-                    ))
+                    this.props.ventasReducer.ventas
+                      .filter((item) => item.estado == "Vendido")
+                      .reverse()
+                      .slice(0, 8)
+                      .map((valor) => (
+                        <tr key={valor.id_producto_fac}>
+                          <td>{valor.descripcion_f}</td>
+                          <td>
+                            {valor.nombres == "consumidor_final"
+                              ? valor.nombres
+                              : `${valor.nombres} - ${valor.apellidos}`}
+                          </td>
+                          <td>{valor.correo}</td>
+                          <td>{valor.identificacion}</td>
+                          <td>{valor.descuento}</td>
+                          <td>{valor.total}</td>
+                          <td>{valor.efectivo}</td>
+                          <td>{valor.cambio}</td>
+                          <td>
+                            {moment(valor.fecha_factura).format("LL, LTS")}
+                          </td>
+                          <td>
+                            <Confirmacion
+                              id={valor.id_producto_fac}
+                              tabla="producto_factura"
+                            />
+                            <button
+                              className="btn btn-mini"
+                              style={{ backgroundColor: "trasparent" }}
+                            >
+                              <x-button style={this.styles.btn_azul}>
+                                <x-label>Detalles</x-label>
+                                <dialog style={this.styles.dialogo}>
+                                  <DetalleCard
+                                    id_factura={valor.id_factura}
+                                    data={this.props.ventasReducer.ventas}
+                                  />
+                                </dialog>
+                              </x-button>
+                            </button>
+                          </td>
+                        </tr>
+                      ))
                   )}
                 </tbody>
               </table>
@@ -153,50 +171,72 @@ class Home extends React.Component {
             <hr />
             <h4 style={{ fontWeight: "bold" }}>Productos por caducar</h4>
             <div className="col-12 seccion-table-por-caducar">
-              <table className="table-striped mt-2 table-caducar text-center">
+              <table
+                className="table-striped mt-2 table-caducar text-center"
+                style={{ marginBottom: 40 }}
+              >
                 <thead>
                   <tr>
-                    <th>Imagen</th>
+                    <th>Activo</th>
                     <th>Nombre</th>
                     <th>Laboratorio</th>
-                    <th>Stock</th>
-                    <th>Presentacion</th>
-                    <th>Miligramos</th>
-                    <th>Fecha de elaboracion</th>
-                    <th>Fecha de caducidad</th>
+                    <th>Cantidad</th>
+                    <th>Present</th>
+                    <th>Medidas</th>
+                    <th># Lote</th>
+                    <th>Reg - Sanitario</th>
+                    <th>PVP</th>
+                    <th>PVF</th>
+                    <th>Elaboracion</th>
+                    <th>Caducidad</th>
                     <th>Opciones</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {this.state.data_producto_por_caducar == 0 ? (
+                  {this.props.ProductoReducer.Producto.cargando ? (
                     <tr>
-                      <td colSpan="9" className="p-2">
+                      <td colSpan="13" className="p-2">
+                        {this.load()}
+                      </td>
+                    </tr>
+                  ) : this.props.ProductoReducer.Producto.filter((item) =>
+                      this.validar_caducidad(item.fecha_caducidad)
+                    ).length == 0 ? (
+                    <tr>
+                      <td colSpan="13">
                         <Alerta
                           titulo="No existen datos para mostrar"
-                          contenido="Por el momento no existen productos que esten en peligro de expiracion."
+                          contenido="Por el momento no existen Productos en peligro a caducar."
                         />
                       </td>
                     </tr>
                   ) : (
-                    this.state.data_producto_por_caducar.map((valor) => (
-                      <tr>
+                    this.props.ProductoReducer.Producto.filter((item) =>
+                      this.validar_caducidad(item.fecha_caducidad)
+                    ).map((valor) => (
+                      <tr
+                        key={valor.id_producto}
+                        className={validar_status(valor.estado)}
+                      >
+                        <td>{valor.principio_activo}</td>
+                        <td>{valor.product_name}</td>
+                        <td>{valor.nombre_laboratorio}</td>
+                        <td>{valor.cantidad}</td>
+                        <td>{valor.presentacion}</td>
                         <td>
-                          {" "}
-                          <img src="img/medicamento/paracetamol.jpg" />{" "}
+                          {valor.medida} {valor.tipo_medida}
                         </td>
-                        <td>CSS</td>
-                        <td>28K</td>
-                        <td>photon.css</td>
-                        <td>CSS</td>
-                        <td>28K</td>
-                        <td>28K</td>
-                        <td>28K</td>
+                        <td>{valor.lote}</td>
+                        <td>{valor.registro_sanitario}</td>
+                        <td>{valor.pvp}</td>
+                        <td>{valor.pvf}</td>
+                        <td>{valor.fecha_elaboracion}</td>
+                        <td>{valor.fecha_caducidad}</td>
                         <td>
-                          <button className="btn btn-mini btn-warning">
-                            Modificar
-                          </button>
-
-                          <Confir />
+                          <Confirmacion
+                            id={valor.id_producto}
+                            tabla="productos"
+                          />
                         </td>
                       </tr>
                     ))
@@ -212,8 +252,20 @@ class Home extends React.Component {
   }
 }
 
-const mapStateToProps = (reducers) => {
-  return reducers.usuariosReducer;
+Home.prototypes = {
+  ventasReducer: PropsType.object,
+  ProductoReducer: PropsType.object,
+  traer_ventas: PropsType.func,
+  obtener_producto_completos: PropsType.func,
 };
 
-export default connect(mapStateToProps, ActionsUser)(Home);
+const mapStateToProps = ({ ventasReducer, ProductoReducer }) => {
+  return { ventasReducer, ProductoReducer };
+};
+
+const mapDispatchToProps = {
+  obtener_producto_completos,
+  traer_ventas,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

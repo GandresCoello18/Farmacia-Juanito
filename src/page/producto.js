@@ -4,6 +4,7 @@ import { Redirect } from "react-router-dom";
 import Head from "../componentes/head";
 import Nav from "../componentes/nav";
 import Cookie from "js-cookie";
+import Alerta from "../componentes/alert";
 import Footer from "../componentes/footer";
 import Load from "../componentes/preload";
 import { connect } from "react-redux";
@@ -119,10 +120,19 @@ class Productos extends React.Component {
                   </tr>
                 </thead>
                 <tbody>
-                  {this.props.ProductoReducer.Producto.length == 0 ? (
+                  {this.props.ProductoReducer.Producto.cargando ? (
                     <tr>
                       <td colSpan="13" className="p-2">
                         {this.load()}
+                      </td>
+                    </tr>
+                  ) : this.props.ProductoReducer.Producto.length == 0 ? (
+                    <tr>
+                      <td colSpan="8">
+                        <Alerta
+                          titulo="No existen datos para mostrar"
+                          contenido="Por el momento no existen Productos."
+                        />
                       </td>
                     </tr>
                   ) : (

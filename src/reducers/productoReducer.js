@@ -48,7 +48,6 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         Producto_Name: [],
-        cargando: false,
         error: "",
         mensaje: "Producto name creado exitosamente",
       };
@@ -58,6 +57,7 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         Producto: [],
         error: "",
+        cargando: true,
         mensaje_producto_complete: "Producto creado exitosamente",
       };
 
@@ -97,10 +97,10 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, Producto: action.payload, cargando: false };
 
     case TRAER_NAME_PRODUCTO:
-      return { ...state, Producto_Name: action.payload, cargando: false };
+      return { ...state, Producto_Name: action.payload };
 
     case TRAER_NAME_LABORATORIO:
-      return { ...state, Laboratorio_Name: action.payload, cargando: false };
+      return { ...state, Laboratorio_Name: action.payload };
 
     case TRAER_PRINCIPIO_ACTIVO:
       return {
@@ -114,7 +114,6 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         Laboratorio_Name: [],
-        cargando: false,
         mensaje_laboratorio: "Laboratio creado exitosamente",
       };
 
@@ -122,7 +121,6 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         Laboratorio_Name: [],
-        cargando: false,
         error_laboratorio: action.payload,
         mensaje_laboratorio: action.payload,
       };

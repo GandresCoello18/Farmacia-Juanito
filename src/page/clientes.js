@@ -3,6 +3,7 @@ import PropsType from "prop-types";
 import { exist_token } from "../util/verifi-local-token";
 import Nav from "../componentes/nav";
 import Cookie from "js-cookie";
+import Alerta from "../componentes/alert";
 import { connect } from "react-redux";
 import Load from "../componentes/preload";
 import Confir from "../componentes/confirmacion";
@@ -212,10 +213,19 @@ class Clientes extends React.Component {
                           </tr>
                         </thead>
                         <tbody>
-                          {this.props.clienteReducer.clientes.length == 0 ? (
+                          {this.props.clienteReducer.cargar_cliente ? (
                             <tr>
-                              <td colSpan="13" className="p-2">
+                              <td colSpan="6" className="p-2">
                                 {this.load()}
+                              </td>
+                            </tr>
+                          ) : this.props.clienteReducer.clientes.length == 0 ? (
+                            <tr>
+                              <td colSpan="6">
+                                <Alerta
+                                  titulo="No existen datos para mostrar"
+                                  contenido="Por el momento no existen clientes registrados."
+                                />
                               </td>
                             </tr>
                           ) : (

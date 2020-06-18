@@ -10,6 +10,7 @@ const INITIAL_STATE = {
   busqueda_cliente: [],
   error_cliente: "",
   mensaje_cliente: "",
+  cargar_cliente: true,
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -18,7 +19,7 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         clientes: action.payload,
-        cargando: false,
+        cargar_cliente: false,
         error_cliente: "",
       };
 
@@ -27,6 +28,7 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         clientes: [],
         error_cliente: "",
+        cargar_cliente: true,
         mensaje_cliente: "Se creo el cliente",
       };
 
