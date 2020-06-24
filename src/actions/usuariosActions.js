@@ -1,129 +1,89 @@
-import axios from "axios";
-import { domain } from "../util/verifi-local-token";
-import { TRAER_TODOS, CREAR_USER, CARGANDO, ERROR, TOKEN, } from "../types/usuariosTypes";
-import { TRAER_ULTIMOS_6, ERROR_HISTORY } from '../types/historySessionTypes';
+import {
+  verificacionCodeAccess,
+  create_count,
+  verificarEmail,
+  loginAccess,
+  sessionHistory,
+} from "../api/usuarios";
+import { CREAR_USER, CARGANDO, ERROR, TOKEN } from "../types/usuariosTypes";
+import { TRAER_ULTIMOS_6, ERROR_HISTORY } from "../types/historySessionTypes";
 
 export const crear_cuenta = (data, autorizacion) => async (dispatch) => {
   try {
     let user_register = {};
 
-    const obtenerTipo = await axios({
-      method: "get",
-      url: `${domain()}/view/home/verificar/${autorizacion}`,
-    });
+    verificacionCodeAccess(autorizacion).then((res) => {
+      if (res.data.feeback == "Acceso concedido") {
+        user_register = {
+          ...data,
+          tipo: res.data.info[0].tipo,
+        };
 
-    if (obtenerTipo.data.feeback == "Acceso concedido") {
-      user_register = {
-        ...data,
-        tipo: obtenerTipo.data.info[0].tipo,
-      };
-    } else {
-      dispatch({
-        type: ERROR,
-        payload: obtenerTipo.data.feeback,
-      });
-    }
-
-    const respuesta = await axios({
-      method: "POST",
-      url: `${domain()}/api/usuario`,
-      data: user_register,
+        create_count(user_register).then((res) => {
+          if (res.data.feeback != undefined || res.data.feeback != null) {
+            dispatch({
+              type: ERROR,
+              payload: res.data.feeback,
+            });
+          } else {
+            dispatch({
+              type: CREAR_USER,
+              payload: res.data,
+            });
+            dispatch({
+              type: CARGANDO,
+              payload: true,
+            });
+          }
+        });
+      } else {
+        dispatch({
+          type: ERROR,
+          payload: res.data.feeback,
+        });
+      }
     });
-    if (respuesta.data.feeback != undefined || respuesta.data.feeback != null) {
-      dispatch({
-        type: ERROR,
-        payload: respuesta.data.feeback,
-      });
-    } else {
-      dispatch({
-        type: CREAR_USER,
-        payload: respuesta.data,
-      });
-      dispatch({
-        type: CARGANDO,
-        payload: true,
-      });
-    }
   } catch (error) {
     dispatch({
       type: ERROR,
-      payload: "Error al crear Usuario usuariosActions.",
+      payload: "Error (Usuario) usuariosActions: " + error.message,
     });
   }
 };
 
 export const login = (email, password) => async (dispatch) => {
   try {
-    const email_on = await axios({
-      method: "get",
-      url: `${domain()}/api/email/verificar/email/${email}`,
-    });
-
-    if (email_on.data == [] || email_on.data == 0) {
-      dispatch({
-        type: ERROR,
-        payload: `No existe cuenta asociada con: ${email}`,
-      });
-    } else if (email_on.data[0].email_on == 0) {
-      dispatch({
-        type: ERROR,
-        payload: `Este email (${email}) no esta verificado, ingrese a su tablero de mensajes para confirmarlo`,
-      });
-    } else {
-      
-      const login_user = await axios({
-        method: "post",
-        url: `${domain()}/api/login/autenticacion`,
-        data: {
-          email,
-          password,
-        },
-      });
-
-      if (
-        login_user.data.feeback != undefined ||
-        login_user.data.feeback != null
-      ) {
-        
+    verificarEmail(email).then((res) => {
+      if (res.data == [] || res.data == 0) {
         dispatch({
           type: ERROR,
-          payload: login_user.data.feeback,
+          payload: `No existe cuenta asociada con: ${email}`,
+        });
+      } else if (res.data[0].email_on == 0) {
+        dispatch({
+          type: ERROR,
+          payload: `Este email (${email}) no esta verificado, ingrese a su tablero de mensajes para confirmarlo`,
         });
       } else {
-        dispatch({
-          type: TOKEN,
-          payload: login_user.data.token,
+        loginAccess(email, password).then((res) => {
+          if (res.data.feeback != undefined || res.data.feeback != null) {
+            dispatch({
+              type: ERROR,
+              payload: res.data.feeback,
+            });
+          } else {
+            dispatch({
+              type: TOKEN,
+              payload: res.data.token,
+            });
+          }
         });
       }
-    }
-  } catch (error) {
-    
-    dispatch({
-      type: ERROR,
-      payload: "Fallo en login, usuario Actions.",
-    });
-  
-  }
-};
-
-export const traerTodos = () => async (dispatch) => {
-  dispatch({
-    type: CARGANDO,
-  });
-
-  try {
-    const respuesta = await axios.get(
-      "https://jsonplaceholder.typicode.com/users"
-    );
-    dispatch({
-      type: TRAER_TODOS,
-      payload: respuesta.data,
     });
   } catch (error) {
-    console.log(error.message);
     dispatch({
       type: ERROR,
-      payload: "Información de usuario no disponible.",
+      payload: "Fallo en login, usuario Actions: " + error.message,
     });
   }
 };
@@ -145,19 +105,16 @@ export const restaurar_user = () => async (dispatch) => {
 
 export const history_session = () => async (dispatch) => {
   try {
-    const respuesta = await axios({
-      method: 'get',
-      url: `${domain()}/api/usuario/history-session?limite=6`,
-    });
-
-    dispatch({
-      type: TRAER_ULTIMOS_6,
-      payload: respuesta.data,
+    sessionHistory().then((res) => {
+      dispatch({
+        type: TRAER_ULTIMOS_6,
+        payload: res.data,
+      });
     });
   } catch (error) {
     dispatch({
       type: ERROR_HISTORY,
-      payload: `Error en history: ${error}`,
+      payload: `Error en history: ${error.message}`,
     });
   }
 };

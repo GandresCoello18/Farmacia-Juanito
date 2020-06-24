@@ -109,11 +109,11 @@ class Home extends React.Component {
                 <tbody>
                   {this.props.ventasReducer.carga_ventas ? (
                     <tr>
-                      <td colSpan="8">{this.load()}</td>
+                      <td colSpan="10">{this.load()}</td>
                     </tr>
                   ) : this.props.ventasReducer.ventas.length == 0 ? (
                     <tr>
-                      <td colSpan="8">
+                      <td colSpan="10">
                         <Alerta
                           titulo="No existen datos para mostrar"
                           contenido="Por el momento no existen ventas en esta fecha."

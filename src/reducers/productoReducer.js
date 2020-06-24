@@ -3,7 +3,6 @@ import {
   CREAR_PRODUCTO,
   BUSCAR_PRODUCTO,
   ERROR_PRODUCTO_COMPLETE,
-  ELIMINAR_PRODUCTO,
   NOTIFICACION_ACTIVIVDAD,
   CREAR_NAME_PRODUCTO,
   TRAER_NAME_PRODUCTO,
@@ -55,7 +54,6 @@ export default (state = INITIAL_STATE, action) => {
     case CREAR_PRODUCTO:
       return {
         ...state,
-        Producto: [],
         error: "",
         cargando: true,
         mensaje_producto_complete: "Producto creado exitosamente",
@@ -129,12 +127,6 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         Busqueda_producto: action.payload,
-      };
-
-    case ELIMINAR_PRODUCTO:
-      return {
-        ...state,
-        mensaje_producto_complete: action.payload,
       };
 
     case NOTIFICACION_ACTIVIVDAD:

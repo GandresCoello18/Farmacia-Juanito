@@ -2,7 +2,6 @@ export const TRAER_PRODUCTO = "producto_traer_todos";
 export const CREAR_PRODUCTO = "producto_create";
 export const ERROR_PRODUCTO_COMPLETE = "producto_error_complete";
 export const BUSCAR_PRODUCTO = "buscar_producto";
-export const ELIMINAR_PRODUCTO = "eliminar_producto";
 
 export const CARGANDO_PRODUCTO = "producto_cargando";
 export const ERROR_PRODUCTO = "Producto_error";

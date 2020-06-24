@@ -5,10 +5,9 @@ import {
   MENSAJE_VENTAS,
   ERROR_VENTAS,
 } from "../types/ventasTypes";
+import { createVenta, obtenerVentas, eliminarVentas } from "../api/ventas";
 import { LIMPIAR_CARRITO } from "../types/carritoTypes";
 import { NOTIFICACION_ACTIVIVDAD } from "../types/ProductoTypes";
-import axios from "axios";
-import { domain } from "../util/verifi-local-token";
 
 export const crear_venta = (data) => async (dispatch, getState) => {
   setTimeout(() => {
@@ -20,17 +19,19 @@ export const crear_venta = (data) => async (dispatch, getState) => {
       payload: array,
     });
   }, 3000);
-
   try {
-    await axios({
-      method: "POST",
-      url: `${domain()}/api/factura`,
-      data: data,
-    });
+    createVenta(data).then((res) => {
+      dispatch({
+        type: CREAR_VENTAS,
+        payload: "Venta Exitosa",
+      });
 
-    dispatch({
-      type: CREAR_VENTAS,
-      payload: "Venta Exitosa",
+      obtenerVentas().then((res) => {
+        dispatch({
+          type: TRAER_VENTAS,
+          payload: res.data,
+        });
+      });
     });
   } catch (error) {
     dispatch({
@@ -51,14 +52,11 @@ export const crear_venta = (data) => async (dispatch, getState) => {
 
 export const traer_ventas = () => async (dispatch) => {
   try {
-    const i = await axios({
-      method: "GET",
-      url: `${domain()}/api/venta`,
-    });
-
-    dispatch({
-      type: TRAER_VENTAS,
-      payload: i.data,
+    obtenerVentas().then((res) => {
+      dispatch({
+        type: TRAER_VENTAS,
+        payload: res.data,
+      });
     });
   } catch (error) {
     dispatch({
@@ -98,9 +96,13 @@ export const limpiar_ventas = () => async (dispatch) => {
 
 export const eliminar_venta = (id) => async (dispatch) => {
   try {
-    await axios({
-      method: "DELETE",
-      url: `${domain()}/api/venta/${id}`,
+    eliminarVentas(id).then((res) => {
+      obtenerVentas().then((res) => {
+        dispatch({
+          type: TRAER_VENTAS,
+          payload: res.data,
+        });
+      });
     });
   } catch (error) {
     dispatch({

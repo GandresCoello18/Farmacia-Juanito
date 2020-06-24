@@ -6,13 +6,13 @@ import { createStore, applyMiddleware } from "redux";
 import reduxThunk from "redux-thunk";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
+import { composeWithDevTools } from "redux-devtools-extension";
 
 import reducers from "./reducers";
 
 const store = createStore(
   reducers, // Reducers
-  {}, // Estado inicial
-  applyMiddleware(reduxThunk)
+  composeWithDevTools(applyMiddleware(reduxThunk))
 );
 
 ReactDOM.render(

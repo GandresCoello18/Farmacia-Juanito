@@ -59,7 +59,7 @@ class Stock extends React.Component {
   }
 
   componentWillUpdate(nextProps, nextState) {
-    if (nextProps.ProductoReducer.mensaje != "") {
+    /*if (nextProps.ProductoReducer.mensaje != "") {
       document.getElementById(
         "sms-name-product"
       ).innerText = `${nextProps.ProductoReducer.mensaje}`;
@@ -81,13 +81,13 @@ class Stock extends React.Component {
       ).innerText = `${nextProps.ProductoReducer.mensaje_producto_complete}`;
       this.limpiar_sms("sms_product_complete");
       this.props.obtener_producto_completos();
-    }
+    }*/
   }
 
   limpiar_sms = (sms_span) => {
-    this.state.limpiar_a_tiempo = setTimeout(() => {
+    /*this.state.limpiar_a_tiempo = setTimeout(() => {
       document.getElementById(sms_span).innerText = "";
-    }, 3000);
+    }, 3000);*/
   };
 
   componentWillUnmount() {
@@ -154,23 +154,21 @@ class Stock extends React.Component {
     ) {
       alert("Campos vacios en agregar productos a stock");
     } else {
-      let data = new FormData();
-
-      // let file = document.getElementById("foto-producto").files[0];
-      // data.append("file", file);
-      data.append("id_name_product", this.state.producto);
-      data.append("id_name_laboratorio", this.state.laboratorio);
-      data.append("cantidad", this.state.cantidad);
-      data.append("presentacion", this.state.presentacion);
-      data.append("lote", this.state.lote);
-      data.append("registro_sanitario", this.state.registro_sanitario);
-      data.append("dosis", this.state.dosis);
-      data.append("tipo_dosis", this.state.tipo_dosis);
-      data.append("fecha_elaboracion", this.state.fecha_elaboracion);
-      data.append("fecha_caducidad", this.state.fecha_caducidad);
-      data.append("pvp", this.state.pvp);
-      data.append("pvf", this.state.pvf);
-      data.append("id_principio_activo,", this.state.principio_activo);
+      let data = {
+        id_name_product: this.state.producto,
+        id_name_laboratorio: this.state.laboratorio,
+        cantidad: this.state.cantidad,
+        presentacion: this.state.presentacion,
+        lote: this.state.lote,
+        registro_sanitario: this.state.registro_sanitario,
+        dosis: this.state.dosis,
+        tipo_dosis: this.state.tipo_dosis,
+        fecha_elaboracion: this.state.fecha_elaboracion,
+        fecha_caducidad: this.state.fecha_caducidad,
+        pvp: this.state.pvp,
+        pvf: this.state.pvf,
+        id_principio_activo: this.state.principio_activo,
+      };
 
       this.props.create_product(data);
     }
@@ -393,7 +391,7 @@ class Stock extends React.Component {
                           name="cantidad"
                           onChange={this.handleInputChange}
                           placeholder="100"
-                          defaultValue={1}
+                          defaultValue={0}
                         />
                       </div>
                       <div className="col p-2">

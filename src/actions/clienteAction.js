@@ -1,5 +1,6 @@
 import axios from "axios";
 import { domain } from "../util/verifi-local-token";
+import { createCliente, traerCLiente } from "../api/clientes";
 import {
   CREAR_CLIENTE,
   TRAER_CLIENTES,
@@ -16,54 +17,46 @@ export const crear_cliente = (
   direccion
 ) => async (dispatch) => {
   try {
-    const i = await axios({
-      method: "post",
-      url: `${domain()}/api/cliente`,
-      data: {
-        nombre,
-        apellido,
-        identificacion,
-        correo,
-        direccion,
-      },
-    });
+    createCliente(nombre, apellido, identificacion, correo, direccion).then(
+      (res) => {
+        if (res.data.feeback != undefined) {
+          dispatch({
+            type: ERROR_CLIENTE,
+            payload: res.data.feeback,
+          });
 
-    if (i.data.feeback != undefined) {
-      dispatch({
-        type: ERROR_CLIENTE,
-        payload: i.data.feeback,
-      });
+          dispatch({
+            type: NOTIFICACION_ACTIVIVDAD,
+            payload: {
+              tipo: "ERROR",
+              text: `(Cliente) ${res.data.feeback}`,
+              date: new Date(),
+            },
+          });
 
-      dispatch({
-        type: NOTIFICACION_ACTIVIVDAD,
-        payload: {
-          tipo: "ERROR",
-          text: `(Cliente) ${i.data.feeback}`,
-          date: new Date(),
-        },
-      });
+          setTimeout(() => {
+            dispatch({
+              type: ERROR_CLIENTE,
+              payload: "",
+            });
+          }, 3000);
+        } else {
+          dispatch({
+            type: CREAR_CLIENTE,
+            payload: res.data,
+          });
 
-      setTimeout(() => {
-        dispatch({
-          type: ERROR_CLIENTE,
-          payload: "",
-        });
-      }, 3000);
-    } else {
-      dispatch({
-        type: CREAR_CLIENTE,
-        payload: i.data,
-      });
-
-      dispatch({
-        type: NOTIFICACION_ACTIVIVDAD,
-        payload: {
-          tipo: "EXITO",
-          text: "(Cliente) Se creo cliente/s correctamente",
-          date: new Date(),
-        },
-      });
-    }
+          dispatch({
+            type: NOTIFICACION_ACTIVIVDAD,
+            payload: {
+              tipo: "EXITO",
+              text: "(Cliente) Se creo cliente/s correctamente",
+              date: new Date(),
+            },
+          });
+        }
+      }
+    );
   } catch (error) {
     dispatch({
       type: ERROR_CLIENTE,
@@ -83,19 +76,16 @@ export const crear_cliente = (
 
 export const traer_clientes = () => async (dispatch) => {
   try {
-    const i = await axios({
-      method: "get",
-      url: `${domain()}/api/cliente`,
-    });
+    traerCLiente().then((res) => {
+      dispatch({
+        type: TRAER_CLIENTES,
+        payload: res.data,
+      });
 
-    dispatch({
-      type: TRAER_CLIENTES,
-      payload: i.data,
-    });
-
-    dispatch({
-      type: BUSQUEDA_CLIENTES,
-      payload: i.data,
+      dispatch({
+        type: BUSQUEDA_CLIENTES,
+        payload: res.data,
+      });
     });
   } catch (error) {
     dispatch({
