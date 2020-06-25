@@ -45,3 +45,13 @@ export const loginAccess = async (email, password) => {
     },
   });
 };
+
+/////////////////  METODO DE PETICION DELETE
+
+export const cleanHistory = async () => {
+  return await axios({
+    method: "DELETE",
+    url: `${domain()}/api/usuario/history-session`,
+    headers: { "access-token": Cookie.get("access_token") },
+  });
+};

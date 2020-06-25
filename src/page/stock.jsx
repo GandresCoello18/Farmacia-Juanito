@@ -8,7 +8,7 @@ import Cookie from "js-cookie";
 import Alerta from "../componentes/alert";
 import Load from "../componentes/preload";
 import { connect } from "react-redux";
-import { Redirect } from "react-router-dom";
+import { Redirect, Link } from "react-router-dom";
 import { validar_status } from "../util/util-status";
 import { exist_token } from "../util/verifi-local-token";
 
@@ -41,6 +41,15 @@ class Stock extends React.Component {
     pvp: 0,
     pvf: 0,
     limpiar_a_tiempo: null,
+  };
+
+  styles = {
+    dialog: {
+      width: 300,
+      height: "100%",
+      right: 0,
+      left: "auto",
+    },
   };
 
   componentDidMount() {
@@ -244,11 +253,13 @@ class Stock extends React.Component {
                       value="Registrar"
                       onClick={this.add_name_product}
                     />{" "}
-                    &nbsp; &nbsp;{" "}
-                    <span
-                      style={{ color: "#229954", fontWeight: "bold" }}
-                      id="sms-name-product"
-                    ></span>
+                    <Link
+                      className="btn btn-primary mt-2"
+                      style={{ position: "absolute", right: 10 }}
+                      to="/detalles-productos"
+                    >
+                      Producto y mas detalles
+                    </Link>
                   </form>
                 </dialog>
               </x-button>
@@ -284,11 +295,13 @@ class Stock extends React.Component {
                       value="Registrar"
                       onClick={this.add_name_laboratorio}
                     />{" "}
-                    &nbsp; &nbsp;{" "}
-                    <span
-                      style={{ color: "#229954", fontWeight: "bold" }}
-                      id="sms-name-laboratorio"
-                    ></span>
+                    <Link
+                      className="btn btn-primary mt-2"
+                      style={{ position: "absolute", right: 10 }}
+                      to="/detalles-productos"
+                    >
+                      Producto y mas detalles
+                    </Link>
                   </form>
                 </dialog>
               </x-button>
@@ -559,11 +572,13 @@ class Stock extends React.Component {
                       value="Registrar"
                       onClick={this.add_name_prin_activo}
                     />{" "}
-                    &nbsp; &nbsp;{" "}
-                    <span
-                      style={{ color: "#229954", fontWeight: "bold" }}
-                      id="sms-name-laboratorio"
-                    ></span>
+                    <Link
+                      className="btn btn-primary mt-2"
+                      style={{ position: "absolute", right: 10 }}
+                      to="/detalles-productos"
+                    >
+                      Producto y mas detalles
+                    </Link>
                   </form>
                 </dialog>
               </x-button>
@@ -607,7 +622,7 @@ class Stock extends React.Component {
                     </tr>
                   ) : this.props.ProductoReducer.Producto.length == 0 ? (
                     <tr>
-                      <td colSpan="8">
+                      <td colSpan="13">
                         <Alerta
                           titulo="No existen datos para mostrar"
                           contenido="Por el momento no existen Productos."

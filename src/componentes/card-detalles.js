@@ -56,7 +56,7 @@ const DetallesCard = ({ id_factura, data }) => {
                     </li>
                   </ul>
                   <br />
-                  <span>
+                  <span className="fecha-vendido">
                     Vendido en:{" "}
                     <b>{moment(item.fecha_factura).format("LL, LTS")}</b>
                   </span>

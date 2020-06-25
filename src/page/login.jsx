@@ -273,9 +273,7 @@ class Login extends React.Component {
   }
 }
 
-Login.prototypes = {
-  
-}
+Login.prototypes = {};
 
 const mapStateToProps = (state) => {
   return state.usuariosReducer;

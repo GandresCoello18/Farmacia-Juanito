@@ -3,7 +3,7 @@
   background-color: #fff;
   color: #000;
   padding: 20px;
-  border-bottom: 2px solid #6eb4f7;
+  border-bottom: 4px solid #6eb4f7;
 }
 .detalles-compra img {
   width: 180px;
@@ -11,5 +11,16 @@
   background-color: red;
 }
 .detalles-compra ul li {
-  padding: 7px 0px;
+  padding: 5px 0px;
+  background-color: darkslategrey;
+  border-radius: 10px;
+  margin-top: 5px;
+  color: #fff;
+  border: 1px solid #fff;
+}
+.detalles-compra .fecha-vendido {
+  background-color: tomato;
+  color: #fff;
+  padding: 6px;
+  border-radius: 10px;
 }

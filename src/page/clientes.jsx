@@ -34,12 +34,12 @@ class Clientes extends React.Component {
   }
 
   componentWillUpdate(nextProps, nextState) {
-    if (nextProps.clienteReducer.mensaje_cliente != "") {
+    /*if (nextProps.clienteReducer.mensaje_cliente != "") {
       alert(`${nextProps.clienteReducer.mensaje_cliente}`);
     }
     if (nextProps.clienteReducer.mensaje_cliente == "Se creo el cliente") {
       this.props.traer_clientes();
-    }
+    }*/
   }
 
   handleInputChange = (event) => {
@@ -191,7 +191,12 @@ class Clientes extends React.Component {
                     className="row justify-content-start"
                     style={{ marginLeft: 40 }}
                   >
-                    <h4 className="p-2 text-left mt-5">Clientes:</h4>
+                    <h4
+                      className="p-2 text-left mt-5"
+                      style={{ fontWeight: "bold" }}
+                    >
+                      Clientes:
+                    </h4>
                     <div className="col-5">
                       <input
                         type="text"

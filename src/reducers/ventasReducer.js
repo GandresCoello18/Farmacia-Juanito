@@ -20,7 +20,6 @@ export default (state = INITIAL_STATE, action) => {
     case CREAR_VENTAS:
       return {
         ...state,
-        ventas: [],
         mensaje_ventas: action.payload,
         carga_ventas: true,
       };

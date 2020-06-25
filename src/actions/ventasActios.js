@@ -6,24 +6,40 @@ import {
   ERROR_VENTAS,
 } from "../types/ventasTypes";
 import { createVenta, obtenerVentas, eliminarVentas } from "../api/ventas";
+import { obtenerProductoCompleto } from "../api/producto";
 import { LIMPIAR_CARRITO } from "../types/carritoTypes";
-import { NOTIFICACION_ACTIVIVDAD } from "../types/ProductoTypes";
+import {
+  NOTIFICACION_ACTIVIVDAD,
+  TRAER_PRODUCTO,
+  BUSCAR_PRODUCTO,
+} from "../types/ProductoTypes";
 
 export const crear_venta = (data) => async (dispatch, getState) => {
-  setTimeout(() => {
-    const array = getState().carritoReducer.carrito;
-    array.splice(0, array.length);
-
-    dispatch({
-      type: LIMPIAR_CARRITO,
-      payload: array,
-    });
-  }, 3000);
   try {
     createVenta(data).then((res) => {
       dispatch({
         type: CREAR_VENTAS,
         payload: "Venta Exitosa",
+      });
+
+      const array = getState().carritoReducer.carrito;
+      array.splice(0, array.length);
+
+      dispatch({
+        type: LIMPIAR_CARRITO,
+        payload: array,
+      });
+
+      obtenerProductoCompleto().then((res) => {
+        dispatch({
+          type: TRAER_PRODUCTO,
+          payload: res.data,
+        });
+
+        dispatch({
+          type: BUSCAR_PRODUCTO,
+          payload: res.data,
+        });
       });
 
       obtenerVentas().then((res) => {

@@ -7,7 +7,10 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import Alerta from "../componentes/alert";
 import "../assest/css/nav.css";
-import { history_session } from "../actions/usuariosActions";
+import {
+  history_session,
+  limpiar_history_session,
+} from "../actions/usuariosActions";
 
 class Nav extends React.Component {
   state = {};
@@ -215,6 +218,18 @@ class Nav extends React.Component {
                     />
                   )}
                 </ul>
+                <strong
+                  className="btn-limpiar-history"
+                  onClick={() => {
+                    if (
+                      this.props.userHistoryReducer.historySession.length > 1
+                    ) {
+                      this.props.limpiar_history_session();
+                    }
+                  }}
+                >
+                  Limpiar historial
+                </strong>
               </dialog>
             </x-button>
           </div>
@@ -313,6 +328,7 @@ Nav.prototypes = {
   ProductoReducer: PropsType.object,
   carritoReducer: PropsType.object,
   history_session: PropsType.func,
+  limpiar_history_session: PropsType.func,
 };
 
 const mapStateToProps = ({
@@ -325,6 +341,7 @@ const mapStateToProps = ({
 
 const mapDispchToProps = {
   history_session,
+  limpiar_history_session,
 };
 
 export default connect(mapStateToProps, mapDispchToProps)(Nav);

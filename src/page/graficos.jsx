@@ -1,7 +1,10 @@
 import React from "react";
+import Cookie from "js-cookie";
+import { Redirect } from "react-router-dom";
 import Head from "../componentes/head";
 import Nav from "../componentes/nav";
 import Footer from "../componentes/footer";
+import { exist_token } from "../util/verifi-local-token";
 import { Line, Bar } from "react-chartjs-2";
 
 class Graficos extends React.Component {
@@ -148,6 +151,9 @@ class Graficos extends React.Component {
   }
 
   render() {
+    if (exist_token(Cookie.get("access_token")) == false) {
+      return <Redirect to="/login" />;
+    }
     return (
       <>
         <Head titulo="Graficos" />

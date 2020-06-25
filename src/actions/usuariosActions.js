@@ -4,9 +4,11 @@ import {
   verificarEmail,
   loginAccess,
   sessionHistory,
+  cleanHistory,
 } from "../api/usuarios";
 import { CREAR_USER, CARGANDO, ERROR, TOKEN } from "../types/usuariosTypes";
 import { TRAER_ULTIMOS_6, ERROR_HISTORY } from "../types/historySessionTypes";
+import { NOTIFICACION_ACTIVIVDAD } from "../types/ProductoTypes";
 
 export const crear_cuenta = (data, autorizacion) => async (dispatch) => {
   try {
@@ -109,6 +111,33 @@ export const history_session = () => async (dispatch) => {
       dispatch({
         type: TRAER_ULTIMOS_6,
         payload: res.data,
+      });
+    });
+  } catch (error) {
+    dispatch({
+      type: ERROR_HISTORY,
+      payload: `Error en history: ${error.message}`,
+    });
+  }
+};
+
+export const limpiar_history_session = () => async (dispatch) => {
+  try {
+    cleanHistory().then((res) => {
+      sessionHistory().then((res) => {
+        dispatch({
+          type: TRAER_ULTIMOS_6,
+          payload: res.data,
+        });
+      });
+
+      dispatch({
+        type: NOTIFICACION_ACTIVIVDAD,
+        payload: {
+          tipo: "EXITO",
+          text: `${res.data.feeback}`,
+          date: new Date(),
+        },
       });
     });
   } catch (error) {

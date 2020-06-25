@@ -77,10 +77,10 @@ class Carrito extends React.Component {
   }
 
   componentWillUpdate(nextProps, nextState) {
-    if (nextProps.ventasReducer.mensaje_ventas != "") {
+    /*if (nextProps.ventasReducer.mensaje_ventas != "") {
       console.log(this.props.history);
       this.props.history.push("/producto");
-    }
+    }*/
   }
 
   handleInputChange = (event) => {
@@ -165,6 +165,7 @@ class Carrito extends React.Component {
     console.log(obj);
 
     this.props.crear_venta(obj);
+    this.props.history.push("/producto");
   };
 
   load = () => {

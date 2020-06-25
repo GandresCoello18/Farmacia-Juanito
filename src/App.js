@@ -3,6 +3,7 @@ import { Switch, Route, BrowserRouter as Router } from "react-router-dom";
 import Home from "./page/home";
 import Login from "./page/login";
 import Producto from "./page/producto";
+import DetalleProduct from "./page/detalles-productos";
 import Stock from "./page/stock";
 import Clientes from "./page/clientes";
 import Graficos from "./page/graficos";
@@ -18,6 +19,7 @@ function App() {
           <Route exact path="/" component={Home} />
           <Route exact path="/login" component={Login} />
           <Route exact path="/producto" component={Producto} />
+          <Route exact path="/detalles-productos" component={DetalleProduct} />
           <Route exact path="/stock" component={Stock} />
           <Route exact path="/graficos" component={Graficos} />
           <Route exact path="/clientes" component={Clientes} />

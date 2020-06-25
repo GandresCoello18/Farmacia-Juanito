@@ -1,6 +1,4 @@
-import axios from "axios";
-import { domain } from "../util/verifi-local-token";
-import { createCliente, traerCLiente } from "../api/clientes";
+import { createCliente, traerCLiente, eliminarCliente } from "../api/clientes";
 import {
   CREAR_CLIENTE,
   TRAER_CLIENTES,
@@ -54,20 +52,32 @@ export const crear_cliente = (
               date: new Date(),
             },
           });
+
+          traerCLiente().then((res) => {
+            dispatch({
+              type: TRAER_CLIENTES,
+              payload: res.data,
+            });
+
+            dispatch({
+              type: BUSQUEDA_CLIENTES,
+              payload: res.data,
+            });
+          });
         }
       }
     );
   } catch (error) {
     dispatch({
       type: ERROR_CLIENTE,
-      payload: `Error en crear cliente: ${error}`,
+      payload: `Error (cliente): ${error.message}`,
     });
 
     dispatch({
       type: NOTIFICACION_ACTIVIVDAD,
       payload: {
         tipo: "ERROR",
-        text: `(Cliente) Error en crear cliente: ${error}`,
+        text: `(Cliente) Error en crear cliente: ${error.message}`,
         date: new Date(),
       },
     });
@@ -90,14 +100,14 @@ export const traer_clientes = () => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: ERROR_CLIENTE,
-      payload: `Error al traer cliente: ${error}`,
+      payload: `Error al traer cliente: ${error.message}`,
     });
 
     dispatch({
       type: NOTIFICACION_ACTIVIVDAD,
       payload: {
         tipo: "ERROR",
-        text: `(Cliente) Error al mostrar cliente: ${error}`,
+        text: `(Cliente) Error al mostrar cliente: ${error.message}`,
         date: new Date(),
       },
     });
@@ -113,23 +123,32 @@ export const busqueda_en_clientes = (array) => async (dispatch) => {
 
 export const eliminar_cliente = (id) => async (dispatch) => {
   try {
-    await axios({
-      method: "DELETE",
-      url: `${domain()}/api/cliente/${id}`,
-    });
+    eliminarCliente(id).then((res) => {
+      dispatch({
+        type: NOTIFICACION_ACTIVIVDAD,
+        payload: {
+          tipo: "EXITO",
+          text: `(Cliente) se elimino el cliente`,
+          date: new Date(),
+        },
+      });
 
-    dispatch({
-      type: NOTIFICACION_ACTIVIVDAD,
-      payload: {
-        tipo: "EXITO",
-        text: `(Cliente) Error al eliminar cliente`,
-        date: new Date(),
-      },
+      traerCLiente().then((res) => {
+        dispatch({
+          type: TRAER_CLIENTES,
+          payload: res.data,
+        });
+
+        dispatch({
+          type: BUSQUEDA_CLIENTES,
+          payload: res.data,
+        });
+      });
     });
   } catch (error) {
     dispatch({
       type: ERROR_CLIENTE,
-      payload: `Error al eliminar cliente: ${error}`,
+      payload: `Error al eliminar cliente: ${error.message}`,
     });
   }
 };
