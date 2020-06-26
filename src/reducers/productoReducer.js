@@ -23,16 +23,19 @@ const INITIAL_STATE = {
   Laboratorio_Name: [],
   Principio_activo: [],
   ////////////////
-  cargando: false,
+  cargar_name_product: true,
   error: "",
   mensaje: "",
   ///////////////
+  carga_laboratorio: true,
   mensaje_laboratorio: "",
   error_laboratorio: "",
   //////////////
+  cargando: true,
   mensaje_producto_complete: "",
   error_producto_complete: "",
   //////////////
+  carga_principio_activo: true,
   error_principio_activo: "",
   mensaje_principio_activo: "",
   //////////////
@@ -47,6 +50,7 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         Producto_Name: [],
+        cargar_name_product: true,
         error: "",
         mensaje: "Producto name creado exitosamente",
       };
@@ -62,7 +66,7 @@ export default (state = INITIAL_STATE, action) => {
     case CREAR_PRINCIPIO_ACTIVO:
       return {
         ...state,
-        Principio_activo: [],
+        carga_principio_activo: true,
         mensaje_principio_activo: "principio activo creado exitosamente",
       };
 
@@ -95,14 +99,23 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, Producto: action.payload, cargando: false };
 
     case TRAER_NAME_PRODUCTO:
-      return { ...state, Producto_Name: action.payload };
+      return {
+        ...state,
+        Producto_Name: action.payload,
+        cargar_name_product: false,
+      };
 
     case TRAER_NAME_LABORATORIO:
-      return { ...state, Laboratorio_Name: action.payload };
+      return {
+        ...state,
+        Laboratorio_Name: action.payload,
+        carga_laboratorio: false,
+      };
 
     case TRAER_PRINCIPIO_ACTIVO:
       return {
         ...state,
+        carga_principio_activo: false,
         Principio_activo: action.payload,
         error_principio_activo: "",
         mensaje_principio_activo: "",
@@ -111,7 +124,7 @@ export default (state = INITIAL_STATE, action) => {
     case CREAR_NAME_LABORATORIO:
       return {
         ...state,
-        Laboratorio_Name: [],
+        carga_laboratorio: true,
         mensaje_laboratorio: "Laboratio creado exitosamente",
       };
 

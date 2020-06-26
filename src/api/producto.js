@@ -86,3 +86,27 @@ export const eliminarProducto = async (id) => {
     headers: { "access-token": Cookie.get("access_token") },
   });
 };
+
+export const elimarPrincioActivo = async (id) => {
+  return await axios({
+    method: "DELETE",
+    url: `${domain()}/api/principio_activo/${id}`,
+    headers: { "access-token": Cookie.get("access_token") },
+  });
+};
+
+export const elimarProductName = async (id) => {
+  return await axios({
+    method: "DELETE",
+    url: `${domain()}/api/nombre_producto/${id}`,
+    headers: { "access-token": Cookie.get("access_token") },
+  });
+};
+
+export const eliminarLaboratorio = async (id) => {
+  return await axios({
+    method: "DELETE",
+    url: `${domain()}/api/nombre_laboratorio/${id}`,
+    headers: { "access-token": Cookie.get("access_token") },
+  });
+};
