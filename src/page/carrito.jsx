@@ -62,13 +62,6 @@ class Carrito extends React.Component {
       this.props.traer_clientes();
     }
 
-    /*let sub = 0;
-    let datosCarrito = this.props.carritoReducer.carrito;
-    for (let i = 0; i < datosCarrito.length; i++) {
-      sub = sub + Number(datosCarrito[i].pvp);
-    }
-
-    let total = (sub + (sub * this.state.iva) / 100).toFixed(2);*/
     this.calcular_sub_total_de_pago();
   }
 
@@ -98,7 +91,7 @@ class Carrito extends React.Component {
     });
   };
 
-  calcular_sub_total_de_pago = () => {
+  calcular_sub_total_de_pago = (descuento = null) => {
     let sub = 0;
     let total = 0;
 
@@ -107,7 +100,13 @@ class Carrito extends React.Component {
       sub = sub + Number(celda_total[i].value);
     }
 
-    total = (sub + (sub * this.state.iva) / 100).toFixed(2);
+    if (descuento != null) {
+      total = (sub + (sub * this.state.iva) / 100).toFixed(2);
+      let desc = ((total * descuento) / 100).toFixed(2);
+      total = (total - desc).toFixed(2);
+    } else {
+      total = (sub + (sub * this.state.iva) / 100).toFixed(2);
+    }
 
     this.setState({
       subTotalCompra: Number(sub.toFixed(2)),
@@ -135,20 +134,23 @@ class Carrito extends React.Component {
 
     sub = sub * Number(e.target.value);
 
-    //let total = sub + (sub * this.state.iva) / 100;
     item_total.value = sub.toFixed(2);
     this.calcular_sub_total_de_pago();
-    /*total = (this.state.Total + total).toFixed(2);
-    sub = (this.state.subTotalCompra + sub).toFixed(2);
-
-    
-    this.setState({
-      subTotalCompra: Number(sub),
-      Total: Number(total),
-    });*/
   };
 
   confirmar_pago = () => {
+    if (this.state.efectivo_pago != "") {
+      if (Number(this.state.efectivo_pago) < this.state.Total) {
+        alert(
+          "El efectivo tiene que ser mayor o igual que el total de la compra"
+        );
+        return false;
+      }
+      this.setState({
+        cambio_pago: Number(this.state.efectivo_pago) - this.state.Total,
+      });
+    }
+
     const datosCarrito = this.props.carritoReducer.carrito;
 
     for (let i = 0; i < datosCarrito.length; i++) {
@@ -172,8 +174,6 @@ class Carrito extends React.Component {
     };
 
     if (obj.cambio == "$: Cambio") obj.cambio = 0;
-
-    console.log(obj);
 
     this.props.crear_venta(obj);
     this.props.history.push("/producto");
@@ -341,9 +341,14 @@ class Carrito extends React.Component {
                   <div className="col mt-1">
                     <input
                       type="number"
+                      min="0"
                       style={{ width: 100 }}
                       name="descuento"
+                      disabled={this.props.carritoReducer.carrito.length == 0}
                       onChange={this.handleInputChange}
+                      onChange={(e) => {
+                        this.calcular_sub_total_de_pago(Number(e.target.value));
+                      }}
                       className="form-control"
                       placeholder="Descuento  %"
                     />
@@ -371,7 +376,13 @@ class Carrito extends React.Component {
                         </Link>
                       </li>
                       <li className="list-group-item">
-                        <select className="form-control" name="cliente_pago">
+                        <select
+                          className="form-control"
+                          name="cliente_pago"
+                          disabled={
+                            this.props.carritoReducer.carrito.length == 0
+                          }
+                        >
                           <option>Clientes</option>
                           {this.props.clienteReducer.clientes.map((item) => (
                             <option
@@ -386,6 +397,9 @@ class Carrito extends React.Component {
                       <li className="list-group-item">
                         <textarea
                           rows="3"
+                          disabled={
+                            this.props.carritoReducer.carrito.length == 0
+                          }
                           name="descripcion_pago"
                           className="form-control"
                           placeholder="Descripcion de la compra..."
@@ -403,6 +417,10 @@ class Carrito extends React.Component {
                         <input
                           type="number"
                           name="efectivo_pago"
+                          onChange={this.validar_efectivo}
+                          disabled={
+                            this.props.carritoReducer.carrito.length == 0
+                          }
                           onChange={this.handleInputChange}
                           className="form-control"
                           placeholder="$: Efectivo"
@@ -434,7 +452,7 @@ class Carrito extends React.Component {
                       className="btn btn-positive form-control mt-2"
                       onClick={this.confirmar_pago}
                     >
-                      Confirmar Pago
+                      Confirmar Compra
                     </button>
                   </div>
                 </dialog>
