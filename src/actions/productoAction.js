@@ -471,9 +471,9 @@ export const eliminar_nombre_producto = (id) => async (dispatch) => {
   }
 };
 
-export const eliminar_laboratorio = () => async (dispatch) => {
+export const eliminar_laboratorio = (id) => async (dispatch) => {
   try {
-    eliminarLaboratorio().then((res) => {
+    eliminarLaboratorio(id).then((res) => {
       if (res.data.feeback != undefined) {
         dispatch({
           type: NOTIFICACION_ACTIVIVDAD,

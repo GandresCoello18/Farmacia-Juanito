@@ -128,7 +128,7 @@ class Productos extends React.Component {
                     </tr>
                   ) : this.props.ProductoReducer.Producto.length == 0 ? (
                     <tr>
-                      <td colSpan="8">
+                      <td colSpan="13">
                         <Alerta
                           titulo="No existen datos para mostrar"
                           contenido="Por el momento no existen Productos."

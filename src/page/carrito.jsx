@@ -62,26 +62,17 @@ class Carrito extends React.Component {
       this.props.traer_clientes();
     }
 
-    let sub = 0;
+    /*let sub = 0;
     let datosCarrito = this.props.carritoReducer.carrito;
     for (let i = 0; i < datosCarrito.length; i++) {
       sub = sub + Number(datosCarrito[i].pvp);
     }
 
-    let total = (sub + (sub * this.state.iva) / 100).toFixed(2);
-
-    this.setState({
-      subTotalCompra: Number(sub.toFixed(2)),
-      Total: Number(total),
-    });
+    let total = (sub + (sub * this.state.iva) / 100).toFixed(2);*/
+    this.calcular_sub_total_de_pago();
   }
 
-  componentWillUpdate(nextProps, nextState) {
-    /*if (nextProps.ventasReducer.mensaje_ventas != "") {
-      console.log(this.props.history);
-      this.props.history.push("/producto");
-    }*/
-  }
+  componentWillUpdate(nextProps, nextState) {}
 
   handleInputChange = (event) => {
     const target = event.target;
@@ -107,10 +98,28 @@ class Carrito extends React.Component {
     });
   };
 
+  calcular_sub_total_de_pago = () => {
+    let sub = 0;
+    let total = 0;
+
+    let celda_total = document.querySelectorAll(".celda_total");
+    for (let i = 0; i < celda_total.length; i++) {
+      sub = sub + Number(celda_total[i].value);
+    }
+
+    total = (sub + (sub * this.state.iva) / 100).toFixed(2);
+
+    this.setState({
+      subTotalCompra: Number(sub.toFixed(2)),
+      Total: Number(total),
+    });
+  };
+
   formato = (e, id_producto) =>
     (document.getElementById(`cantidad_${id_producto}`).value = 0);
 
   cantidad = (e, id_producto) => {
+    let item_total = document.getElementById(`item_total_${id_producto}`);
     let sub = 0;
 
     let datosCarrito = this.props.carritoReducer.carrito;
@@ -124,17 +133,19 @@ class Carrito extends React.Component {
       sub = Number(data.pvp) / Number(data.cantidad);
     }
 
-    sub = sub * (Number(e.target.value) - 1);
+    sub = sub * Number(e.target.value);
 
-    let total = sub + (sub * this.state.iva) / 100;
-
-    total = (this.state.Total + total).toFixed(2);
+    //let total = sub + (sub * this.state.iva) / 100;
+    item_total.value = sub.toFixed(2);
+    this.calcular_sub_total_de_pago();
+    /*total = (this.state.Total + total).toFixed(2);
     sub = (this.state.subTotalCompra + sub).toFixed(2);
 
+    
     this.setState({
       subTotalCompra: Number(sub),
       Total: Number(total),
-    });
+    });*/
   };
 
   confirmar_pago = () => {
@@ -200,10 +211,10 @@ class Carrito extends React.Component {
                     <th>Lote</th>
                     <th>Reg-Sanit</th>
                     <th>PVP</th>
-                    <th>Elaboracion</th>
                     <th>Caducidad</th>
                     <th>Formato</th>
                     <th>Cantidad</th>
+                    <th>Total</th>
                     <th>Opciones</th>
                   </tr>
                 </thead>
@@ -240,7 +251,6 @@ class Carrito extends React.Component {
                         <td>{valor.lote}</td>
                         <td>{valor.registro_sanitario}</td>
                         <td>{valor.pvp}</td>
-                        <td>{valor.fecha_elaboracion}</td>
                         <td>{valor.fecha_caducidad}</td>
                         <td>
                           <select
@@ -257,6 +267,7 @@ class Carrito extends React.Component {
                           <input
                             type="number"
                             min="1"
+                            max={valor.cantidad}
                             onChange={(e) =>
                               this.cantidad(e, valor.id_producto)
                             }
@@ -265,6 +276,16 @@ class Carrito extends React.Component {
                             placeholder="Cantidad"
                             style={{ width: 60 }}
                             defaultValue={1}
+                          />
+                        </td>
+                        <td>
+                          <input
+                            type="text"
+                            id={`item_total_${valor.id_producto}`}
+                            className="form-control celda_total"
+                            defaultValue={valor.pvp}
+                            disabled={true}
+                            style={{ width: 65 }}
                           />
                         </td>
                         <td>

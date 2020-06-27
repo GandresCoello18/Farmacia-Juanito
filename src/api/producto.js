@@ -90,7 +90,7 @@ export const eliminarProducto = async (id) => {
 export const elimarPrincioActivo = async (id) => {
   return await axios({
     method: "DELETE",
-    url: `${domain()}/api/principio_activo/${id}`,
+    url: `${domain()}/api/producto/principio_activo/${id}`,
     headers: { "access-token": Cookie.get("access_token") },
   });
 };
@@ -98,7 +98,7 @@ export const elimarPrincioActivo = async (id) => {
 export const elimarProductName = async (id) => {
   return await axios({
     method: "DELETE",
-    url: `${domain()}/api/nombre_producto/${id}`,
+    url: `${domain()}/api/producto/nombre_producto/${id}`,
     headers: { "access-token": Cookie.get("access_token") },
   });
 };
@@ -106,7 +106,7 @@ export const elimarProductName = async (id) => {
 export const eliminarLaboratorio = async (id) => {
   return await axios({
     method: "DELETE",
-    url: `${domain()}/api/nombre_laboratorio/${id}`,
+    url: `${domain()}/api/producto/nombre_laboratorio/${id}`,
     headers: { "access-token": Cookie.get("access_token") },
   });
 };

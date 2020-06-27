@@ -170,7 +170,7 @@ class DetallesProduct extends React.Component {
                       <td colSpan="3">
                         <Alerta
                           titulo="No existen datos para mostrar"
-                          contenido="Por el momento no existen Principios activos."
+                          contenido="Por el momento no existen Nombres de laboratorio."
                         />
                       </td>
                     </tr>

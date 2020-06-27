@@ -67,38 +67,6 @@ class Stock extends React.Component {
     }
   }
 
-  componentWillUpdate(nextProps, nextState) {
-    /*if (nextProps.ProductoReducer.mensaje != "") {
-      document.getElementById(
-        "sms-name-product"
-      ).innerText = `${nextProps.ProductoReducer.mensaje}`;
-      this.limpiar_sms("sms-name-product");
-      this.props.obterner_name_productos();
-    }
-
-    if (nextProps.ProductoReducer.mensaje_laboratorio != "") {
-      document.getElementById(
-        "sms-name-laboratorio"
-      ).innerText = `${nextProps.ProductoReducer.mensaje_laboratorio}`;
-      this.limpiar_sms("sms-name-laboratorio");
-      this.props.obterner_name_laboratorio();
-    }
-
-    if (nextProps.ProductoReducer.mensaje_producto_complete != "") {
-      document.getElementById(
-        "sms_product_complete"
-      ).innerText = `${nextProps.ProductoReducer.mensaje_producto_complete}`;
-      this.limpiar_sms("sms_product_complete");
-      this.props.obtener_producto_completos();
-    }*/
-  }
-
-  limpiar_sms = (sms_span) => {
-    /*this.state.limpiar_a_tiempo = setTimeout(() => {
-      document.getElementById(sms_span).innerText = "";
-    }, 3000);*/
-  };
-
   componentWillUnmount() {
     clearTimeout(this.state.limpiar_a_tiempo);
   }
@@ -616,13 +584,13 @@ class Stock extends React.Component {
                 <tbody>
                   {this.props.ProductoReducer.Producto.cargando ? (
                     <tr>
-                      <td colSpan="13" className="p-2">
+                      <td colSpan="14" className="p-2">
                         {this.load()}
                       </td>
                     </tr>
                   ) : this.props.ProductoReducer.Producto.length == 0 ? (
                     <tr>
-                      <td colSpan="13">
+                      <td colSpan="14">
                         <Alerta
                           titulo="No existen datos para mostrar"
                           contenido="Por el momento no existen Productos."

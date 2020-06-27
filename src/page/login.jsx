@@ -7,7 +7,11 @@ import { exist_token } from "../util/verifi-local-token";
 import { Redirect } from "react-router-dom";
 import Head from "../componentes/head";
 
-import * as ActionsUser from "../actions/usuariosActions";
+import {
+  crear_cuenta,
+  restaurar_user,
+  login,
+} from "../actions/usuariosActions";
 
 class Login extends React.Component {
   state = {
@@ -25,10 +29,6 @@ class Login extends React.Component {
     email_login: "",
     password_login: "",
   };
-
-  componentDidMount() {
-    // this.props.traerTodos();
-  }
 
   componentWillUpdate(nextProps, nextState) {
     if (nextProps.error != "") {
@@ -273,14 +273,20 @@ class Login extends React.Component {
   }
 }
 
-Login.prototypes = {};
+Login.prototypes = {
+  crear_cuenta: PropsType.func,
+  restaurar_user: PropsType.func,
+  login: PropsType.func,
+};
 
 const mapStateToProps = (state) => {
   return state.usuariosReducer;
 };
 
 const mapDispatchToProps = {
-  ActionsUser,
+  crear_cuenta,
+  login,
+  restaurar_user,
 };
 
-export default connect(mapStateToProps, ActionsUser)(Login);
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
