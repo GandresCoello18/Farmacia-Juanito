@@ -144,8 +144,8 @@ class Home extends React.Component {
                           </td>
                           <td>
                             <Confirmacion
-                              id={valor.id_producto_fac}
-                              tabla="producto_factura"
+                              id={valor.id_factura}
+                              tabla="factura"
                             />
                             <button
                               className="btn btn-mini"

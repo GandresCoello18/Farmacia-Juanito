@@ -3,7 +3,6 @@ import {
   ERROR_VENTAS,
   MENSAJE_VENTAS,
   MOSTRAR_POR_FECHAS,
-  CARGADO,
   TRAER_VENTAS,
 } from "../types/ventasTypes";
 

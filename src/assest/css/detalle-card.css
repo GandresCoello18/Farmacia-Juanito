@@ -5,6 +5,13 @@
   padding: 20px;
   border-bottom: 4px solid #6eb4f7;
 }
+.detalles-compra h5 {
+  padding: 7px 15px;
+  background-color: tomato;
+  color: #fff;
+  font-weight: bold;
+  border-radius: 10px;
+}
 .detalles-compra img {
   width: 180px;
   height: 180px;
@@ -12,15 +19,29 @@
 }
 .detalles-compra ul li {
   padding: 5px 0px;
+  list-style: none;
+  position: relative;
+  left: -20px;
   background-color: darkslategrey;
   border-radius: 10px;
   margin-top: 5px;
   color: #fff;
   border: 1px solid #fff;
 }
+.detalles-compra ul li b {
+  color: tomato;
+}
 .detalles-compra .fecha-vendido {
   background-color: tomato;
   color: #fff;
   padding: 6px;
   border-radius: 10px;
+}
+.detalles-compra .eliminar-venta {
+  background-color: darkred;
+  color: #fff;
+  font-weight: bold;
+  padding: 7px 15px;
+  border-radius: 10px;
+  cursor: pointer;
 }

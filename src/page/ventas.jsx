@@ -9,6 +9,7 @@ import moment from "moment";
 import Alerta from "../componentes/alert";
 import DetalleCard from "../componentes/card-detalles";
 import Confirmacion from "../componentes/confirmacion";
+import EstadisticasPorDia from "../componentes/grafico-estadistico-ventas-por-dia";
 import Nav from "../componentes/nav";
 import { fecha_actual } from "../util/fecha";
 import { Redirect } from "react-router-dom";
@@ -18,7 +19,7 @@ import { traer_ventas, traer_por_fecha } from "../actions/ventasActios";
 
 class Ventas extends React.Component {
   state = {
-    data_ventas: [],
+    fecha_select: "",
   };
 
   styles = {
@@ -61,11 +62,12 @@ class Ventas extends React.Component {
     this.props.traer_por_fecha(nuevo);
   };
 
-  search_for_date = (e) => this.metodo_buscar_venta(e.target.value);
-
-  load = () => {
-    return <Load />;
+  search_for_date = (e) => {
+    this.metodo_buscar_venta(e.target.value);
+    this.setState({ fecha_select: e.target.value });
   };
+
+  load = () => <Load />;
 
   render() {
     if (exist_token(Cookie.get("access_token")) == false) {
@@ -78,24 +80,35 @@ class Ventas extends React.Component {
 
         <section className="container-fluid">
           <div className="row justify-content-center">
-            <div className="col-3">
+            <div className="col-6">
+              <EstadisticasPorDia />
+            </div>
+            <div className="col-3 mt-5">
               <label>
                 <b>Buscar ventas por fecha:</b>
               </label>
               <input
                 type="date"
+                max={fecha_actual()}
                 className="form-control mt-2"
                 onChange={this.search_for_date}
               />
-            </div>
-
-            <div className="col-3">
+              <br />
               <h4 className="p-2 text-left">
-                Ventas: <b>{moment(`${new Date()}`).format("LL")}</b>
+                Ventas:{" "}
+                <b>
+                  {moment(
+                    `${
+                      this.state.fecha_select == ""
+                        ? new Date()
+                        : this.state.fecha_select
+                    }`
+                  ).format("LL")}
+                </b>
               </h4>
             </div>
 
-            <div className="col-10 seccion-table-productos_all">
+            <div className="col-10 seccion-table-productos_all mt-5">
               <table className="table-striped mt-1 text-center">
                 <thead>
                   <tr>
@@ -157,8 +170,8 @@ class Ventas extends React.Component {
                               </x-button>
                             </button>
                             <Confirmacion
-                              id={valor.id_producto_fac}
-                              tabla="producto_factura"
+                              id={valor.id_factura}
+                              tabla="factura"
                             />
                           </td>
                         </tr>

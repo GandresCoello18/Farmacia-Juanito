@@ -9,7 +9,7 @@ import {
   eliminar_laboratorio,
 } from "../actions/productoAction";
 import { eliminar_cliente } from "../actions/clienteAction";
-import { eliminar_venta } from "../actions/ventasActios";
+import { eliminar_venta, eliminar_factura } from "../actions/ventasActios";
 
 class Confirmacion extends React.Component {
   state = {
@@ -44,6 +44,9 @@ class Confirmacion extends React.Component {
         break;
       case "producto_factura":
         this.props.eliminar_venta(id);
+        break;
+      case "factura":
+        this.props.eliminar_factura(id);
         break;
       case "principio_activo":
         this.props.eliminar_principio_activo(id);
@@ -120,6 +123,7 @@ Confirmacion.prototypes = {
   eliminar_principio_activo: PropType.func,
   eliminar_nombre_producto: PropType.func,
   eliminar_laboratorio: PropType.func,
+  eliminar_factura: PropType.func,
 };
 
 const mapDispachToProps = {
@@ -129,6 +133,7 @@ const mapDispachToProps = {
   eliminar_principio_activo,
   eliminar_nombre_producto,
   eliminar_laboratorio,
+  eliminar_factura,
 };
 
 export default connect(null, mapDispachToProps)(Confirmacion);

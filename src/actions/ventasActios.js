@@ -5,7 +5,12 @@ import {
   MENSAJE_VENTAS,
   ERROR_VENTAS,
 } from "../types/ventasTypes";
-import { createVenta, obtenerVentas, eliminarVentas } from "../api/ventas";
+import {
+  createVenta,
+  obtenerVentas,
+  eliminarVentas,
+  eliminarFactura,
+} from "../api/ventas";
 import { obtenerProductoCompleto } from "../api/producto";
 import { LIMPIAR_CARRITO } from "../types/carritoTypes";
 import {
@@ -113,12 +118,85 @@ export const limpiar_ventas = () => async (dispatch) => {
 export const eliminar_venta = (id) => async (dispatch) => {
   try {
     eliminarVentas(id).then((res) => {
-      obtenerVentas().then((res) => {
+      if (res.data.feeback != undefined) {
         dispatch({
-          type: TRAER_VENTAS,
-          payload: res.data,
+          type: NOTIFICACION_ACTIVIVDAD,
+          payload: {
+            tipo: "ERROR",
+            text: `${res.data.feeback}`,
+            date: new Date(),
+          },
         });
-      });
+      } else {
+        obtenerVentas().then((res) => {
+          dispatch({
+            type: TRAER_VENTAS,
+            payload: res.data,
+          });
+        });
+
+        dispatch({
+          type: NOTIFICACION_ACTIVIVDAD,
+          payload: {
+            tipo: "EXITO",
+            text: `Se elimino la venta`,
+            date: new Date(),
+          },
+        });
+      }
+    });
+  } catch (error) {
+    dispatch({
+      type: ERROR_VENTAS,
+      payload: `Error: ${error.message}`,
+    });
+
+    dispatch({
+      type: NOTIFICACION_ACTIVIVDAD,
+      payload: {
+        tipo: "ERROR",
+        text: `${error.message}`,
+        date: new Date(),
+      },
+    });
+  }
+};
+
+export const eliminar_factura = (id) => async (dispatch) => {
+  try {
+    eliminarFactura(id).then((res) => {
+      console.log(res);
+      if (res.data.feeback != undefined) {
+        dispatch({
+          type: ERROR_VENTAS,
+          payload: `Error (Ventas): ${res.data.feeback}`,
+        });
+
+        dispatch({
+          type: NOTIFICACION_ACTIVIVDAD,
+          payload: {
+            tipo: "ERROR",
+            text: `${res.data.feeback}`,
+            date: new Date(),
+          },
+        });
+      } else {
+        obtenerVentas().then((res) => {
+          dispatch({
+            type: TRAER_VENTAS,
+            payload: res.data,
+          });
+        });
+
+        dispatch({
+          type: NOTIFICACION_ACTIVIVDAD,
+          payload: {
+            tipo: "EXITO",
+            text: `Se elimino la factura`,
+            date: new Date(),
+          },
+        });
+      }
     });
   } catch (error) {
     dispatch({

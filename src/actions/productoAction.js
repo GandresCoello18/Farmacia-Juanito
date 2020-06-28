@@ -45,6 +45,18 @@ export const create_product = (data) => async (dispatch) => {
           date: new Date(),
         },
       });
+
+      obtenerProductoCompleto().then((res) => {
+        dispatch({
+          type: TRAER_PRODUCTO,
+          payload: res.data,
+        });
+
+        dispatch({
+          type: BUSCAR_PRODUCTO,
+          payload: res.data,
+        });
+      });
     });
   } catch (error) {
     dispatch({

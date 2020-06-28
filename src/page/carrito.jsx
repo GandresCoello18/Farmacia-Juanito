@@ -114,6 +114,24 @@ class Carrito extends React.Component {
     });
   };
 
+  validar_cantidad_item_producto_not_cero = () => {
+    let celda_cantidad = document.querySelectorAll(".celda_cantidad");
+    for (let i = 0; i < celda_cantidad.length; i++) {
+      if (celda_cantidad[i].value == 0) {
+        return true;
+      }
+    }
+
+    let celda_total = document.querySelectorAll(".celda_total");
+    for (let i = 0; i < celda_total.length; i++) {
+      if (celda_total[i].value == 0) {
+        return true;
+      }
+    }
+
+    return false;
+  };
+
   formato = (e, id_producto) =>
     (document.getElementById(`cantidad_${id_producto}`).value = 0);
 
@@ -127,7 +145,12 @@ class Carrito extends React.Component {
     if (
       document.getElementById(`formato_${id_producto}`).value == "Por Paquete"
     ) {
-      sub = sub + Number(data.pvp);
+      if (Number(e.target.value) < 2 && Number(e.target.value) > 0) {
+        sub = sub + Number(data.pvp);
+      } else {
+        e.target.value = 1;
+        sub = item_total.value;
+      }
     } else {
       sub = Number(data.pvp) / Number(data.cantidad);
     }
@@ -151,32 +174,38 @@ class Carrito extends React.Component {
       });
     }
 
-    const datosCarrito = this.props.carritoReducer.carrito;
+    if (this.validar_cantidad_item_producto_not_cero()) {
+      alert("Hay cantidades sin especificar o totales en 0");
+    } else {
+      const datosCarrito = this.props.carritoReducer.carrito;
 
-    for (let i = 0; i < datosCarrito.length; i++) {
-      datosCarrito[i].formato = document.getElementById(
-        `formato_${datosCarrito[i].id_producto}`
-      ).value;
-      datosCarrito[i].unidades = document.getElementById(
-        `cantidad_${datosCarrito[i].id_producto}`
-      ).value;
+      for (let i = 0; i < datosCarrito.length; i++) {
+        datosCarrito[i].formato = document.getElementById(
+          `formato_${datosCarrito[i].id_producto}`
+        ).value;
+        datosCarrito[i].unidades = document.getElementById(
+          `cantidad_${datosCarrito[i].id_producto}`
+        ).value;
+      }
+
+      const obj = {
+        id_cliente: this.state.cliente_pago,
+        descripcion: this.state.descripcion_pago,
+        descuento: this.state.descuento,
+        iva: this.state.iva,
+        total: Number(this.state.Total),
+        efectivo: this.state.efectivo_pago,
+        cambio: Number(
+          (Number(this.state.efectivo_pago) - this.state.Total).toFixed(2)
+        ),
+        productos: datosCarrito,
+      };
+
+      if (obj.cambio == "$: Cambio") obj.cambio = 0;
+
+      this.props.crear_venta(obj);
+      this.props.history.push("/producto");
     }
-
-    const obj = {
-      id_cliente: this.state.cliente_pago,
-      descripcion: this.state.descripcion_pago,
-      descuento: this.state.descuento,
-      iva: this.state.iva,
-      total: Number(this.state.Total),
-      efectivo: this.state.efectivo_pago,
-      cambio: this.state.cambio_pago,
-      productos: datosCarrito,
-    };
-
-    if (obj.cambio == "$: Cambio") obj.cambio = 0;
-
-    this.props.crear_venta(obj);
-    this.props.history.push("/producto");
   };
 
   load = () => {
@@ -272,7 +301,7 @@ class Carrito extends React.Component {
                               this.cantidad(e, valor.id_producto)
                             }
                             id={`cantidad_${valor.id_producto}`}
-                            className="form-control"
+                            className="form-control celda_cantidad"
                             placeholder="Cantidad"
                             style={{ width: 60 }}
                             defaultValue={1}
@@ -342,6 +371,7 @@ class Carrito extends React.Component {
                     <input
                       type="number"
                       min="0"
+                      max="100"
                       style={{ width: 100 }}
                       name="descuento"
                       disabled={this.props.carritoReducer.carrito.length == 0}

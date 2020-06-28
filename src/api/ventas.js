@@ -27,5 +27,14 @@ export const eliminarVentas = async (id) => {
   return await axios({
     method: "DELETE",
     url: `${domain()}/api/venta/${id}`,
+    headers: { "access-token": Cookie.get("access_token") },
+  });
+};
+
+export const eliminarFactura = async (id) => {
+  return await axios({
+    method: "DELETE",
+    url: `${domain()}/api/factura/${id}`,
+    headers: { "access-token": Cookie.get("access_token") },
   });
 };

@@ -148,6 +148,7 @@ class Stock extends React.Component {
       };
 
       this.props.create_product(data);
+      document.getElementById("form-stock").reset();
     }
   };
 
@@ -294,7 +295,7 @@ class Stock extends React.Component {
                     Agregar en Stock
                   </h3>
 
-                  <form className="pb-5">
+                  <form className="pb-5" id="form-stock">
                     <div className="row justify-content-center">
                       <div className="col p-2">
                         <label>

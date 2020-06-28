@@ -156,7 +156,7 @@ class Graficos extends React.Component {
     }
     return (
       <>
-        <Head titulo="Graficos" />
+        <Head titulo="Graficos Estadisticos" />
         <Nav />
 
         <section className="container-fluid">
