@@ -29,6 +29,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "test-jest": "jest",
     "preelectron-pack": "yarn build",
     "electron-pack": "build --w",
     "format": "pretty-quick"
@@ -40,7 +41,11 @@
     "not op_mini all"
   ],
   "devDependencies": {
+    "@babel/core": "^7.10.3",
+    "@babel/preset-env": "^7.10.3",
+    "babel-jest": "^26.1.0",
     "electron-builder": "^22.7.0",
+    "jest": "^26.1.0",
     "prettier": "^2.0.5",
     "pretty-quick": "^2.0.1"
   },
