@@ -1,5 +1,5 @@
 import {
-  TRAER_TODOS,
+  TRAER_TODOS_USERS,
   CREAR_USER,
   CARGANDO,
   ERROR,
@@ -8,14 +8,14 @@ import {
 
 const INITIAL_STATE = {
   usuarios: [],
-  cargando: false,
+  cargando: true,
   error: "",
   token: "",
 };
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case TRAER_TODOS:
+    case TRAER_TODOS_USERS:
       return {
         ...state,
         usuarios: action.payload,
@@ -28,6 +28,7 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         usuarios: {},
         error: "",
+        cargando: true,
       };
 
     case CARGANDO:

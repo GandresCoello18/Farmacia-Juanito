@@ -25,6 +25,13 @@ export const sessionHistory = async () => {
   });
 };
 
+export const obtenerUsuarios = async () => {
+  return await axios({
+    method: "GET",
+    url: `${domain()}/api/usuario`,
+  });
+};
+
 ///////////////////  METODO DE PETICION POST
 
 export const create_count = async (user_register) => {
@@ -52,6 +59,14 @@ export const cleanHistory = async () => {
   return await axios({
     method: "DELETE",
     url: `${domain()}/api/usuario/history-session`,
+    headers: { "access-token": Cookie.get("access_token") },
+  });
+};
+
+export const eliminarUser = async (id) => {
+  return await axios({
+    method: "DELETE",
+    url: `${domain()}/api/usuario/${id}`,
     headers: { "access-token": Cookie.get("access_token") },
   });
 };

@@ -40,9 +40,11 @@ class Nav extends React.Component {
   componentDidMount() {
     moment.lang("es");
 
-    this.props.history_session();
+    if (this.props.userHistoryReducer.historySession.length == 0) {
+      this.props.history_session();
+    }
 
-    if (this.state.cantidad_carrito == 0) {
+    if (this.props.carritoReducer.carrito.length == 0) {
       document.getElementById("btn-carrito").classList.add("btn-negative");
     }
 
@@ -68,6 +70,9 @@ class Nav extends React.Component {
       case "/clientes":
         item_menu[5].classList.add("active");
         break;
+      case "/flujo-caja":
+        item_menu[6].classList.add("active");
+        break;
     }
   }
 
@@ -81,11 +86,6 @@ class Nav extends React.Component {
       btn_carrito.classList.add("btn-positive");
     }
   }
-
-  /*limpiar_busqueda = () => {
-    let busqueda_producto = document.getElementById("search_producto");
-    busqueda_producto.value = "";
-  };*/
 
   cerrar_session = () => {
     Cookie.remove("access_token");
@@ -150,7 +150,7 @@ class Nav extends React.Component {
             </span>
             <b style={{ fontSize: 14 }}>Clientes</b>
           </Link>
-          <div className="tab-item">
+          <Link to="/flujo-caja" className="tab-item">
             <span
               className="material-icons"
               style={{ position: "absolute", left: 30, fontSize: 20 }}
@@ -158,7 +158,7 @@ class Nav extends React.Component {
               attach_money
             </span>
             <b style={{ fontSize: 14 }}>Flujo de caja</b>
-          </div>
+          </Link>
 
           <div className="tab-item tab-item-fixed">
             <span className="icon icon-plus"></span>
@@ -187,7 +187,7 @@ class Nav extends React.Component {
                           key={valor.id_historial_session}
                         >
                           <img
-                            className="img-circle media-object pull-left"
+                            className="img-circle media-object pull-left mt-2"
                             src={`${domain()}/static/${valor.foto}`}
                             width="32"
                             height="32"
@@ -206,6 +206,18 @@ class Nav extends React.Component {
                                 {moment(valor.fecha_session).format("LL, LT")}
                               </b>
                               .
+                            </p>
+                            <p>
+                              <strong>Tipo User:</strong> &nbsp;{" "}
+                              <span
+                                className={
+                                  valor.tipo_user == "Administrador"
+                                    ? "alert-danger"
+                                    : "badge-warning"
+                                }
+                              >
+                                {valor.tipo_user}
+                              </span>{" "}
                             </p>
                           </div>
                         </li>
@@ -230,6 +242,11 @@ class Nav extends React.Component {
                 >
                   Limpiar historial
                 </strong>
+                <Link to="/usuarios">
+                  <strong className="btn-mostrar-usuarios">
+                    Mostrar Usuarios
+                  </strong>
+                </Link>
               </dialog>
             </x-button>
           </div>

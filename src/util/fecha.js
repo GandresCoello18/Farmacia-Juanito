@@ -33,6 +33,10 @@ function diferencias_de_dias_por_fecha(inicio, fin) {
   return Number(Math.round(diferencia_en_milisegundos / milisegundos_por_dia));
 }
 
+function ano_actual() {
+  return new Date().getFullYear();
+}
+
 function agregar_ceros_mes(mes) {
   if (mes < 10) {
     mes = `${0}${mes + 1}`;
@@ -49,6 +53,7 @@ function agregar_ceros_dia(dia) {
 
 module.exports = {
   diferencias_de_dias_por_fecha,
+  ano_actual,
   fecha_actual,
   restar_fecha,
 };

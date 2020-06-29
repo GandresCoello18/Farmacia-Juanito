@@ -10,6 +10,7 @@ import {
 } from "../actions/productoAction";
 import { eliminar_cliente } from "../actions/clienteAction";
 import { eliminar_venta, eliminar_factura } from "../actions/ventasActios";
+import { eliminar_ususario } from "../actions/usuariosActions";
 
 class Confirmacion extends React.Component {
   state = {
@@ -57,6 +58,9 @@ class Confirmacion extends React.Component {
       case "nombre_laboratorio":
         this.props.eliminar_laboratorio(id);
         break;
+      case "usuarios":
+        this.props.eliminar_ususario(id);
+        break;
     }
   };
 
@@ -89,10 +93,6 @@ class Confirmacion extends React.Component {
                   onClick={() => {
                     this.close();
                     this.setState({ notificacion: true });
-                    /*setTimeout(
-                      () => this.setState({ notificacion: false }),
-                      3000
-                    );*/
                   }}
                 >
                   <x-button
@@ -124,6 +124,7 @@ Confirmacion.prototypes = {
   eliminar_nombre_producto: PropType.func,
   eliminar_laboratorio: PropType.func,
   eliminar_factura: PropType.func,
+  eliminar_ususario: PropType.func,
 };
 
 const mapDispachToProps = {
@@ -134,6 +135,7 @@ const mapDispachToProps = {
   eliminar_nombre_producto,
   eliminar_laboratorio,
   eliminar_factura,
+  eliminar_ususario,
 };
 
 export default connect(null, mapDispachToProps)(Confirmacion);

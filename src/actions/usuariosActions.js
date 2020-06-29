@@ -5,8 +5,16 @@ import {
   loginAccess,
   sessionHistory,
   cleanHistory,
+  obtenerUsuarios,
+  eliminarUser,
 } from "../api/usuarios";
-import { CREAR_USER, CARGANDO, ERROR, TOKEN } from "../types/usuariosTypes";
+import {
+  CREAR_USER,
+  CARGANDO,
+  ERROR,
+  TOKEN,
+  TRAER_TODOS_USERS,
+} from "../types/usuariosTypes";
 import { TRAER_ULTIMOS_6, ERROR_HISTORY } from "../types/historySessionTypes";
 import { NOTIFICACION_ACTIVIVDAD } from "../types/ProductoTypes";
 
@@ -118,6 +126,15 @@ export const history_session = () => async (dispatch) => {
       type: ERROR_HISTORY,
       payload: `Error en history: ${error.message}`,
     });
+
+    dispatch({
+      type: NOTIFICACION_ACTIVIVDAD,
+      payload: {
+        tipo: "ERROR",
+        text: `(History Session) ${error.message}`,
+        date: new Date(),
+      },
+    });
   }
 };
 
@@ -144,6 +161,87 @@ export const limpiar_history_session = () => async (dispatch) => {
     dispatch({
       type: ERROR_HISTORY,
       payload: `Error en history: ${error.message}`,
+    });
+
+    dispatch({
+      type: NOTIFICACION_ACTIVIVDAD,
+      payload: {
+        tipo: "ERROR",
+        text: `(Cliente) ${error.message}`,
+        date: new Date(),
+      },
+    });
+  }
+};
+
+export const traer_usuarios = () => async (dispatch) => {
+  try {
+    obtenerUsuarios().then((res) => {
+      dispatch({
+        type: TRAER_TODOS_USERS,
+        payload: res.data,
+      });
+    });
+  } catch (error) {
+    dispatch({
+      type: ERROR,
+      payload: "Error en traer usuario: " + error.message,
+    });
+
+    dispatch({
+      type: NOTIFICACION_ACTIVIVDAD,
+      payload: {
+        tipo: "ERROR",
+        text: `(Cliente) ${error.message}`,
+        date: new Date(),
+      },
+    });
+  }
+};
+
+export const eliminar_ususario = (id) => async (dispatch) => {
+  try {
+    eliminarUser(id).then((res) => {
+      if (res.data.feeback != undefined) {
+        dispatch({
+          type: NOTIFICACION_ACTIVIVDAD,
+          payload: {
+            tipo: "ERROR",
+            text: `${res.data.feeback}`,
+            date: new Date(),
+          },
+        });
+      } else {
+        obtenerUsuarios().then((res) => {
+          dispatch({
+            type: TRAER_TODOS_USERS,
+            payload: res.data,
+          });
+        });
+
+        dispatch({
+          type: NOTIFICACION_ACTIVIVDAD,
+          payload: {
+            tipo: "EXITO",
+            text: `Se elimino el usuario`,
+            date: new Date(),
+          },
+        });
+      }
+    });
+  } catch (error) {
+    dispatch({
+      type: ERROR,
+      payload: "Error al eliminar usuario: " + error.message,
+    });
+
+    dispatch({
+      type: NOTIFICACION_ACTIVIVDAD,
+      payload: {
+        tipo: "ERROR",
+        text: `(Usuario) ${error.message}`,
+        date: new Date(),
+      },
     });
   }
 };
