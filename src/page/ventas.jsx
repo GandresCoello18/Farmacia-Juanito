@@ -19,7 +19,8 @@ import { traer_ventas, traer_por_fecha } from "../actions/ventasActios";
 
 class Ventas extends React.Component {
   state = {
-    fecha_select: "",
+    fecha_select: fecha_actual(),
+    total_ventas: 0,
   };
 
   styles = {
@@ -53,12 +54,15 @@ class Ventas extends React.Component {
   metodo_buscar_venta = (fecha) => {
     let datosVentas = this.props.ventasReducer.ventas;
     let nuevo = [];
+    let total = 0;
 
     for (let i = 0; i < datosVentas.length; i++) {
       if (datosVentas[i].fecha_factura.indexOf(fecha) != -1) {
         nuevo.push(datosVentas[i]);
+        total = total + Number(datosVentas[i].total);
       }
     }
+    this.setState({ total_ventas: total });
     this.props.traer_por_fecha(nuevo);
   };
 
@@ -81,7 +85,7 @@ class Ventas extends React.Component {
         <section className="container-fluid">
           <div className="row justify-content-center">
             <div className="col-6">
-              <EstadisticasPorDia />
+              <EstadisticasPorDia fecha={this.state.fecha_select} />
             </div>
             <div className="col-3 mt-5">
               <label>
@@ -105,6 +109,9 @@ class Ventas extends React.Component {
                     }`
                   ).format("LL")}
                 </b>
+              </h4>
+              <h4 className="p-2">
+                Total: <b>$ {this.state.total_ventas.toFixed(2)}</b>
               </h4>
             </div>
 

@@ -31,6 +31,8 @@ class Carrito extends React.Component {
     descripcion_pago: "",
     efectivo_pago: 0,
     cambio_pago: "$: Cambio",
+    ////////////
+    time: null,
   };
 
   styles = {
@@ -79,7 +81,12 @@ class Carrito extends React.Component {
 
   remover_del_carrito = (id_producto) => {
     this.props.quitar_del_carrito(id_producto);
+    this.time = setTimeout(() => this.calcular_sub_total_de_pago(), 1000);
   };
+
+  componentWillUnmount() {
+    clearTimeout(this.time);
+  }
 
   clear_carrito = () => {
     this.props.limpiar_carrito();

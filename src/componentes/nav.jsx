@@ -39,13 +39,16 @@ class Nav extends React.Component {
 
   componentDidMount() {
     moment.lang("es");
+    let btn_carrito = document.getElementById("btn-carrito");
 
     if (this.props.userHistoryReducer.historySession.length == 0) {
       this.props.history_session();
     }
 
     if (this.props.carritoReducer.carrito.length == 0) {
-      document.getElementById("btn-carrito").classList.add("btn-negative");
+      btn_carrito.classList.add("btn-negative");
+    } else {
+      btn_carrito.classList.add("btn-positive");
     }
 
     let pathnombre = window.location.pathname;

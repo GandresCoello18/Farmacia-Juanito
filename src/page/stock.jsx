@@ -41,6 +41,8 @@ class Stock extends React.Component {
     pvp: 0,
     pvf: 0,
     limpiar_a_tiempo: null,
+    ////////////////////
+    cantidad_por_presentacion: 100,
   };
 
   styles = {
@@ -79,6 +81,19 @@ class Stock extends React.Component {
     this.setState({
       [name]: value,
     });
+
+    if (name == "presentacion") {
+      let c = 1;
+
+      if (value == "Tabletas" || value == "Ampollas") {
+        c = 100;
+      }
+
+      this.setState({
+        cantidad_por_presentacion: c,
+      });
+      document.getElementById("cantidad").value = 0;
+    }
   };
 
   add_name_product = () => {
@@ -149,6 +164,7 @@ class Stock extends React.Component {
 
       this.props.create_product(data);
       document.getElementById("form-stock").reset();
+      document.getElementById("fecha_caducidad").disabled = true;
     }
   };
 
@@ -365,19 +381,6 @@ class Stock extends React.Component {
                       </div>
                       <div className="col p-2">
                         <label>
-                          <b>Cantidad:</b>
-                        </label>
-                        <input
-                          type="number"
-                          className="form-control"
-                          name="cantidad"
-                          onChange={this.handleInputChange}
-                          placeholder="100"
-                          defaultValue={0}
-                        />
-                      </div>
-                      <div className="col p-2">
-                        <label>
                           <b>Presentacion:</b>
                         </label>
                         <select
@@ -393,12 +396,33 @@ class Stock extends React.Component {
                         </select>
                       </div>
                       <div className="col p-2">
+                        <label>
+                          <b>Cantidad:</b>
+                        </label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          name="cantidad"
+                          id="cantidad"
+                          onChange={this.handleInputChange}
+                          placeholder="100"
+                          min="0"
+                          max={this.state.cantidad_por_presentacion}
+                          disabled={
+                            this.state.presentacion == "-----" ||
+                            this.state.presentacion == ""
+                          }
+                          defaultValue={0}
+                        />
+                      </div>
+                      <div className="col p-2">
                         <label>PVP:</label>
                         <input
                           type="number"
                           onChange={this.handleInputChange}
                           className="form-control"
                           name="pvp"
+                          min="0"
                           placeholder="0.00"
                         />
                       </div>
@@ -409,6 +433,7 @@ class Stock extends React.Component {
                           onChange={this.handleInputChange}
                           className="form-control"
                           name="pvf"
+                          min="0"
                           placeholder="0.00"
                         />
                       </div>
@@ -424,6 +449,7 @@ class Stock extends React.Component {
                           name="lote"
                           onChange={this.handleInputChange}
                           className="form-control"
+                          min="0"
                           placeholder="0000000"
                         />
                       </div>
@@ -448,6 +474,7 @@ class Stock extends React.Component {
                           name="dosis"
                           onChange={this.handleInputChange}
                           className="form-control"
+                          min="0"
                           placeholder="000"
                         />
                       </div>
@@ -486,6 +513,7 @@ class Stock extends React.Component {
                           type="date"
                           className="form-control"
                           name="fecha_caducidad"
+                          id="fecha_caducidad"
                           disabled={this.state.fecha_elaboracion == "" && true}
                           min={this.state.fecha_elaboracion}
                           onChange={this.handleInputChange}
@@ -599,7 +627,15 @@ class Stock extends React.Component {
                       </td>
                     </tr>
                   ) : (
-                    this.props.ProductoReducer.Producto.map((valor) => (
+                    this.props.ProductoReducer.Producto.sort((a, b) => {
+                      if (a.estado > b.estado) {
+                        return 1;
+                      }
+                      if (a.estado < b.estado) {
+                        return -1;
+                      }
+                      return 0;
+                    }).map((valor) => (
                       <tr
                         key={valor.id_producto}
                         className={validar_status(valor.estado)}

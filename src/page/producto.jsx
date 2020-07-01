@@ -126,9 +126,11 @@ class Productos extends React.Component {
                         {this.load()}
                       </td>
                     </tr>
-                  ) : this.props.ProductoReducer.Producto.length == 0 ||
-                    this.props.ProductoReducer.Producto.filter(
-                      (item) => item.estado == "Disponible" && item.cantidad < 1
+                  ) : this.props.ProductoReducer.Producto.filter(
+                      (item) =>
+                        (item.estado == "Disponible" ||
+                          item.estado == "Aun disponible") &&
+                        item.cantidad > 0
                     ).length == 0 ? (
                     <tr>
                       <td colSpan="13">
@@ -140,7 +142,9 @@ class Productos extends React.Component {
                     </tr>
                   ) : (
                     this.props.ProductoReducer.Producto.filter(
-                      (item) => item.estado == "Disponible"
+                      (item) =>
+                        item.estado == "Disponible" ||
+                        item.estado == "Aun disponible"
                     ).map((valor) => (
                       <tr key={valor.id_producto}>
                         <td>{valor.principio_activo}</td>

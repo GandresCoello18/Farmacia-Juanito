@@ -58,22 +58,19 @@ class Home extends React.Component {
   }
 
   validar_caducidad = (fecha_caducidad) => {
-    if (
-      Math.abs(
-        diferencias_de_dias_por_fecha(
-          fecha_caducidad,
-          restar_fecha(fecha_actual(), -30)
-        )
-      ) > 30
-    ) {
+    let dias = Math.abs(
+      diferencias_de_dias_por_fecha(
+        fecha_caducidad,
+        restar_fecha(fecha_actual(), -30)
+      )
+    );
+    if (dias <= 30) {
       return true;
     }
     return false;
   };
 
-  load = () => {
-    return <Load />;
-  };
+  load = () => <Load />;
 
   render() {
     if (exist_token(Cookie.get("access_token")) == false) {

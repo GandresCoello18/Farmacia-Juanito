@@ -97,7 +97,7 @@ class Graficos extends React.Component {
       ],
       datasets: [
         {
-          label: "Productos vendidos al año",
+          label: "Ganacias del año",
           data: [
             Math.round(Math.random() * 220),
             Math.round(Math.random() * 318),
@@ -175,7 +175,7 @@ class Graficos extends React.Component {
             <br />
 
             <div className="col-12 mb-3">
-              <h4 className="text-center">Ventas de productos mensual</h4>
+              <h4 className="text-center">Ganacias de cada mes</h4>
 
               <Bar data={this.state.data_ano} />
             </div>
