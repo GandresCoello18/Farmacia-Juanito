@@ -145,7 +145,11 @@ class Ventas extends React.Component {
                     </tr>
                   ) : (
                     this.props.ventasReducer.ventas_por_fecha
-                      .filter((item) => item.estado == "Vendido")
+                      .filter(
+                        (item) =>
+                          item.estado == "Vendido" ||
+                          item.estado == "Aun disponible"
+                      )
                       .map((valor) => (
                         <tr key={valor.id_producto_fac}>
                           <td>{valor.product_name}</td>
