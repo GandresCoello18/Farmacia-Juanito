@@ -29,7 +29,7 @@ class FlujoCajaYear extends React.Component {
                 </tr>
               </thead>
               <tbody>
-                <tr>
+                <tr className="alert-success">
                   <td>test</td>
                   <td>test</td>
                   <td>test</td>
@@ -72,7 +72,7 @@ class FlujoCajaYear extends React.Component {
                 </tr>
               </thead>
               <tbody>
-                <tr>
+                <tr className="alert-warning">
                   <td>test</td>
                   <td>test</td>
                   <td>test</td>
@@ -98,7 +98,7 @@ class FlujoCajaYear extends React.Component {
 
             <table className="table-striped text-center">
               <thead>
-                <tr>
+                <tr className="badge-light">
                   <th>Detalles de saldos</th>
                   <th>Enero</th>
                   <th>Febrero</th>
@@ -115,7 +115,7 @@ class FlujoCajaYear extends React.Component {
                 </tr>
               </thead>
               <tbody>
-                <tr>
+                <tr className="alert-danger">
                   <td>test</td>
                   <td>test</td>
                   <td>test</td>

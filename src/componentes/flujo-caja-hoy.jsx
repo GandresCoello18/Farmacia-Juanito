@@ -10,18 +10,22 @@ class FlujoCajaHoy extends React.Component {
               INGRESOS
             </h4>
 
-            <table className="table-striped text-center mt-5">
+            <table
+              className="table-striped text-center mt-5"
+              style={{ fontSize: 20 }}
+            >
               <thead>
                 <tr>
                   <th>Vendidos</th>
-                  <th>Monto</th>
+                  <th>Total</th>
                 </tr>
               </thead>
-              <tr>
-                <td>26</td>
-                <td>200</td>
-              </tr>
-              <tbody></tbody>
+              <tbody>
+                <tr>
+                  <td className="badge-success">26</td>
+                  <td className="badge-success">200</td>
+                </tr>
+              </tbody>
             </table>
           </div>
 
@@ -30,18 +34,22 @@ class FlujoCajaHoy extends React.Component {
               EGRESOS
             </h4>
 
-            <table className="table-striped text-center mt-5">
+            <table
+              className="table-striped text-center mt-5"
+              style={{ fontSize: 20 }}
+            >
               <thead>
                 <tr>
-                  <th>Vendidos</th>
-                  <th>Monto</th>
+                  <th>Egresos</th>
+                  <th>Total</th>
                 </tr>
               </thead>
-              <tr>
-                <td>26</td>
-                <td>200</td>
-              </tr>
-              <tbody></tbody>
+              <tbody>
+                <tr>
+                  <td className="badge-warning">26</td>
+                  <td className="badge-warning">200</td>
+                </tr>
+              </tbody>
             </table>
           </div>
 
@@ -50,18 +58,22 @@ class FlujoCajaHoy extends React.Component {
               SALDOS
             </h4>
 
-            <table className="table-striped text-center mt-5">
+            <table
+              className="table-striped text-center mt-5"
+              style={{ fontSize: 20 }}
+            >
               <thead>
                 <tr>
-                  <th>Vendidos</th>
-                  <th>Monto</th>
+                  <th>Saldo Neto</th>
+                  <th>Saldo acumulado</th>
                 </tr>
               </thead>
-              <tr>
-                <td>26</td>
-                <td>200</td>
-              </tr>
-              <tbody></tbody>
+              <tbody>
+                <tr>
+                  <td className="badge-info">26</td>
+                  <td className="badge-info">200</td>
+                </tr>
+              </tbody>
             </table>
           </div>
         </div>

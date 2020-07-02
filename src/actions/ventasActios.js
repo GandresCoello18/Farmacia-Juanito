@@ -214,3 +214,29 @@ export const eliminar_factura = (id) => async (dispatch) => {
     });
   }
 };
+
+export const quitar_facturas_repetidas = (ventas) => async () => {
+  let count = 0;
+  let y = 0;
+  let resul = [];
+
+  for (let i = 0; i < ventas.length; i++) {
+    for (let j = 0; j < ventas.length; j++) {
+      if (ventas[i].id_factura == ventas[j].id_factura) {
+        count = count + 1;
+      }
+    }
+
+    if (count < 2) {
+      resul.push(ventas[i]);
+    } else {
+      y = y + 1;
+      if (y < 2) {
+        resul.push(ventas[i]);
+      }
+    }
+    count = 0;
+  }
+
+  return resul;
+};

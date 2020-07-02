@@ -20,12 +20,16 @@ import {
 import { validar_status } from "../util/util-status";
 import "../assest/css/home.css";
 
-import { traer_ventas } from "../actions/ventasActios";
+import {
+  traer_ventas,
+  quitar_facturas_repetidas,
+} from "../actions/ventasActios";
 import { obtener_producto_completos } from "../actions/productoAction";
 
 class Home extends React.Component {
   state = {
     one_factura: 0,
+    data_ventas_limpios: [],
   };
 
   styles = {
@@ -55,6 +59,7 @@ class Home extends React.Component {
     if (this.props.ProductoReducer.Producto.length == 0) {
       this.props.obtener_producto_completos();
     }
+    this.validar_facturas_repetidas();
   }
 
   validar_caducidad = (fecha_caducidad) => {
@@ -68,6 +73,16 @@ class Home extends React.Component {
       return true;
     }
     return false;
+  };
+
+  validar_facturas_repetidas = () => {
+    this.props
+      .quitar_facturas_repetidas(this.props.ventasReducer.ventas)
+      .then((data) => {
+        this.setState({
+          data_ventas_limpios: data,
+        });
+      });
   };
 
   load = () => <Load />;
@@ -108,7 +123,8 @@ class Home extends React.Component {
                     <tr>
                       <td colSpan="10">{this.load()}</td>
                     </tr>
-                  ) : this.props.ventasReducer.ventas.length == 0 ? (
+                  ) : this.props.ventasReducer.ventas.length == 0 ||
+                    this.state.data_ventas_limpios.length == 0 ? (
                     <tr>
                       <td colSpan="10">
                         <Alerta
@@ -118,7 +134,7 @@ class Home extends React.Component {
                       </td>
                     </tr>
                   ) : (
-                    this.props.ventasReducer.ventas
+                    this.state.data_ventas_limpios
                       .filter((item) => item.estado == "Vendido")
                       .reverse()
                       .slice(0, 8)
@@ -253,6 +269,7 @@ Home.prototypes = {
   ventasReducer: PropsType.object,
   ProductoReducer: PropsType.object,
   traer_ventas: PropsType.func,
+  quitar_facturas_repetidas: PropsType.func,
   obtener_producto_completos: PropsType.func,
 };
 
@@ -262,6 +279,7 @@ const mapStateToProps = ({ ventasReducer, ProductoReducer }) => {
 
 const mapDispatchToProps = {
   obtener_producto_completos,
+  quitar_facturas_repetidas,
   traer_ventas,
 };
 

@@ -53,13 +53,30 @@ class Ventas extends React.Component {
 
   metodo_buscar_venta = (fecha) => {
     let datosVentas = this.props.ventasReducer.ventas;
+    let count = 0;
+    let y = 0;
     let nuevo = [];
     let total = 0;
 
     for (let i = 0; i < datosVentas.length; i++) {
       if (datosVentas[i].fecha_factura.indexOf(fecha) != -1) {
         nuevo.push(datosVentas[i]);
-        total = total + Number(datosVentas[i].total);
+
+        for (let j = 0; j < datosVentas.length; j++) {
+          if (datosVentas[i].id_factura == datosVentas[j].id_factura) {
+            count = count + 1;
+          }
+        }
+
+        if (count < 2) {
+          total = total + Number(datosVentas[i].total);
+        } else {
+          y = y + 1;
+          if (y < 2) {
+            total = total + Number(datosVentas[i].total);
+          }
+        }
+        count = 0;
       }
     }
     this.setState({ total_ventas: total });
