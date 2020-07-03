@@ -118,7 +118,7 @@ class Login extends React.Component {
 
   render() {
     if (exist_token(Cookie.get("access_token")) == true) {
-      return <Redirect to="/" />;
+      return <Redirect to="/stock" />;
     }
     return (
       <>

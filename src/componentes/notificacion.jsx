@@ -8,7 +8,7 @@ class Notificacion extends React.Component {
   render() {
     return (
       <>
-        <x-button id="notificacion">
+        <x-button style={{ minHeight: 0 }} id="notificacion">
           <x-label></x-label>
           <x-notification timeout="3000">{this.props.text}</x-notification>
         </x-button>

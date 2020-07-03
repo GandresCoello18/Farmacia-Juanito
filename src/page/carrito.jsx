@@ -5,12 +5,13 @@ import Head from "../componentes/head";
 import Cookie from "js-cookie";
 import Alerta from "../componentes/alert";
 import moment from "moment";
-import { Link, Redirect } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import { exist_token } from "../util/verifi-local-token";
 import ImgFact from "../assest/logo-farmacia.jpeg";
 import Nav from "../componentes/nav";
 import Notificacion from "../componentes/notificacion";
+import FormCreateClient from "../componentes/form-create-cliente";
 import Footer from "../componentes/footer";
 
 import { quitar_del_carrito, limpiar_carrito } from "../actions/carritoAction";
@@ -33,6 +34,7 @@ class Carrito extends React.Component {
     cambio_pago: "$: Cambio",
     ////////////
     time: null,
+    slider: "carrito_pago",
   };
 
   styles = {
@@ -74,6 +76,21 @@ class Carrito extends React.Component {
     const value = target.value;
     const name = target.name;
 
+    if (name == "descuento") {
+      this.calcular_sub_total_de_pago(Number(value));
+    }
+    if (name == "efectivo_pago") {
+      let cambio = "";
+
+      if (value != "") {
+        cambio = (Number(value) - this.state.Total).toFixed(2);
+      }
+
+      this.setState({
+        cambio_pago: cambio,
+      });
+    }
+
     this.setState({
       [name]: value,
     });
@@ -98,27 +115,77 @@ class Carrito extends React.Component {
     });
   };
 
-  calcular_sub_total_de_pago = (descuento = null) => {
+  calcular_sub_total_de_pago = (descuento = null, aplicar_iva = false) => {
     let sub = 0;
     let total = 0;
 
     let celda_total = document.querySelectorAll(".celda_total");
-    for (let i = 0; i < celda_total.length; i++) {
-      sub = sub + Number(celda_total[i].value);
-    }
 
-    if (descuento != null) {
-      total = (sub + (sub * this.state.iva) / 100).toFixed(2);
-      let desc = ((total * descuento) / 100).toFixed(2);
-      total = (total - desc).toFixed(2);
+    if (aplicar_iva) {
+      for (let i = 0; i < celda_total.length; i++) {
+        total = total + Number(celda_total[i].value);
+      }
+
+      this.setState({
+        Total: Number(total.toFixed(2)),
+      });
     } else {
-      total = (sub + (sub * this.state.iva) / 100).toFixed(2);
+      for (let i = 0; i < celda_total.length; i++) {
+        sub = sub + Number(celda_total[i].value);
+      }
+
+      if (descuento != null) {
+        total = sub;
+        let desc = ((total * descuento) / 100).toFixed(2);
+        total = total - desc;
+      } else {
+        total = sub;
+      }
+
+      this.setState({
+        subTotalCompra: Number(sub.toFixed(2)),
+        Total: Number(total.toFixed(2)),
+      });
+    }
+  };
+
+  add_iva = (id_producto) => {
+    let item_total = Number(
+      document.getElementById(`item_total_${id_producto}`).value
+    );
+    let cantidad = Number(
+      document.getElementById(`cantidad_${id_producto}`).value
+    );
+    let sub = 0;
+    let data_iva = 0;
+
+    let datosCarrito = this.props.carritoReducer.carrito;
+    let data = datosCarrito.find((item) => item.id_producto == id_producto);
+    sub = Number(data.pvp) / Number(data.cantidad);
+    sub = sub * Number(cantidad);
+
+    if (document.getElementById(`iva_${id_producto}`).checked) {
+      data_iva = item_total + (item_total * this.state.iva) / 100;
+    } else {
+      data_iva = item_total - (sub * this.state.iva) / 100;
     }
 
-    this.setState({
-      subTotalCompra: Number(sub.toFixed(2)),
-      Total: Number(total),
-    });
+    document.getElementById(
+      `item_total_${id_producto}`
+    ).value = data_iva.toFixed(2);
+    this.calcular_sub_total_de_pago(null, true);
+    this.validar_aplicar_iva_not_descuento();
+  };
+
+  validar_aplicar_iva_not_descuento = () => {
+    let checkbox = document.querySelectorAll(".aplicar_iva");
+    for (let i = 0; i < checkbox.length; i++) {
+      if (checkbox[i].checked) {
+        document.getElementById("descuento").disabled = true;
+        return true;
+      }
+    }
+    document.getElementById("descuento").disabled = false;
   };
 
   validar_cantidad_item_producto_not_cero = () => {
@@ -139,8 +206,16 @@ class Carrito extends React.Component {
     return false;
   };
 
-  formato = (e, id_producto) =>
-    (document.getElementById(`cantidad_${id_producto}`).value = 0);
+  cambiar_slider = () => this.setState({ slider: "carrito_pago" });
+
+  formato = (e, id_producto) => {
+    document.getElementById("descuento").value = "";
+    document.getElementById(`cantidad_${id_producto}`).value = 0;
+
+    this.setState({
+      descuento: 0,
+    });
+  };
 
   cantidad = (e, id_producto) => {
     let item_total = document.getElementById(`item_total_${id_producto}`);
@@ -174,6 +249,9 @@ class Carrito extends React.Component {
         alert(
           "El efectivo tiene que ser mayor o igual que el total de la compra"
         );
+        return false;
+      } else if (this.state.cambio_pago < 0) {
+        alert("Fatal: cambio negativo, el cambio es menor a cero");
         return false;
       }
       this.setState({
@@ -215,9 +293,7 @@ class Carrito extends React.Component {
     }
   };
 
-  load = () => {
-    return <Load />;
-  };
+  load = () => <Load />;
 
   render() {
     if (exist_token(Cookie.get("access_token")) == false) {
@@ -244,12 +320,11 @@ class Carrito extends React.Component {
                     <th>Cant</th>
                     <th>Present</th>
                     <th>Medida</th>
-                    <th>Lote</th>
-                    <th>Reg-Sanit</th>
                     <th>PVP</th>
                     <th>Caducidad</th>
                     <th>Formato</th>
                     <th>Cantidad</th>
+                    <th>¿ Iva ?</th>
                     <th>Total</th>
                     <th>Opciones</th>
                   </tr>
@@ -284,8 +359,6 @@ class Carrito extends React.Component {
                         <td>
                           {valor.medida} {valor.tipo_medida}
                         </td>
-                        <td>{valor.lote}</td>
-                        <td>{valor.registro_sanitario}</td>
                         <td>{valor.pvp}</td>
                         <td>{valor.fecha_caducidad}</td>
                         <td>
@@ -313,6 +386,19 @@ class Carrito extends React.Component {
                             style={{ width: 60 }}
                             defaultValue={1}
                           />
+                        </td>
+                        <td>
+                          <div className="checkbox">
+                            <label>
+                              <input
+                                type="checkbox"
+                                className="aplicar_iva"
+                                id={`iva_${valor.id_producto}`}
+                                onClick={() => this.add_iva(valor.id_producto)}
+                              />{" "}
+                              {this.state.iva} %
+                            </label>
+                          </div>
                         </td>
                         <td>
                           <input
@@ -379,13 +465,11 @@ class Carrito extends React.Component {
                       type="number"
                       min="0"
                       max="100"
+                      id="descuento"
                       style={{ width: 100 }}
                       name="descuento"
                       disabled={this.props.carritoReducer.carrito.length == 0}
                       onChange={this.handleInputChange}
-                      onChange={(e) => {
-                        this.calcular_sub_total_de_pago(Number(e.target.value));
-                      }}
                       className="form-control"
                       placeholder="Descuento  %"
                     />
@@ -397,101 +481,119 @@ class Carrito extends React.Component {
               <x-button style={this.styles.btn_verde}>
                 <x-label>Continuar</x-label>
                 <dialog style={this.styles.dialogo}>
-                  <div className="card">
-                    <img
-                      src={ImgFact}
-                      className="card-img-top p-2"
-                      style={{ height: 220 }}
-                    />
-                    <ul className="list-group list-group-flush">
-                      <li className="list-group-item">
-                        Fecha: <b>{moment(new Date()).format("LL")}</b>
-                      </li>
-                      <li className="list-group-item">
-                        <Link to="/clientes" className="btn btn-primary">
-                          Agregar nuevo cliente
-                        </Link>
-                      </li>
-                      <li className="list-group-item">
-                        <select
-                          className="form-control"
-                          name="cliente_pago"
-                          disabled={
-                            this.props.carritoReducer.carrito.length == 0
-                          }
-                        >
-                          <option>Clientes</option>
-                          {this.props.clienteReducer.clientes.map((item) => (
-                            <option
-                              key={item.identificacion}
-                              value={item.identificacion}
-                            >
-                              {item.nombres} {item.apellidos}
-                            </option>
-                          ))}
-                        </select>
-                      </li>
-                      <li className="list-group-item">
-                        <textarea
-                          rows="3"
-                          disabled={
-                            this.props.carritoReducer.carrito.length == 0
-                          }
-                          name="descripcion_pago"
-                          className="form-control"
-                          placeholder="Descripcion de la compra..."
-                        ></textarea>
-                      </li>
-                      <li className="list-group-item">
-                        Descuento:{" "}
-                        <b className="badge-info p-1">
-                          {this.state.descuento} %
-                        </b>{" "}
-                        &nbsp; &nbsp; &nbsp; &nbsp; Iva:{" "}
-                        <b className="badge-info p-1">{this.state.iva} %</b>
-                      </li>
-                      <li className="list-group-item">
-                        <input
-                          type="number"
-                          name="efectivo_pago"
-                          onChange={this.validar_efectivo}
-                          disabled={
-                            this.props.carritoReducer.carrito.length == 0
-                          }
-                          onChange={this.handleInputChange}
-                          className="form-control"
-                          placeholder="$: Efectivo"
-                          style={{ width: 100 }}
-                        />
-                        &nbsp; &nbsp; &nbsp; &nbsp;
-                        <input
-                          type="number"
-                          name="cambio_pago"
-                          onChange={this.handleInputChange}
-                          className="form-control"
-                          disabled={true}
-                          placeholder={this.state.cambio_pago}
-                          style={{ width: 100 }}
-                        />
-                      </li>
-                      <li className="list-group-item">
-                        Total a pagar: &nbsp; &nbsp;
-                        <span
-                          style={{ fontSize: 13 }}
-                          className="badge-success p-1 mt-1"
-                        >
-                          <b>$ {this.state.Total}</b>
-                        </span>
-                      </li>
-                    </ul>
-                    <button
-                      disabled={this.props.carritoReducer.carrito.length == 0}
-                      className="btn btn-positive form-control mt-2"
-                      onClick={this.confirmar_pago}
-                    >
-                      Confirmar Compra
-                    </button>
-                  </div>
+                  {this.state.slider != "carrito_pago" ? (
+                    <div style={{ color: "#000" }}>
+                      <FormCreateClient cambiar_slider={this.cambiar_slider} />
+                    </div>
+                  ) : (
+                    <div className="card">
+                      <img
+                        src={ImgFact}
+                        className="card-img-top p-2"
+                        style={{ height: 220 }}
+                      />
+                      <ul className="list-group list-group-flush">
+                        <li className="list-group-item">
+                          Fecha: <b>{moment(new Date()).format("LL")}</b>
+                        </li>
+                        <li className="list-group-item">
+                          <button
+                            className="btn btn-primary"
+                            disabled={
+                              this.props.carritoReducer.carrito.length == 0
+                            }
+                            onClick={() => {
+                              this.setState({
+                                slider: "crear cliente",
+                              });
+                            }}
+                          >
+                            Agregar nuevo cliente
+                          </button>
+                        </li>
+                        <li className="list-group-item">
+                          <select
+                            className="form-control"
+                            name="cliente_pago"
+                            disabled={
+                              this.props.carritoReducer.carrito.length == 0
+                            }
+                          >
+                            <option>Clientes</option>
+                            {this.props.clienteReducer.clientes.map((item) => (
+                              <option
+                                key={item.identificacion}
+                                value={item.identificacion}
+                              >
+                                {item.nombres} {item.apellidos}
+                              </option>
+                            ))}
+                          </select>
+                        </li>
+                        <li className="list-group-item">
+                          <textarea
+                            rows="3"
+                            disabled={
+                              this.props.carritoReducer.carrito.length == 0
+                            }
+                            name="descripcion_pago"
+                            className="form-control"
+                            placeholder="Descripcion de la compra..."
+                          ></textarea>
+                        </li>
+                        <li className="list-group-item">
+                          Descuento:{" "}
+                          <b className="badge-info p-1">
+                            {this.state.descuento} %
+                          </b>{" "}
+                          &nbsp; &nbsp; &nbsp; &nbsp; Iva:{" "}
+                          <b className="badge-info p-1">{this.state.iva} %</b>
+                        </li>
+                        <li className="list-group-item">
+                          <input
+                            type="number"
+                            name="efectivo_pago"
+                            min="0"
+                            onChange={this.validar_efectivo}
+                            disabled={
+                              this.props.carritoReducer.carrito.length == 0
+                            }
+                            onChange={this.handleInputChange}
+                            className="form-control"
+                            placeholder="$: Efectivo"
+                            style={{ width: 100 }}
+                          />
+                          &nbsp; &nbsp; &nbsp; &nbsp;
+                          <input
+                            type="number"
+                            name="cambio_pago"
+                            id="cambio_pago"
+                            onChange={this.handleInputChange}
+                            className="form-control"
+                            disabled={true}
+                            placeholder={this.state.cambio_pago}
+                            style={{ width: 100 }}
+                          />
+                        </li>
+                        <li className="list-group-item">
+                          Total a pagar: &nbsp; &nbsp;
+                          <span
+                            style={{ fontSize: 13 }}
+                            className="badge-success p-1 mt-1"
+                          >
+                            <b>$ {this.state.Total}</b>
+                          </span>
+                        </li>
+                      </ul>
+                      <button
+                        disabled={this.props.carritoReducer.carrito.length == 0}
+                        className="btn btn-positive form-control mt-2"
+                        onClick={this.confirmar_pago}
+                      >
+                        Confirmar Compra
+                      </button>
+                    </div>
+                  )}
                 </dialog>
               </x-button>
             </div>

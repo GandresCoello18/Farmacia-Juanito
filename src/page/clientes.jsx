@@ -9,68 +9,17 @@ import Load from "../componentes/preload";
 import Confir from "../componentes/confirmacion";
 import Footer from "../componentes/footer";
 import Head from "../componentes/head";
+import FormCreateClient from "../componentes/form-create-cliente";
 import { Redirect } from "react-router-dom";
 
-import {
-  traer_clientes,
-  crear_cliente,
-  busqueda_en_clientes,
-} from "../actions/clienteAction";
+import { traer_clientes, busqueda_en_clientes } from "../actions/clienteAction";
 
 class Clientes extends React.Component {
-  state = {
-    nombres: "",
-    apellidos: "",
-    identificacion: 0,
-    correo: "",
-    direccion: "",
-    data_clientes: [],
-  };
-
   componentDidMount() {
     if (this.props.clienteReducer.clientes.length == 0) {
       this.props.traer_clientes();
     }
   }
-
-  componentWillUpdate(nextProps, nextState) {
-    /*if (nextProps.clienteReducer.mensaje_cliente != "") {
-      alert(`${nextProps.clienteReducer.mensaje_cliente}`);
-    }
-    if (nextProps.clienteReducer.mensaje_cliente == "Se creo el cliente") {
-      this.props.traer_clientes();
-    }*/
-  }
-
-  handleInputChange = (event) => {
-    const target = event.target;
-    const value = target.value;
-    const name = target.name;
-
-    this.setState({
-      [name]: value,
-    });
-  };
-
-  add_cliente = () => {
-    if (
-      this.state.nombres == "" ||
-      this.state.apellidos == "" ||
-      this.state.identificacion == "" ||
-      this.state.correo == "" ||
-      this.state.direccion == ""
-    ) {
-    } else {
-      this.props.crear_cliente(
-        this.state.nombres,
-        this.state.apellidos,
-        this.state.identificacion,
-        this.state.correo,
-        this.state.direccion
-      );
-      document.getElementById("client_form").reset();
-    }
-  };
 
   search_client = (e) => {
     const respaldo = this.props.clienteReducer.clientes;
@@ -95,9 +44,7 @@ class Clientes extends React.Component {
     }
   };
 
-  load = () => {
-    return <Load />;
-  };
+  load = () => <Load />;
 
   render() {
     if (exist_token(Cookie.get("access_token")) == false) {
@@ -113,78 +60,7 @@ class Clientes extends React.Component {
             <div className="window-content">
               <div className="pane-group">
                 <div className="pane-sm sidebar" style={{ width: 400 }}>
-                  <div
-                    style={{
-                      backgroundColor: "#0866dc",
-                      color: "#fff",
-                      width: "100%",
-                      padding: 5,
-                    }}
-                  >
-                    <strong
-                      className="text-center"
-                      style={{
-                        marginLeft: 30,
-                      }}
-                    >
-                      Nuevo Cliente
-                    </strong>
-                  </div>
-
-                  <form className="p-2" id="client_form">
-                    <label className="mt-0"> Nombres:</label>
-                    <input
-                      type="text"
-                      name="nombres"
-                      onChange={this.handleInputChange}
-                      className="form-control"
-                      placeholder="Nombres completos"
-                    />
-
-                    <label className="mt-2">Apellidos:</label>
-                    <input
-                      type="text"
-                      name="apellidos"
-                      onChange={this.handleInputChange}
-                      className="form-control"
-                      placeholder="Apellidos completos"
-                    />
-
-                    <label className="mt-2">Numero de identificacion:</label>
-                    <input
-                      type="number"
-                      name="identificacion"
-                      onChange={this.handleInputChange}
-                      className="form-control"
-                      placeholder="0000"
-                    />
-
-                    <label className="mt-2">Direccion de correo:</label>
-                    <input
-                      type="email"
-                      name="correo"
-                      onChange={this.handleInputChange}
-                      className="form-control"
-                      placeholder="ejemplo@gmail.com"
-                    />
-
-                    <label className="mt-2">Direccion:</label>
-                    <textarea
-                      rows="3"
-                      name="direccion"
-                      onChange={this.handleInputChange}
-                      className="form-control"
-                      placeholder="......"
-                    ></textarea>
-
-                    <button
-                      onClick={this.add_cliente}
-                      type="button"
-                      className="btn btn-primary form-control mt-1"
-                    >
-                      Guardar
-                    </button>
-                  </form>
+                  <FormCreateClient />
                 </div>
                 <div className="pane">
                   <div
@@ -239,8 +115,18 @@ class Clientes extends React.Component {
                                 <td>{valor.nombres}</td>
                                 <td>{valor.apellidos}</td>
                                 <td>{valor.identificacion}</td>
-                                <td>{valor.correo}</td>
-                                <td>{valor.direccion}</td>
+                                <td
+                                  className={
+                                    valor.correo == "" && "alert-danger"
+                                  }
+                                >
+                                  {valor.correo == ""
+                                    ? "no especificado"
+                                    : valor.correo}
+                                </td>
+                                <td style={{ width: 100 }}>
+                                  {valor.direccion}
+                                </td>
                                 <td>
                                   <button className="btn btn-mini btn-warning">
                                     Modificar
@@ -274,7 +160,6 @@ class Clientes extends React.Component {
 
 Clientes.prototypes = {
   clienteReducer: PropsType.object,
-  crear_cliente: PropsType.func,
   traer_clientes: PropsType.func,
   busqueda_en_clientes: PropsType.func,
 };
@@ -284,7 +169,6 @@ const mapStateToProps = ({ clienteReducer }) => {
 };
 
 const mapDispchToProps = {
-  crear_cliente,
   traer_clientes,
   busqueda_en_clientes,
 };

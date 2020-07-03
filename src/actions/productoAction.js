@@ -98,6 +98,13 @@ export const create_name_product = (name) => async (dispatch) => {
           payload: res.data,
         });
 
+        obtenerNameProduct().then((res) => {
+          dispatch({
+            type: TRAER_NAME_PRODUCTO,
+            payload: res.data,
+          });
+        });
+
         dispatch({
           type: NOTIFICACION_ACTIVIVDAD,
           payload: {
@@ -148,6 +155,13 @@ export const create_name_laboratorio = (name) => async (dispatch) => {
           payload: res.data,
         });
 
+        obtenerNameLaboratorio().then((res) => {
+          dispatch({
+            type: TRAER_NAME_LABORATORIO,
+            payload: res.data,
+          });
+        });
+
         dispatch({
           type: NOTIFICACION_ACTIVIVDAD,
           payload: {
@@ -196,6 +210,13 @@ export const create_name_princ_activo = (name) => async (dispatch) => {
         dispatch({
           type: CREAR_PRINCIPIO_ACTIVO,
           payload: res.data,
+        });
+
+        obtenerPrincipioActive().then((res) => {
+          dispatch({
+            type: TRAER_PRINCIPIO_ACTIVO,
+            payload: res.data,
+          });
         });
 
         dispatch({
