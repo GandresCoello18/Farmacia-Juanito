@@ -1,4 +1,9 @@
-import { createCliente, traerCLiente, eliminarCliente } from "../api/clientes";
+import {
+  createCliente,
+  traerCLiente,
+  eliminarCliente,
+  editarCliente,
+} from "../api/clientes";
 import {
   CREAR_CLIENTE,
   TRAER_CLIENTES,
@@ -124,31 +129,117 @@ export const busqueda_en_clientes = (array) => async (dispatch) => {
 export const eliminar_cliente = (id) => async (dispatch) => {
   try {
     eliminarCliente(id).then((res) => {
-      dispatch({
-        type: NOTIFICACION_ACTIVIVDAD,
-        payload: {
-          tipo: "EXITO",
-          text: `(Cliente) se elimino el cliente`,
-          date: new Date(),
-        },
-      });
-
-      traerCLiente().then((res) => {
+      if (res.data.feeback != undefined) {
         dispatch({
-          type: TRAER_CLIENTES,
-          payload: res.data,
+          type: NOTIFICACION_ACTIVIVDAD,
+          payload: {
+            tipo: "ERROR",
+            text: `${res.data.feeback}`,
+            date: new Date(),
+          },
+        });
+      } else {
+        dispatch({
+          type: NOTIFICACION_ACTIVIVDAD,
+          payload: {
+            tipo: "EXITO",
+            text: `(Cliente) se elimino el cliente`,
+            date: new Date(),
+          },
         });
 
-        dispatch({
-          type: BUSQUEDA_CLIENTES,
-          payload: res.data,
+        traerCLiente().then((res) => {
+          dispatch({
+            type: TRAER_CLIENTES,
+            payload: res.data,
+          });
+
+          dispatch({
+            type: BUSQUEDA_CLIENTES,
+            payload: res.data,
+          });
         });
-      });
+      }
     });
   } catch (error) {
+    dispatch({
+      type: NOTIFICACION_ACTIVIVDAD,
+      payload: {
+        tipo: "ERROR",
+        text: `${error.message}`,
+        date: new Date(),
+      },
+    });
+
     dispatch({
       type: ERROR_CLIENTE,
       payload: `Error al eliminar cliente: ${error.message}`,
     });
   }
+};
+
+var validar_res = true;
+export const editar_cliente = (
+  id,
+  nombre,
+  apellido,
+  identificacion,
+  correo,
+  direccion
+) => async (dispatch) => {
+  try {
+    editarCliente(id, nombre, apellido, identificacion, correo, direccion).then(
+      (res) => {
+        if (res.data.feeback != undefined) {
+          dispatch({
+            type: NOTIFICACION_ACTIVIVDAD,
+            payload: {
+              tipo: "ERROR",
+              text: `${res.data.feeback}`,
+              date: new Date(),
+            },
+          });
+          validar_res = false;
+        } else {
+          traerCLiente().then((res) => {
+            dispatch({
+              type: TRAER_CLIENTES,
+              payload: res.data,
+            });
+
+            dispatch({
+              type: BUSQUEDA_CLIENTES,
+              payload: res.data,
+            });
+          });
+
+          dispatch({
+            type: NOTIFICACION_ACTIVIVDAD,
+            payload: {
+              tipo: "EXITO",
+              text: `Se actualizo el cliente`,
+              date: new Date(),
+            },
+          });
+          validar_res = true;
+        }
+      }
+    );
+  } catch (error) {
+    dispatch({
+      type: NOTIFICACION_ACTIVIVDAD,
+      payload: {
+        tipo: "ERROR",
+        text: `${error.message}`,
+        date: new Date(),
+      },
+    });
+
+    dispatch({
+      type: ERROR_CLIENTE,
+      payload: `Error al editar cliente: ${error.message}`,
+    });
+    validar_res = false;
+  }
+  return validar_res;
 };

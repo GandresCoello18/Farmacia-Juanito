@@ -38,5 +38,30 @@ export const eliminarCliente = async (id) => {
   return await axios({
     method: "DELETE",
     url: `${domain()}/api/cliente/${id}`,
+    headers: { "access-token": Cookie.get("access_token") },
+  });
+};
+
+/////////////  METODO DE PETICION PUT
+
+export const editarCliente = async (
+  id,
+  nombre,
+  apellido,
+  identificacion,
+  correo,
+  direccion
+) => {
+  return await axios({
+    method: "PUT",
+    url: `${domain()}/api/cliente/${id}`,
+    data: {
+      nombre,
+      apellido,
+      identificacion,
+      correo,
+      direccion,
+    },
+    headers: { "access-token": Cookie.get("access_token") },
   });
 };

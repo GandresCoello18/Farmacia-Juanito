@@ -7,6 +7,7 @@ import Alerta from "../componentes/alert";
 import { connect } from "react-redux";
 import Load from "../componentes/preload";
 import Confir from "../componentes/confirmacion";
+import Edit from "../componentes/edit";
 import Footer from "../componentes/footer";
 import Head from "../componentes/head";
 import FormCreateClient from "../componentes/form-create-cliente";
@@ -117,7 +118,10 @@ class Clientes extends React.Component {
                                 <td>{valor.identificacion}</td>
                                 <td
                                   className={
-                                    valor.correo == "" && "alert-danger"
+                                    valor.correo == "" ||
+                                    valor.correo == "no especificado"
+                                      ? "alert-danger"
+                                      : ""
                                   }
                                 >
                                   {valor.correo == ""
@@ -128,9 +132,7 @@ class Clientes extends React.Component {
                                   {valor.direccion}
                                 </td>
                                 <td>
-                                  <button className="btn btn-mini btn-warning">
-                                    Modificar
-                                  </button>
+                                  <Edit form="cliente" data={valor} />
                                   <Confir
                                     id={valor.id_cliente}
                                     tabla="cliente"

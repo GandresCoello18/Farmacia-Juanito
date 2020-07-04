@@ -1,5 +1,6 @@
 import React from "react";
 import PropType from "prop-types";
+import EditCliente from "../componentes/form-edit/edit-cliente";
 import EditUsuario from "../componentes/form-edit/edit-usuarios";
 
 class Edit extends React.Component {
@@ -36,6 +37,9 @@ class Edit extends React.Component {
             <dialog style={this.state.styles.dialog}>
               {this.props.form == "usuarios" && (
                 <EditUsuario data={this.props.data} />
+              )}
+              {this.props.form == "cliente" && (
+                <EditCliente data={this.props.data} />
               )}
             </dialog>
           </x-button>

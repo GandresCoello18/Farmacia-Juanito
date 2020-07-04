@@ -7,6 +7,7 @@ import {
   cleanHistory,
   obtenerUsuarios,
   eliminarUser,
+  editarUser,
 } from "../api/usuarios";
 import {
   CREAR_USER,
@@ -233,6 +234,55 @@ export const eliminar_ususario = (id) => async (dispatch) => {
     dispatch({
       type: ERROR,
       payload: "Error al eliminar usuario: " + error.message,
+    });
+
+    dispatch({
+      type: NOTIFICACION_ACTIVIVDAD,
+      payload: {
+        tipo: "ERROR",
+        text: `(Usuario) ${error.message}`,
+        date: new Date(),
+      },
+    });
+  }
+};
+
+export const editar_usuario = (id, nombres, apellidos, email_on) => async (
+  dispatch
+) => {
+  try {
+    editarUser(id, nombres, apellidos, email_on).then((res) => {
+      if (res.data.feeback != undefined) {
+        dispatch({
+          type: NOTIFICACION_ACTIVIVDAD,
+          payload: {
+            tipo: "ERROR",
+            text: `${res.data.feeback}`,
+            date: new Date(),
+          },
+        });
+      } else {
+        obtenerUsuarios().then((res) => {
+          dispatch({
+            type: TRAER_TODOS_USERS,
+            payload: res.data,
+          });
+        });
+
+        dispatch({
+          type: NOTIFICACION_ACTIVIVDAD,
+          payload: {
+            tipo: "EXITO",
+            text: `Se actualizo el usuario`,
+            date: new Date(),
+          },
+        });
+      }
+    });
+  } catch (error) {
+    dispatch({
+      type: ERROR,
+      payload: "Error al editar el usuario: " + error.message,
     });
 
     dispatch({

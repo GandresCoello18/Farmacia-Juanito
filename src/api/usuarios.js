@@ -21,7 +21,7 @@ export const verificarEmail = async (email) => {
 export const sessionHistory = async () => {
   return await axios({
     method: "GET",
-    url: `${domain()}/api/usuario/history-session?limite=6`,
+    url: `${domain()}/api/usuario/history-session?limite=5`,
   });
 };
 
@@ -67,6 +67,21 @@ export const eliminarUser = async (id) => {
   return await axios({
     method: "DELETE",
     url: `${domain()}/api/usuario/${id}`,
+    headers: { "access-token": Cookie.get("access_token") },
+  });
+};
+
+/////////////////  METODO DE PETICION PUT
+
+export const editarUser = async (id, nombres, apellidos, email_on) => {
+  return await axios({
+    method: "PUT",
+    url: `${domain()}/api/usuario/${id}`,
+    data: {
+      nombres,
+      apellidos,
+      email_on,
+    },
     headers: { "access-token": Cookie.get("access_token") },
   });
 };

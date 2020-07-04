@@ -1,15 +1,34 @@
 import React from "react";
+import PropType from "prop-types";
+import { connect } from "react-redux";
+
+import { editar_usuario } from "../../actions/usuariosActions";
 
 class EditUsuario extends React.Component {
   update_user = (id_user) => {
-    console.log(id_user);
+    let nombres = document.getElementById("nombres").value;
+    let apellidos = document.getElementById("apellidos").value;
+    let email_on = document.getElementById("email_on").value;
+
+    if (nombres == "" || apellidos == "" || email_on == "") {
+      alert("Campos vacios, revise y vuelva ha intentarlo");
+    } else {
+      let on = null;
+      if (email_on == "Si") {
+        on = true;
+      } else {
+        on = false;
+      }
+      this.props.editar_usuario(id_user, nombres, apellidos, on);
+      alert("Actualizacion completada..!");
+    }
   };
 
   render() {
     return (
       <>
         {[this.props.data].map((item) => (
-          <form className="p-2">
+          <form className="p-2" key={item.id_user}>
             <h4
               style={{
                 fontWeight: "bold",
@@ -26,6 +45,7 @@ class EditUsuario extends React.Component {
               <div className="col-12">
                 <input
                   className="form-control"
+                  id="nombres"
                   placeholder="nuevo nombre"
                   defaultValue={item.nombres}
                 />
@@ -35,6 +55,7 @@ class EditUsuario extends React.Component {
               <div className="col-12">
                 <input
                   className="form-control"
+                  id="apellidos"
                   placeholder="nuevo apellido"
                   defaultValue={item.apellidos}
                 />
@@ -42,8 +63,7 @@ class EditUsuario extends React.Component {
 
               <label className="ml-3 mt-2">Verificar Email:</label>
               <div className="col-12">
-                <select className="form-control">
-                  <option>Escoger</option>
+                <select className="form-control" id="email_on">
                   <option>Si</option>
                   <option>No</option>
                 </select>
@@ -66,4 +86,12 @@ class EditUsuario extends React.Component {
   }
 }
 
-export default EditUsuario;
+const mapDisPatchToProps = {
+  editar_usuario,
+};
+
+EditUsuario.prototypes = {
+  editar_usuario: PropType.func,
+};
+
+export default connect(null, mapDisPatchToProps)(EditUsuario);
