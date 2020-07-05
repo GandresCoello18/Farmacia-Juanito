@@ -5,6 +5,7 @@ import Nav from "../componentes/nav";
 import ConfirEliminar from "../componentes/confirmacion";
 import Footer from "../componentes/footer";
 import Cookie from "js-cookie";
+import Edit from "../componentes/edit";
 import Alerta from "../componentes/alert";
 import Load from "../componentes/preload";
 import { connect } from "react-redux";
@@ -467,19 +468,6 @@ class Stock extends React.Component {
                       </div>
                       <div className="col p-2">
                         <label>
-                          <b>Medidas:</b>
-                        </label>
-                        <input
-                          type="number"
-                          name="dosis"
-                          onChange={this.handleInputChange}
-                          className="form-control"
-                          min="0"
-                          placeholder="000"
-                        />
-                      </div>
-                      <div className="col p-2">
-                        <label>
                           <b>Tipo de medidas:</b>
                         </label>
                         <select
@@ -493,6 +481,19 @@ class Stock extends React.Component {
                           <option>Litros</option>
                           <option>Mililitros</option>
                         </select>
+                      </div>
+                      <div className="col p-2">
+                        <label>
+                          <b>Medidas:</b>
+                        </label>
+                        <input
+                          type="number"
+                          name="dosis"
+                          onChange={this.handleInputChange}
+                          className="form-control"
+                          min="0"
+                          placeholder="000"
+                        />
                       </div>
                       <div className="col p-2">
                         <label>
@@ -656,12 +657,9 @@ class Stock extends React.Component {
                         <td>{valor.fecha_elaboracion}</td>
                         <td>{valor.fecha_caducidad}</td>
                         <td>
-                          <button
-                            className="btn btn-mini btn-warning"
-                            disabled={valor.estado != "Disponible" && true}
-                          >
-                            Modificar
-                          </button>
+                          {valor.estado == "Disponible" && (
+                            <Edit form="stock" data={valor} />
+                          )}
                           <span>
                             <ConfirEliminar
                               id={valor.id_producto}

@@ -46,6 +46,7 @@ class CreateClient extends React.Component {
       this.setState({
         exito: true,
       });
+      setTimeout(() => this.setState({ exito: false }), 1000);
     }
   };
 

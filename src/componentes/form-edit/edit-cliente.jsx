@@ -1,10 +1,14 @@
 import React from "react";
 import PropType from "prop-types";
 import { connect } from "react-redux";
-
+import Notificacion from "../notificacion";
 import { editar_cliente } from "../../actions/clienteAction";
 
 class EditCliente extends React.Component {
+  state = {
+    actualizado: false,
+  };
+
   update_client = (id_cliente) => {
     let nombre = document.getElementById("nombres").value;
     let apellido = document.getElementById("apellidos").value;
@@ -21,23 +25,18 @@ class EditCliente extends React.Component {
     ) {
       alert("Campos vacios, revise y vuelva ha intentarlo");
     } else {
-      this.props
-        .editar_cliente(
-          id_cliente,
-          nombre,
-          apellido,
-          identificacion,
-          correo,
-          direccion
-        )
-        .then((res) => {
-          console.log(res);
-          if (res) {
-            alert("Cliente actualizado");
-          } else {
-            alert("ups..!! Ocurrio un error");
-          }
-        });
+      this.props.editar_cliente(
+        id_cliente,
+        nombre,
+        apellido,
+        identificacion,
+        correo,
+        direccion
+      );
+      this.setState({
+        actualizado: true,
+      });
+      setTimeout(() => this.setState({ actualizado: false }), 1000);
     }
   };
 
@@ -122,6 +121,7 @@ class EditCliente extends React.Component {
             </div>
           </form>
         ))}
+        {this.state.actualizado && <Notificacion text="Actualizando...." />}
       </>
     );
   }

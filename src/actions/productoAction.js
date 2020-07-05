@@ -11,6 +11,10 @@ import {
   elimarPrincioActivo,
   elimarProductName,
   eliminarLaboratorio,
+  editarPrincipioActivo,
+  editarNombreProducto,
+  editarLaboratorio,
+  editarProducto,
 } from "../api/producto";
 import {
   ERROR_PRODUCTO,
@@ -490,14 +494,14 @@ export const eliminar_nombre_producto = (id) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: ERROR_PRODUCTO,
-      payload: `Error al eliminar name laboratorio: ${error.message}`,
+      payload: `Error al eliminar name producto: ${error.message}`,
     });
 
     dispatch({
       type: NOTIFICACION_ACTIVIVDAD,
       payload: {
         tipo: "ERROR",
-        text: `Error al eliminar name laboratorio: ${error.message}`,
+        text: `Error al eliminar name producto: ${error.message}`,
         date: new Date(),
       },
     });
@@ -545,6 +549,226 @@ export const eliminar_laboratorio = (id) => async (dispatch) => {
       payload: {
         tipo: "ERROR",
         text: `Error al eliminar name laboratorio: ${error.message}`,
+        date: new Date(),
+      },
+    });
+  }
+};
+
+export const editar_principio_activo = (id, principio_activo) => async (
+  dispatch
+) => {
+  try {
+    editarPrincipioActivo(id, principio_activo).then((res) => {
+      if (res.data.feeback != undefined) {
+        dispatch({
+          type: NOTIFICACION_ACTIVIVDAD,
+          payload: {
+            tipo: "ERROR",
+            text: `${res.data.feeback}`,
+            date: new Date(),
+          },
+        });
+      } else {
+        obtenerPrincipioActive().then((res) => {
+          dispatch({
+            type: TRAER_PRINCIPIO_ACTIVO,
+            payload: res.data,
+          });
+        });
+
+        dispatch({
+          type: NOTIFICACION_ACTIVIVDAD,
+          payload: {
+            tipo: "EXITO",
+            text: `se ha modificado el principio activo`,
+            date: new Date(),
+          },
+        });
+      }
+    });
+  } catch (error) {
+    dispatch({
+      type: ERROR_PRINCIPIO_ACTIVO,
+      payload: `Error ha editar el principio activo: ${error.message}`,
+    });
+
+    dispatch({
+      type: NOTIFICACION_ACTIVIVDAD,
+      payload: {
+        tipo: "ERROR",
+        text: `Error ha editar el principio activo: ${error.message}`,
+        date: new Date(),
+      },
+    });
+  }
+};
+
+export const editar_nombre_producto = (id, name_product) => async (
+  dispatch
+) => {
+  try {
+    editarNombreProducto(id, name_product).then((res) => {
+      if (res.data.feeback != undefined) {
+        dispatch({
+          type: NOTIFICACION_ACTIVIVDAD,
+          payload: {
+            tipo: "ERROR",
+            text: `${res.data.feeback}`,
+            date: new Date(),
+          },
+        });
+      } else {
+        obtenerNameProduct().then((res) => {
+          dispatch({
+            type: TRAER_NAME_PRODUCTO,
+            payload: res.data,
+          });
+        });
+
+        dispatch({
+          type: NOTIFICACION_ACTIVIVDAD,
+          payload: {
+            tipo: "EXITO",
+            text: `Se edito el nombre del producto`,
+            date: new Date(),
+          },
+        });
+      }
+    });
+  } catch (error) {
+    dispatch({
+      type: ERROR_PRODUCTO,
+      payload: `Error al editar name producto: ${error.message}`,
+    });
+
+    dispatch({
+      type: NOTIFICACION_ACTIVIVDAD,
+      payload: {
+        tipo: "ERROR",
+        text: `Error al editar name producto: ${error.message}`,
+        date: new Date(),
+      },
+    });
+  }
+};
+
+export const editar_laboratorio = (id, name_laboratorio) => async (
+  dispatch
+) => {
+  try {
+    editarLaboratorio(id, name_laboratorio).then((res) => {
+      if (res.data.feeback != undefined) {
+        dispatch({
+          type: NOTIFICACION_ACTIVIVDAD,
+          payload: {
+            tipo: "ERROR",
+            text: `${res.data.feeback}`,
+            date: new Date(),
+          },
+        });
+      } else {
+        obtenerNameLaboratorio().then((res) => {
+          dispatch({
+            type: TRAER_NAME_LABORATORIO,
+            payload: res.data,
+          });
+        });
+
+        dispatch({
+          type: NOTIFICACION_ACTIVIVDAD,
+          payload: {
+            tipo: "EXITO",
+            text: `Se edito el nombre del laboratorio`,
+            date: new Date(),
+          },
+        });
+      }
+    });
+  } catch (error) {
+    dispatch({
+      type: ERROR_NAME_LABORATORIO,
+      payload: `Error al editar name laboratorio: ${error.message}`,
+    });
+
+    dispatch({
+      type: NOTIFICACION_ACTIVIVDAD,
+      payload: {
+        tipo: "ERROR",
+        text: `Error al editar name laboratorio: ${error.message}`,
+        date: new Date(),
+      },
+    });
+  }
+};
+
+export const editar_producto_completo = (
+  id,
+  producto,
+  laboratorio,
+  principio_act,
+  cantidad,
+  presentacion,
+  lote,
+  sanitario,
+  medidas,
+  tipo_medidas,
+  elaboracion,
+  caducidad,
+  pvp,
+  pvf
+) => async (dispatch) => {
+  try {
+    editarProducto(
+      id,
+      producto,
+      laboratorio,
+      principio_act,
+      cantidad,
+      presentacion,
+      lote,
+      sanitario,
+      medidas,
+      tipo_medidas,
+      elaboracion,
+      caducidad,
+      pvp,
+      pvf
+    ).then((res) => {
+      if (res.data.feeback != undefined) {
+        dispatch({
+          type: NOTIFICACION_ACTIVIVDAD,
+          payload: {
+            tipo: "ERROR",
+            text: `${res.data.feeback}`,
+            date: new Date(),
+          },
+        });
+      } else {
+        obtenerProductoCompleto().then((res) => {
+          dispatch({
+            type: TRAER_PRODUCTO,
+            payload: res.data,
+          });
+
+          dispatch({
+            type: BUSCAR_PRODUCTO,
+            payload: res.data,
+          });
+        });
+      }
+    });
+  } catch (error) {
+    dispatch({
+      type: ERROR_PRODUCTO_COMPLETE,
+      payload: `Error ha editar el producto: ${error.message}`,
+    });
+
+    dispatch({
+      type: NOTIFICACION_ACTIVIVDAD,
+      payload: {
+        tipo: "ERROR",
+        text: `Error ha editar el producto: ${error.message}`,
         date: new Date(),
       },
     });

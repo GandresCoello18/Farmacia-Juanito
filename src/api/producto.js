@@ -110,3 +110,70 @@ export const eliminarLaboratorio = async (id) => {
     headers: { "access-token": Cookie.get("access_token") },
   });
 };
+
+/////////////////// METODO DE PETICION PUT
+
+export const editarPrincipioActivo = async (id, principio_activo) => {
+  return await axios({
+    method: "PUT",
+    url: `${domain()}/api/producto/principio_activo/${id}`,
+    data: { principio_activo },
+    headers: { "access-token": Cookie.get("access_token") },
+  });
+};
+
+export const editarNombreProducto = async (id, name_product) => {
+  return await axios({
+    method: "PUT",
+    url: `${domain()}/api/producto/nombre_producto/${id}`,
+    data: { name_product },
+    headers: { "access-token": Cookie.get("access_token") },
+  });
+};
+
+export const editarLaboratorio = async (id, name_laboratorio) => {
+  return await axios({
+    method: "PUT",
+    url: `${domain()}/api/producto/nombre_laboratorio/${id}`,
+    data: { name_laboratorio },
+    headers: { "access-token": Cookie.get("access_token") },
+  });
+};
+
+export const editarProducto = async (
+  id,
+  producto,
+  laboratorio,
+  principio_act,
+  cantidad,
+  presentacion,
+  lote,
+  sanitario,
+  medidas,
+  tipo_medidas,
+  elaboracion,
+  caducidad,
+  pvp,
+  pvf
+) => {
+  return await axios({
+    method: "PUT",
+    url: `${domain()}/api/producto/${id}`,
+    data: {
+      producto,
+      laboratorio,
+      principio_act,
+      cantidad,
+      presentacion,
+      lote,
+      sanitario,
+      medidas,
+      tipo_medidas,
+      elaboracion,
+      caducidad,
+      pvp,
+      pvf,
+    },
+    headers: { "access-token": Cookie.get("access_token") },
+  });
+};

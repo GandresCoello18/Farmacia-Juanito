@@ -2,6 +2,10 @@ import React from "react";
 import PropType from "prop-types";
 import EditCliente from "../componentes/form-edit/edit-cliente";
 import EditUsuario from "../componentes/form-edit/edit-usuarios";
+import EditPrincipioActivo from "../componentes/form-edit/edit-principio-activo";
+import EditProductName from "../componentes/form-edit/edit-name-product";
+import EditLaboratorio from "../componentes/form-edit/edit-name-laboratorio";
+import EditProduct from "../componentes/form-edit/edit-producto";
 
 class Edit extends React.Component {
   state = {
@@ -40,6 +44,18 @@ class Edit extends React.Component {
               )}
               {this.props.form == "cliente" && (
                 <EditCliente data={this.props.data} />
+              )}
+              {this.props.form == "principio_activo" && (
+                <EditPrincipioActivo data={this.props.data} />
+              )}
+              {this.props.form == "product_name" && (
+                <EditProductName data={this.props.data} />
+              )}
+              {this.props.form == "laboratorio" && (
+                <EditLaboratorio data={this.props.data} />
+              )}
+              {this.props.form == "stock" && (
+                <EditProduct data={this.props.data} />
               )}
             </dialog>
           </x-button>

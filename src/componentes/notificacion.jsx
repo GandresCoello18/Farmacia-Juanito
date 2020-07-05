@@ -2,7 +2,7 @@ import React from "react";
 
 class Notificacion extends React.Component {
   componentDidMount() {
-    console.log(document.getElementById("notificacion").click());
+    document.getElementById("notificacion").click();
   }
 
   render() {

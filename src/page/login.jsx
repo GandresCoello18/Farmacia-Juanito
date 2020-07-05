@@ -41,7 +41,7 @@ class Login extends React.Component {
     }
     if (nextProps.token != "") {
       Cookie.set("access_token", nextProps.token);
-      window.location.href = "/";
+      window.location.href = "/stock";
     }
     this.props.restaurar_user();
   }

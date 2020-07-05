@@ -1,10 +1,14 @@
 import React from "react";
 import PropType from "prop-types";
 import { connect } from "react-redux";
-
+import Notificacion from "../notificacion";
 import { editar_usuario } from "../../actions/usuariosActions";
 
 class EditUsuario extends React.Component {
+  state = {
+    actualizado: false,
+  };
+
   update_user = (id_user) => {
     let nombres = document.getElementById("nombres").value;
     let apellidos = document.getElementById("apellidos").value;
@@ -20,7 +24,10 @@ class EditUsuario extends React.Component {
         on = false;
       }
       this.props.editar_usuario(id_user, nombres, apellidos, on);
-      alert("Actualizacion completada..!");
+      this.setState({
+        actualizado: true,
+      });
+      setTimeout(() => this.setState({ actualizado: false }), 1000);
     }
   };
 
@@ -81,6 +88,7 @@ class EditUsuario extends React.Component {
             </div>
           </form>
         ))}
+        {this.state.actualizado && <Notificacion text="Actualizando...." />}
       </>
     );
   }

@@ -4,6 +4,7 @@ import { exist_token } from "../util/verifi-local-token";
 import Nav from "../componentes/nav";
 import Cookie from "js-cookie";
 import Alerta from "../componentes/alert";
+import Edit from "../componentes/edit";
 import { connect } from "react-redux";
 import Load from "../componentes/preload";
 import Confir from "../componentes/confirmacion";
@@ -29,9 +30,7 @@ class DetallesProduct extends React.Component {
     }
   }
 
-  load = () => {
-    return <Load />;
-  };
+  load = () => <Load />;
 
   render() {
     if (exist_token(Cookie.get("access_token")) == false) {
@@ -54,21 +53,20 @@ class DetallesProduct extends React.Component {
                 <thead>
                   <tr>
                     <th>Active Principle</th>
-                    <th>Editar</th>
-                    <th>Borrar</th>
+                    <th>Opciones</th>
                   </tr>
                 </thead>
                 <tbody>
                   {this.props.ProductoReducer.carga_principio_activo ? (
                     <tr>
-                      <td colSpan="3" className="p-2">
+                      <td colSpan="2" className="p-2">
                         {this.load()}
                       </td>
                     </tr>
                   ) : this.props.ProductoReducer.Principio_activo.length ==
                     0 ? (
                     <tr>
-                      <td colSpan="3">
+                      <td colSpan="2">
                         <Alerta
                           titulo="No existen datos para mostrar"
                           contenido="Por el momento no existen Principios activos."
@@ -80,14 +78,7 @@ class DetallesProduct extends React.Component {
                       <tr key={valor.id_principio_activo}>
                         <td>{valor.principio_activo}</td>
                         <td>
-                          <button
-                            className="btn btn-mini btn-warning"
-                            style={{ cursor: "pointer" }}
-                          >
-                            <span className="material-icons">description</span>
-                          </button>
-                        </td>
-                        <td>
+                          <Edit form="principio_activo" data={valor} />
                           <Confir
                             id={valor.id_principio_activo}
                             tabla="principio_activo"
@@ -104,20 +95,19 @@ class DetallesProduct extends React.Component {
                 <thead>
                   <tr>
                     <th>Name Product</th>
-                    <th>Editar</th>
-                    <th>Borrar</th>
+                    <th>Opciones</th>
                   </tr>
                 </thead>
                 <tbody>
                   {this.props.ProductoReducer.cargar_name_product ? (
                     <tr>
-                      <td colSpan="3" className="p-2">
+                      <td colSpan="2" className="p-2">
                         {this.load()}
                       </td>
                     </tr>
                   ) : this.props.ProductoReducer.Producto_Name.length == 0 ? (
                     <tr>
-                      <td colSpan="3">
+                      <td colSpan="2">
                         <Alerta
                           titulo="No existen datos para mostrar"
                           contenido="Por el momento no existen Nombres de productos."
@@ -129,14 +119,7 @@ class DetallesProduct extends React.Component {
                       <tr key={valor.id_product_name}>
                         <td>{valor.product_name}</td>
                         <td>
-                          <button
-                            className="btn btn-mini btn-warning"
-                            style={{ cursor: "pointer" }}
-                          >
-                            <span className="material-icons">description</span>
-                          </button>
-                        </td>
-                        <td>
+                          <Edit form="product_name" data={valor} />
                           <Confir
                             id={valor.id_product_name}
                             tabla="nombre_producto"
@@ -153,21 +136,20 @@ class DetallesProduct extends React.Component {
                 <thead>
                   <tr>
                     <th>Laboratory</th>
-                    <th>Editar</th>
-                    <th>Borrar</th>
+                    <th>Opciones</th>
                   </tr>
                 </thead>
                 <tbody>
                   {this.props.ProductoReducer.carga_laboratorio ? (
                     <tr>
-                      <td colSpan="3" className="p-2">
+                      <td colSpan="2" className="p-2">
                         {this.load()}
                       </td>
                     </tr>
                   ) : this.props.ProductoReducer.Laboratorio_Name.length ==
                     0 ? (
                     <tr>
-                      <td colSpan="3">
+                      <td colSpan="2">
                         <Alerta
                           titulo="No existen datos para mostrar"
                           contenido="Por el momento no existen Nombres de laboratorio."
@@ -179,14 +161,7 @@ class DetallesProduct extends React.Component {
                       <tr key={valor.id_name_laboratorio}>
                         <td>{valor.nombre_laboratorio}</td>
                         <td>
-                          <button
-                            className="btn btn-mini btn-warning"
-                            style={{ cursor: "pointer" }}
-                          >
-                            <span className="material-icons">description</span>
-                          </button>
-                        </td>
-                        <td>
+                          <Edit form="laboratorio" data={valor} />
                           <Confir
                             id={valor.id_name_laboratorio}
                             tabla="nombre_laboratorio"
