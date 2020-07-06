@@ -255,7 +255,9 @@ class Carrito extends React.Component {
         return false;
       }
       this.setState({
-        cambio_pago: Number(this.state.efectivo_pago) - this.state.Total,
+        cambio_pago: (
+          Number(this.state.efectivo_pago) - this.state.Total
+        ).toFixed(2),
       });
     }
 
@@ -271,6 +273,19 @@ class Carrito extends React.Component {
         datosCarrito[i].unidades = document.getElementById(
           `cantidad_${datosCarrito[i].id_producto}`
         ).value;
+        datosCarrito[i].item_total = document.getElementById(
+          `item_total_${datosCarrito[i].id_producto}`
+        ).value;
+        datosCarrito[i].iva = document.getElementById(
+          `iva_${datosCarrito[i].id_producto}`
+        ).checked;
+      }
+
+      let cambio = 0;
+      if (this.state.efectivo_pago != "") {
+        cambio = Number(
+          (Number(this.state.efectivo_pago) - this.state.Total).toFixed(2)
+        );
       }
 
       const obj = {
@@ -280,16 +295,23 @@ class Carrito extends React.Component {
         iva: this.state.iva,
         total: Number(this.state.Total),
         efectivo: this.state.efectivo_pago,
-        cambio: Number(
-          (Number(this.state.efectivo_pago) - this.state.Total).toFixed(2)
-        ),
+        cambio,
         productos: datosCarrito,
       };
 
       if (obj.cambio == "$: Cambio") obj.cambio = 0;
 
-      this.props.crear_venta(obj);
-      this.props.history.push("/producto");
+      //this.props.crear_venta(obj);
+      window.open(
+        `/emitir-factura?productos=${JSON.stringify(obj.productos)}&descuento=${
+          obj.descuento
+        }&iva=${obj.iva}&total=${obj.total}&efectivo=${obj.efectivo}&cambio=${
+          obj.cambio
+        }`,
+        "Factura",
+        "width=530, height=540"
+      );
+      // this.props.history.push("/producto");
     }
   };
 

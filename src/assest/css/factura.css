@@ -1,0 +1,57 @@
+.fecha-factura {
+  padding: 10px 5px;
+  position: relative;
+  left: 65px;
+  top: 80px;
+}
+.table-factura {
+  padding: 0px 15px;
+  text-align: center;
+  position: relative;
+  top: 80px;
+}
+.table-factura .fila-head {
+  padding: 10px;
+  border-bottom: 2px;
+  border-bottom-style: solid;
+  border-bottom-color: black;
+  border-top: 2px;
+  border-top-style: solid;
+  border-top-color: black;
+}
+.table-factura .fila-body {
+  padding: 10px;
+  border-bottom: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: black;
+}
+.span-factura {
+  position: relative;
+  top: 100px;
+  padding: 5px;
+  left: 15px;
+}
+.cliente-factura {
+  position: relative;
+  top: 100px;
+  padding: 5px;
+  left: 15px;
+}
+.btn-factura {
+  position: relative;
+  top: 120px;
+  left: 20px;
+  padding: 5px;
+  cursor: pointer;
+  color: white;
+  border-color: #29a03b #29a03b #248b34;
+  background-color: #5bd46d;
+  background-image: -webkit-linear-gradient(top, #5bd46d 0, #29a03b 100%);
+  background-image: linear-gradient(to bottom, #5bd46d 0, #29a03b 100%);
+}
+@media print {
+  .oculto-impresion,
+  .oculto-impresion * {
+    display: none !important;
+  }
+}

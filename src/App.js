@@ -11,6 +11,7 @@ import Carrito from "./page/carrito";
 import Ventas from "./page/ventas";
 import Usuarios from "./page/usuarios";
 import FlujoCaja from "./page/flujo-caja";
+import Factura from "./page/factura";
 import history from "./util/history";
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
           <Route exact path="/carrito" component={Carrito} />
           <Route exact path="/ventas" component={Ventas} />
           <Route exact path="/usuarios" component={Usuarios} />
+          <Route exact path="/emitir-factura" component={Factura} />
           <Route exact path="/flujo-caja" component={FlujoCaja} />
         </Switch>
       </Router>
