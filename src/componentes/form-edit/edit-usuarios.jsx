@@ -10,9 +10,10 @@ class EditUsuario extends React.Component {
   };
 
   update_user = (id_user) => {
-    let nombres = document.getElementById("nombres").value;
-    let apellidos = document.getElementById("apellidos").value;
-    let email_on = document.getElementById("email_on").value;
+    let nombres = document.getElementById(`nombres_user_${id_user}`).value;
+    let apellidos = document.getElementById(`apellidos_user_${id_user}`).value;
+    let tipo_user = document.getElementById(`tipo_user_${id_user}`).value;
+    let email_on = document.getElementById(`email_on_user_${id_user}`).value;
 
     if (nombres == "" || apellidos == "" || email_on == "") {
       alert("Campos vacios, revise y vuelva ha intentarlo");
@@ -23,7 +24,7 @@ class EditUsuario extends React.Component {
       } else {
         on = false;
       }
-      this.props.editar_usuario(id_user, nombres, apellidos, on);
+      this.props.editar_usuario(id_user, nombres, apellidos, on, tipo_user);
       this.setState({
         actualizado: true,
       });
@@ -52,7 +53,7 @@ class EditUsuario extends React.Component {
               <div className="col-12">
                 <input
                   className="form-control"
-                  id="nombres"
+                  id={`nombres_user_${item.id_user}`}
                   placeholder="nuevo nombre"
                   defaultValue={item.nombres}
                 />
@@ -62,15 +63,36 @@ class EditUsuario extends React.Component {
               <div className="col-12">
                 <input
                   className="form-control"
-                  id="apellidos"
+                  id={`apellidos_user_${item.id_user}`}
                   placeholder="nuevo apellido"
                   defaultValue={item.apellidos}
                 />
               </div>
 
+              <label className="ml-3 mt-2">Tipo User:</label>
+              <div className="col-12">
+                <select
+                  id={`tipo_user_${item.id_user}`}
+                  className="form-control"
+                >
+                  {["usuario Común", "Administrador"].map((item_t) => (
+                    <option
+                      value={item_t}
+                      key={item_t}
+                      selected={item_t == item.tipo_user}
+                    >
+                      {item_t}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
               <label className="ml-3 mt-2">Verificar Email:</label>
               <div className="col-12">
-                <select className="form-control" id="email_on">
+                <select
+                  className="form-control"
+                  id={`email_on_user_${item.id_user}`}
+                >
                   <option>Si</option>
                   <option>No</option>
                 </select>

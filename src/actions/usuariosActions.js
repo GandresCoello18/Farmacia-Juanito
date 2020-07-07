@@ -247,11 +247,15 @@ export const eliminar_ususario = (id) => async (dispatch) => {
   }
 };
 
-export const editar_usuario = (id, nombres, apellidos, email_on) => async (
-  dispatch
-) => {
+export const editar_usuario = (
+  id,
+  nombres,
+  apellidos,
+  email_on,
+  tipo_user
+) => async (dispatch) => {
   try {
-    editarUser(id, nombres, apellidos, email_on).then((res) => {
+    editarUser(id, nombres, apellidos, email_on, tipo_user).then((res) => {
       if (res.data.feeback != undefined) {
         dispatch({
           type: NOTIFICACION_ACTIVIVDAD,
@@ -267,15 +271,15 @@ export const editar_usuario = (id, nombres, apellidos, email_on) => async (
             type: TRAER_TODOS_USERS,
             payload: res.data,
           });
-        });
 
-        dispatch({
-          type: NOTIFICACION_ACTIVIVDAD,
-          payload: {
-            tipo: "EXITO",
-            text: `Se actualizo el usuario`,
-            date: new Date(),
-          },
+          dispatch({
+            type: NOTIFICACION_ACTIVIVDAD,
+            payload: {
+              tipo: "EXITO",
+              text: `Se actualizo el usuario`,
+              date: new Date(),
+            },
+          });
         });
       }
     });

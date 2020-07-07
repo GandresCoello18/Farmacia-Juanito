@@ -52,6 +52,8 @@ export const quitar_del_carrito = (id_producto) => async (
       date: new Date(),
     },
   });
+
+  return true;
 };
 
 export const limpiar_carrito = () => async (dispatch, getState) => {

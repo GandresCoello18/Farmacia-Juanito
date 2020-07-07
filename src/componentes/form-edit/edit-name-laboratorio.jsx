@@ -11,7 +11,9 @@ class EditLaboratio extends React.Component {
   };
 
   update_laboratorio_name = (id_product_name) => {
-    let nombre = document.getElementById("nombre_laboratorio").value;
+    let nombre = document.getElementById(
+      `nombre_laboratorio_${id_product_name}`
+    ).value;
     if (nombre == "") {
       alert("Campos vacios, revise y vuelva ha intentarlo");
     } else {
@@ -44,7 +46,7 @@ class EditLaboratio extends React.Component {
               <div className="col-12">
                 <input
                   className="form-control"
-                  id="nombre_laboratorio"
+                  id={`nombre_laboratorio_${item.id_name_laboratorio}`}
                   placeholder="nuevo nombre"
                   defaultValue={item.nombre_laboratorio}
                 />

@@ -10,7 +10,8 @@ class EditProductName extends React.Component {
   };
 
   update_product_name = (id_product_name) => {
-    let nombre = document.getElementById("nombre_product").value;
+    let nombre = document.getElementById(`nombre_product_${id_product_name}`)
+      .value;
     if (nombre == "") {
       alert("Campos vacios, revise y vuelva ha intentarlo");
     } else {
@@ -43,7 +44,7 @@ class EditProductName extends React.Component {
               <div className="col-12">
                 <input
                   className="form-control"
-                  id="nombre_product"
+                  id={`nombre_product_${item.id_product_name}`}
                   placeholder="nuevo nombre"
                   defaultValue={item.product_name}
                 />

@@ -10,7 +10,9 @@ class EditPrincipioActive extends React.Component {
   };
 
   update_principio_activo = (id_principio_activo) => {
-    let nombre = document.getElementById("nombre_principio_activo").value;
+    let nombre = document.getElementById(
+      `nombre_principio_activo_${id_principio_activo}`
+    ).value;
     if (nombre == "") {
       alert("Campos vacios, revise y vuelva ha intentarlo");
     } else {
@@ -43,7 +45,7 @@ class EditPrincipioActive extends React.Component {
               <div className="col-12">
                 <input
                   className="form-control"
-                  id="nombre_principio_activo"
+                  id={`nombre_principio_activo_${item.id_principio_activo}`}
                   placeholder="nuevo nombre"
                   defaultValue={item.principio_activo}
                 />

@@ -73,8 +73,11 @@ class Nav extends React.Component {
       case "/clientes":
         item_menu[5].classList.add("active");
         break;
-      case "/flujo-caja":
+      case "/proveedores":
         item_menu[6].classList.add("active");
+        break;
+      case "/flujo-caja":
+        item_menu[7].classList.add("active");
         break;
     }
   }
@@ -102,7 +105,7 @@ class Nav extends React.Component {
           <Link to="/" className="tab-item">
             <span
               className="material-icons"
-              style={{ position: "absolute", left: 50, fontSize: 20 }}
+              style={{ position: "absolute", left: 40, fontSize: 20 }}
             >
               house
             </span>
@@ -111,7 +114,7 @@ class Nav extends React.Component {
           <Link to="/producto" className="tab-item">
             <span
               className="material-icons"
-              style={{ position: "absolute", left: 20, fontSize: 20 }}
+              style={{ position: "absolute", left: 10, fontSize: 20 }}
             >
               local_offer
             </span>
@@ -120,7 +123,7 @@ class Nav extends React.Component {
           <Link to="/stock" className="tab-item">
             <span
               className="material-icons"
-              style={{ position: "absolute", left: 20, fontSize: 20 }}
+              style={{ position: "absolute", left: 10, fontSize: 20 }}
             >
               add_circle
             </span>
@@ -153,10 +156,19 @@ class Nav extends React.Component {
             </span>
             <b style={{ fontSize: 14 }}>Clientes</b>
           </Link>
+          <Link to="/proveedores" className="tab-item">
+            <span
+              className="material-icons"
+              style={{ position: "absolute", left: 15, fontSize: 20 }}
+            >
+              local_shipping
+            </span>
+            <b style={{ fontSize: 14 }}>Proveedores</b>
+          </Link>
           <Link to="/flujo-caja" className="tab-item">
             <span
               className="material-icons"
-              style={{ position: "absolute", left: 30, fontSize: 20 }}
+              style={{ position: "absolute", left: 20, fontSize: 20 }}
             >
               attach_money
             </span>

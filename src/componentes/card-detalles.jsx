@@ -6,6 +6,16 @@ import "../assest/css/detalle-card.css";
 import { eliminar_venta } from "../actions/ventasActios";
 
 class DetallesCard extends React.Component {
+  state = {
+    fecha_venta: "",
+  };
+
+  componentDidMount() {
+    this.setState({
+      fecha_venta: this.props.data[0].fecha_factura,
+    });
+  }
+
   eliminar_esta_venta = (id_producto_fac) => {
     this.props.eliminar_venta(id_producto_fac);
   };
@@ -13,13 +23,13 @@ class DetallesCard extends React.Component {
   render() {
     return (
       <>
+        <h5 className="card-title-detalles text-center">Detalles</h5>
         {this.props.data.map(
           (item) =>
             item.id_factura == this.props.id_factura && (
               <div className="row detalles-compra" key={item.id_producto_fac}>
                 <div className="col-12">
                   <div className="card-body">
-                    <h5 className="card-title text-center">Detalles</h5>
                     <ul>
                       <li>
                         <b>Cliente:</b>{" "}
@@ -54,10 +64,10 @@ class DetallesCard extends React.Component {
                       <li>
                         <div className="row justify-content-center">
                           <div className="col-5">
-                            <b>PVP:</b> {item.pvp}
+                            <b>PVP:</b>$ {item.pvp}
                           </div>
                           <div className="col-5">
-                            <b>PVF:</b> {item.pvf}
+                            <b>Total:</b>$ {item.item_total}
                           </div>
                         </div>
                       </li>
@@ -74,18 +84,15 @@ class DetallesCard extends React.Component {
                           Eliminar venta
                         </span>
                       </div>
-                      <div className="col mt-3">
-                        <span className="fecha-vendido">
-                          Vendido en:{" "}
-                          <b>{moment(item.fecha_factura).format("LL, LTS")}</b>
-                        </span>
-                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             )
         )}
+        <span className="fecha-vendido">
+          Vendido en: <b>{moment(this.state.fecha_venta).format("LL, LTS")}</b>
+        </span>
       </>
     );
   }

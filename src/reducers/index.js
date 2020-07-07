@@ -6,6 +6,7 @@ import clienteReducer from "./clientesReducer";
 import carritoReducer from "./carritoReducer";
 import ventasReducer from "./ventasReducer";
 import EstadisticaReducer from "./estadisticasReducer";
+import Proveedores from "./proveedoresReducer";
 
 export default combineReducers({
   userHistoryReducer,
@@ -15,4 +16,5 @@ export default combineReducers({
   carritoReducer,
   ventasReducer,
   EstadisticaReducer,
+  Proveedores,
 });

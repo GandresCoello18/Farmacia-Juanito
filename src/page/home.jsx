@@ -114,7 +114,7 @@ class Home extends React.Component {
                     <th>Total</th>
                     <th>Efectivo</th>
                     <th>Cambio</th>
-                    <th>Fecha</th>
+                    <th>Fecha ventas</th>
                     <th>Opciones</th>
                   </tr>
                 </thead>
@@ -212,8 +212,10 @@ class Home extends React.Component {
                         {this.load()}
                       </td>
                     </tr>
-                  ) : this.props.ProductoReducer.Producto.filter((item) =>
-                      this.validar_caducidad(item.fecha_caducidad)
+                  ) : this.props.ProductoReducer.Producto.filter(
+                      (item) =>
+                        this.validar_caducidad(item.fecha_caducidad) &&
+                        item.estado != "Vendido"
                     ).length == 0 ? (
                     <tr>
                       <td colSpan="13">
@@ -224,8 +226,10 @@ class Home extends React.Component {
                       </td>
                     </tr>
                   ) : (
-                    this.props.ProductoReducer.Producto.filter((item) =>
-                      this.validar_caducidad(item.fecha_caducidad)
+                    this.props.ProductoReducer.Producto.filter(
+                      (item) =>
+                        this.validar_caducidad(item.fecha_caducidad) &&
+                        item.estado != "Vendido"
                     ).map((valor) => (
                       <tr
                         key={valor.id_producto}

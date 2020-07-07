@@ -106,7 +106,7 @@ class Clientes extends React.Component {
                               <td colSpan="6">
                                 <Alerta
                                   titulo="No existen datos para mostrar"
-                                  contenido="Por el momento no existen clientes registrados."
+                                  contenido="Por el momento no existen clientes."
                                 />
                               </td>
                             </tr>

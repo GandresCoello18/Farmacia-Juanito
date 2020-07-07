@@ -10,11 +10,15 @@ class EditCliente extends React.Component {
   };
 
   update_client = (id_cliente) => {
-    let nombre = document.getElementById("nombres").value;
-    let apellido = document.getElementById("apellidos").value;
-    let correo = document.getElementById("correo").value;
-    let identificacion = document.getElementById("identificacion").value;
-    let direccion = document.getElementById("direccion").value;
+    let nombre = document.getElementById(`nombres_cliente_${id_cliente}`).value;
+    let apellido = document.getElementById(`apellidos_cliente_${id_cliente}`)
+      .value;
+    let correo = document.getElementById(`correo_cliente_${id_cliente}`).value;
+    let identificacion = document.getElementById(
+      `identificacion_cliente_${id_cliente}`
+    ).value;
+    let direccion = document.getElementById(`direccion_cliente_${id_cliente}`)
+      .value;
 
     if (
       (nombre == "",
@@ -61,7 +65,7 @@ class EditCliente extends React.Component {
               <div className="col-12">
                 <input
                   className="form-control"
-                  id="nombres"
+                  id={`nombres_cliente_${item.id_cliente}`}
                   placeholder="nuevo nombre"
                   defaultValue={item.nombres}
                 />
@@ -71,7 +75,7 @@ class EditCliente extends React.Component {
               <div className="col-12">
                 <input
                   className="form-control"
-                  id="apellidos"
+                  id={`apellidos_cliente_${item.id_cliente}`}
                   placeholder="nuevo apellido"
                   defaultValue={item.apellidos}
                 />
@@ -81,7 +85,7 @@ class EditCliente extends React.Component {
               <div className="col-12">
                 <input
                   type="email"
-                  id="correo"
+                  id={`correo_cliente_${item.id_cliente}`}
                   className="form-control"
                   defaultValue={item.correo}
                 />
@@ -91,7 +95,7 @@ class EditCliente extends React.Component {
               <div className="col-12">
                 <input
                   type="number"
-                  id="identificacion"
+                  id={`identificacion_cliente_${item.id_cliente}`}
                   className="form-control"
                   defaultValue={item.identificacion}
                 />
@@ -101,7 +105,7 @@ class EditCliente extends React.Component {
               <div className="col-12">
                 <textarea
                   rows="3"
-                  id="direccion"
+                  id={`direccion_cliente_${item.id_cliente}`}
                   maxLength="60"
                   placeholder="60 caracteres"
                   className="form-control"

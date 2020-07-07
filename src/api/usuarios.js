@@ -73,7 +73,13 @@ export const eliminarUser = async (id) => {
 
 /////////////////  METODO DE PETICION PUT
 
-export const editarUser = async (id, nombres, apellidos, email_on) => {
+export const editarUser = async (
+  id,
+  nombres,
+  apellidos,
+  email_on,
+  tipo_user
+) => {
   return await axios({
     method: "PUT",
     url: `${domain()}/api/usuario/${id}`,
@@ -81,6 +87,7 @@ export const editarUser = async (id, nombres, apellidos, email_on) => {
       nombres,
       apellidos,
       email_on,
+      tipo_user,
     },
     headers: { "access-token": Cookie.get("access_token") },
   });

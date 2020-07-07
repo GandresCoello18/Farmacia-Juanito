@@ -9,6 +9,7 @@
   text-align: center;
   position: relative;
   top: 80px;
+  left: 10px;
 }
 .table-factura .fila-head {
   padding: 10px;
@@ -18,24 +19,26 @@
   border-top: 2px;
   border-top-style: solid;
   border-top-color: black;
+  font-size: 13px;
 }
 .table-factura .fila-body {
   padding: 10px;
   border-bottom: 1px;
   border-bottom-style: solid;
   border-bottom-color: black;
+  font-size: 13px;
 }
 .span-factura {
   position: relative;
   top: 100px;
   padding: 5px;
-  left: 15px;
+  left: 25px;
 }
 .cliente-factura {
   position: relative;
   top: 100px;
   padding: 5px;
-  left: 15px;
+  left: 25px;
 }
 .btn-factura {
   position: relative;

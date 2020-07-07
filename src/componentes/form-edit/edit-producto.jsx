@@ -20,22 +20,35 @@ class EditProduct extends React.Component {
   };
 
   update_product = (id_producto) => {
-    let producto = document.getElementById("producto_update").value;
-    let laboratorio = document.getElementById("laboratorio_update").value;
-    let principio_act = document.getElementById("principio_activo_update")
+    let producto = document.getElementById(`producto_update_${id_producto}`)
       .value;
-    let cantidad = document.getElementById("cantidad_update").value;
-    let lote = document.getElementById("lote_update").value;
-    let registro_sanitario = document.getElementById(
-      "registro_sanitario_update"
+    let laboratorio = document.getElementById(
+      `laboratorio_update_${id_producto}`
     ).value;
-    let medidas = document.getElementById("dosis_update").value;
-    let tipo_medidas = document.getElementById("tipo_dosis_update").value;
-    let presentacion = document.getElementById("presentacion_update").value;
-    let elaboracion = document.getElementById("fecha_elaboracion_update").value;
-    let caducidad = document.getElementById("fecha_caducidad_update").value;
-    let pvp = document.getElementById("pvp_update").value;
-    let pvf = document.getElementById("pvf_update").value;
+    let principio_act = document.getElementById(
+      `principio_activo_update_${id_producto}`
+    ).value;
+    let cantidad = document.getElementById(`cantidad_update_${id_producto}`)
+      .value;
+    let lote = document.getElementById(`lote_update_${id_producto}`).value;
+    let registro_sanitario = document.getElementById(
+      `registro_sanitario_update_${id_producto}`
+    ).value;
+    let medidas = document.getElementById(`dosis_update_${id_producto}`).value;
+    let tipo_medidas = document.getElementById(
+      `tipo_dosis_update_${id_producto}`
+    ).value;
+    let presentacion = document.getElementById(
+      `presentacion_update_${id_producto}`
+    ).value;
+    let elaboracion = document.getElementById(
+      `fecha_elaboracion_update_${id_producto}`
+    ).value;
+    let caducidad = document.getElementById(
+      `fecha_caducidad_update_${id_producto}`
+    ).value;
+    let pvp = document.getElementById(`pvp_update_${id_producto}`).value;
+    let pvf = document.getElementById(`pvf_update_${id_producto}`).value;
 
     if (
       cantidad == "" ||
@@ -97,7 +110,7 @@ class EditProduct extends React.Component {
               <div className="col-12">
                 <select
                   className="form-control"
-                  id="producto_update"
+                  id={`producto_update_${item.id_producto}`}
                   onChange={this.handleInputChange}
                 >
                   <option>-----</option>
@@ -117,7 +130,7 @@ class EditProduct extends React.Component {
               <div className="col-12">
                 <select
                   className="form-control"
-                  id="laboratorio_update"
+                  id={`laboratorio_update_${item.id_producto}`}
                   onChange={this.handleInputChange}
                 >
                   <option>------</option>
@@ -139,7 +152,7 @@ class EditProduct extends React.Component {
               <div className="col-12">
                 <select
                   className="form-control"
-                  id="principio_activo_update"
+                  id={`principio_activo_update_${item.id_producto}`}
                   onChange={this.handleInputChange}
                 >
                   <option>------</option>
@@ -161,7 +174,7 @@ class EditProduct extends React.Component {
               <div className="col-12">
                 <select
                   className="form-control"
-                  id="presentacion_update"
+                  id={`presentacion_update_${item.id_producto}`}
                   onChange={this.handleInputChange}
                 >
                   {["Tabletas", "Suero", "Jarabe", "Ampollas"].map((item_p) => (
@@ -181,7 +194,7 @@ class EditProduct extends React.Component {
                 <input
                   type="number"
                   className="form-control"
-                  id="cantidad_update"
+                  id={`cantidad_update_${item.id_producto}`}
                   onChange={this.handleInputChange}
                   placeholder="100"
                   min="0"
@@ -209,7 +222,7 @@ class EditProduct extends React.Component {
                     type="number"
                     onChange={this.handleInputChange}
                     className="form-control"
-                    id="pvp_update"
+                    id={`pvp_update_${item.id_producto}`}
                     min="0"
                     placeholder="PVP: 0.00"
                     defaultValue={item.pvp}
@@ -220,7 +233,7 @@ class EditProduct extends React.Component {
                     type="number"
                     onChange={this.handleInputChange}
                     className="form-control"
-                    id="pvf_update"
+                    id={`pvf_update_${item.id_producto}`}
                     min="0"
                     placeholder="PVF: 0.00"
                     defaultValue={item.pvf}
@@ -232,7 +245,7 @@ class EditProduct extends React.Component {
               <div className="col-12">
                 <input
                   type="number"
-                  id="lote_update"
+                  id={`lote_update_${item.id_producto}`}
                   onChange={this.handleInputChange}
                   className="form-control"
                   min="0"
@@ -245,7 +258,7 @@ class EditProduct extends React.Component {
               <div className="col-12">
                 <input
                   type="text"
-                  id="registro_sanitario_update"
+                  id={`registro_sanitario_update_${item.id_producto}`}
                   onChange={this.handleInputChange}
                   className="form-control"
                   placeholder="000-000-000"
@@ -257,7 +270,7 @@ class EditProduct extends React.Component {
               <div className="col-12">
                 <select
                   className="form-control"
-                  id="tipo_dosis_update"
+                  id={`tipo_dosis_update_${item.id_producto}`}
                   onChange={this.handleInputChange}
                 >
                   {["Miligramos", "Gramos", "Litros", "Mililitros"].map(
@@ -278,7 +291,7 @@ class EditProduct extends React.Component {
               <div className="col-12">
                 <input
                   type="number"
-                  id="dosis_update"
+                  id={`dosis_update_${item.id_producto}`}
                   onChange={this.handleInputChange}
                   className="form-control"
                   min="0"
@@ -301,7 +314,7 @@ class EditProduct extends React.Component {
                   <input
                     type="date"
                     className="form-control"
-                    id="fecha_elaboracion_update"
+                    id={`fecha_elaboracion_update_${item.id_producto}`}
                     onChange={this.handleInputChange}
                     defaultValue={item.fecha_elaboracion}
                   />
@@ -311,7 +324,7 @@ class EditProduct extends React.Component {
                   <input
                     type="date"
                     className="form-control"
-                    id="fecha_caducidad_update"
+                    id={`fecha_caducidad_update_${item.id_producto}`}
                     onChange={this.handleInputChange}
                     defaultValue={item.fecha_caducidad}
                   />

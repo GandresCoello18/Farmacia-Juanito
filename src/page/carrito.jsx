@@ -97,8 +97,9 @@ class Carrito extends React.Component {
   };
 
   remover_del_carrito = (id_producto) => {
-    this.props.quitar_del_carrito(id_producto);
-    this.time = setTimeout(() => this.calcular_sub_total_de_pago(), 1000);
+    this.props.quitar_del_carrito(id_producto).then(() => {
+      this.calcular_sub_total_de_pago();
+    });
   };
 
   componentWillUnmount() {
@@ -301,7 +302,7 @@ class Carrito extends React.Component {
 
       if (obj.cambio == "$: Cambio") obj.cambio = 0;
 
-      //this.props.crear_venta(obj);
+      this.props.crear_venta(obj);
       window.open(
         `/emitir-factura?productos=${JSON.stringify(obj.productos)}&descuento=${
           obj.descuento
@@ -311,7 +312,7 @@ class Carrito extends React.Component {
         "Factura",
         "width=530, height=540"
       );
-      // this.props.history.push("/producto");
+      this.props.history.push("/producto");
     }
   };
 

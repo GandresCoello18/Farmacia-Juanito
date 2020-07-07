@@ -72,9 +72,7 @@ class Productos extends React.Component {
     this.props.add_carrito(id_producto);
   };
 
-  load = () => {
-    return <Load />;
-  };
+  load = () => <Load />;
 
   render() {
     if (exist_token(Cookie.get("access_token")) == false) {
