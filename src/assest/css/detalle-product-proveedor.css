@@ -1,0 +1,28 @@
+.card-detalles-pp {
+  position: relative;
+  width: 99%;
+  left: 2.5px;
+  word-wrap: break-word;
+  background-color: #fff;
+  background-clip: border-box;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  border-radius: 0.25rem;
+  border-color: #0866dc;
+}
+.card-detalles-pp .card-detalles-pp-header {
+  text-align: center;
+  padding: 0.75rem 1.25rem;
+  margin-bottom: 0;
+  background-color: rgba(0, 0, 0, 0.03);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+}
+.card-detalles-pp .card-detalles-pp-body {
+  min-height: 1px;
+  padding: 11px;
+}
+.card-detalles-pp .card-detalles-pp-footer {
+  text-align: center;
+  padding: 5px;
+  background-color: rgba(0, 0, 0, 0.03);
+  border-top: 1px solid rgba(0, 0, 0, 0.125);
+}

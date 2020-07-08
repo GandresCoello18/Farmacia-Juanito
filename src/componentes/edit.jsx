@@ -6,6 +6,7 @@ import EditPrincipioActivo from "../componentes/form-edit/edit-principio-activo"
 import EditProductName from "../componentes/form-edit/edit-name-product";
 import EditLaboratorio from "../componentes/form-edit/edit-name-laboratorio";
 import EditProduct from "../componentes/form-edit/edit-producto";
+import EditProveedor from "../componentes/form-edit/edit-proveedor";
 
 class Edit extends React.Component {
   state = {
@@ -56,6 +57,9 @@ class Edit extends React.Component {
               )}
               {this.props.form == "stock" && (
                 <EditProduct data={this.props.data} />
+              )}
+              {this.props.form == "proveedor" && (
+                <EditProveedor data={this.props.data} />
               )}
             </dialog>
           </x-button>

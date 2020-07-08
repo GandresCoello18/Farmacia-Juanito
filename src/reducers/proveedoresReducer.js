@@ -2,11 +2,13 @@ import {
   CREAR_PROVEEDOR,
   TRAER_PROVEEDORES,
   ERROR_PROVEEDORES,
+  ADD_PRODUCTO_PROVEEDOR,
 } from "../types/ProveedorTypes";
 
 const INITIAL_STATE = {
   Proveedores: [],
   Busqueda_proveedores: [],
+  Producto_proveedor: [],
   error_proveedor: "",
   mensaje_proveedor: "",
   cargar_proveedor: true,
@@ -30,6 +32,11 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         error_proveedor: action.payload,
+      };
+    case ADD_PRODUCTO_PROVEEDOR:
+      return {
+        ...state,
+        Producto_proveedor: action.payload,
       };
 
     default:

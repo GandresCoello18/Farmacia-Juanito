@@ -9,10 +9,16 @@ import Load from "../componentes/preload";
 import { connect } from "react-redux";
 import Cookie from "js-cookie";
 import Edit from "../componentes/edit";
+import DetallesPP from "../componentes/detalles-producto-proveedor";
 import Confirmacion from "../componentes/confirmacion";
 import { exist_token } from "../util/verifi-local-token";
+import NewProductProveedor from "../componentes/new-product-proveedor";
 
-import { crear_proveedor, traer_proveedores } from "../actions/proveedorAction";
+import {
+  crear_proveedor,
+  traer_proveedores,
+  traer_product_proveedor,
+} from "../actions/proveedorAction";
 import { obterner_name_laboratorio } from "../actions/productoAction";
 
 class Proveedores extends React.Component {
@@ -23,6 +29,7 @@ class Proveedores extends React.Component {
     telefono: 0,
     /////////
     notifico: false,
+    select_detalles_proveedor: "",
   };
 
   handleInputChange = (event) => {
@@ -36,11 +43,14 @@ class Proveedores extends React.Component {
   };
 
   componentDidMount() {
-    if (this.props.Proveedores.Proveedores.length == 0) {
+    if (this.props.ProveedoresReducer.Proveedores.length == 0) {
       this.props.traer_proveedores();
     }
     if (this.props.ProductoReducer.Laboratorio_Name.length == 0) {
       this.props.obterner_name_laboratorio();
+    }
+    if (this.props.ProveedoresReducer.Producto_proveedor.length == 0) {
+      this.props.traer_product_proveedor();
     }
   }
 
@@ -76,7 +86,15 @@ class Proveedores extends React.Component {
             <Nav />
             <div className="window-content">
               <div className="pane-group">
-                <div className="pane-sm sidebar" style={{ width: 400 }}>
+                <div
+                  className="pane-sm sidebar"
+                  style={{
+                    width: 400,
+                    border: 1,
+                    borderStyle: "solid",
+                    borderColor: "#000",
+                  }}
+                >
                   <div
                     style={{
                       backgroundColor: "#ffc107",
@@ -144,6 +162,7 @@ class Proveedores extends React.Component {
 
                     <button
                       onClick={this.add_proveedor}
+                      style={{ color: "#000" }}
                       type="button"
                       className="btn btn-warning form-control mt-3"
                     >
@@ -182,13 +201,14 @@ class Proveedores extends React.Component {
                           </tr>
                         </thead>
                         <tbody>
-                          {this.props.Proveedores.cargar_proveedor ? (
+                          {this.props.ProveedoresReducer.cargar_proveedor ? (
                             <tr>
                               <td colSpan="5" className="p-2">
                                 {this.load()}
                               </td>
                             </tr>
-                          ) : this.props.Proveedores.Proveedores.length == 0 ? (
+                          ) : this.props.ProveedoresReducer.Proveedores
+                              .length == 0 ? (
                             <tr>
                               <td colSpan="5">
                                 <Alerta
@@ -198,46 +218,86 @@ class Proveedores extends React.Component {
                               </td>
                             </tr>
                           ) : (
-                            this.props.Proveedores.Proveedores.map((valor) => (
-                              <tr key={valor.id_proveedores}>
-                                <td>{valor.nombres}</td>
-                                <td>{valor.nombre_laboratorio}</td>
-                                <td
-                                  className={
-                                    valor.correo == "" ||
-                                    valor.correo == "no especificado"
-                                      ? "alert-danger"
-                                      : ""
-                                  }
-                                >
-                                  {valor.correo == ""
-                                    ? "no especificado"
-                                    : valor.correo}
-                                </td>
-                                <td style={{ width: 100 }}>{valor.telefono}</td>
-                                <td>
-                                  <button className="btn btn-mini btn-positive">
-                                    New Product
-                                  </button>
-                                  <button className="btn btn-mini btn-primary">
-                                    Detalles
-                                  </button>
-                                  <Edit form="proveedor" data={valor} />
-                                  <Confirmacion
-                                    id={valor.id_proveedores}
-                                    tabla="proveedor"
-                                  />
-                                </td>
-                              </tr>
-                            ))
+                            this.props.ProveedoresReducer.Proveedores.map(
+                              (valor) => (
+                                <tr key={valor.id_proveedores}>
+                                  <td>{valor.nombres}</td>
+                                  <td>{valor.nombre_laboratorio}</td>
+                                  <td
+                                    className={
+                                      valor.correo == "" ||
+                                      valor.correo == "no especificado"
+                                        ? "alert-danger"
+                                        : ""
+                                    }
+                                  >
+                                    {valor.correo == ""
+                                      ? "no especificado"
+                                      : valor.correo}
+                                  </td>
+                                  <td style={{ width: 100 }}>
+                                    {valor.telefono}
+                                  </td>
+                                  <td>
+                                    <NewProductProveedor
+                                      id={valor.id_proveedores}
+                                    />
+                                    <button
+                                      onClick={() =>
+                                        this.setState({
+                                          select_detalles_proveedor:
+                                            valor.id_proveedores,
+                                        })
+                                      }
+                                      className="btn btn-mini btn-primary ml-1 mr-1"
+                                    >
+                                      Detalles
+                                    </button>
+                                    <Edit form="proveedor" data={valor} />
+                                    <Confirmacion
+                                      id={valor.id_proveedores}
+                                      tabla="proveedor"
+                                    />
+                                  </td>
+                                </tr>
+                              )
+                            )
                           )}
                         </tbody>
                       </table>
                     </div>
                   </div>
                 </div>
-                <div className="pane-sm sidebar" style={{ width: 420 }}>
-                  detalles del pedido
+                <div
+                  className="pane-sm sidebar"
+                  style={{
+                    width: 500,
+                    overflowY: "scroll",
+                    border: 1,
+                    borderStyle: "solid",
+                    borderColor: "#000",
+                  }}
+                >
+                  <h6
+                    className="text-center p-1"
+                    style={{
+                      backgroundColor: "#0866dc",
+                      color: "#fff",
+                      fontSize: 16,
+                    }}
+                  >
+                    Detalles Pedidos
+                  </h6>
+                  {this.state.select_detalles_proveedor == "" ? (
+                    <Alerta
+                      titulo="No existen datos para mostrar"
+                      contenido="Selecciona los detalles del proveedor."
+                    />
+                  ) : (
+                    <DetallesPP
+                      id_proveedor={this.state.select_detalles_proveedor}
+                    />
+                  )}
                 </div>
               </div>
             </div>
@@ -251,18 +311,20 @@ class Proveedores extends React.Component {
 
 Proveedores.prototypes = {
   ProductoReducer: PropsType.object,
-  Proveedores: PropsType.object,
+  ProveedoresReducer: PropsType.object,
   crear_proveedor: PropsType.func,
   traer_proveedores: PropsType.func,
   obterner_name_laboratorio: PropsType.func,
+  traer_product_proveedor: PropsType.func,
 };
 
-const mapStateToProps = ({ ProductoReducer, Proveedores }) => {
-  return { ProductoReducer, Proveedores };
+const mapStateToProps = ({ ProductoReducer, ProveedoresReducer }) => {
+  return { ProductoReducer, ProveedoresReducer };
 };
 
 const mapDispachToProps = {
   traer_proveedores,
+  traer_product_proveedor,
   crear_proveedor,
   obterner_name_laboratorio,
 };
