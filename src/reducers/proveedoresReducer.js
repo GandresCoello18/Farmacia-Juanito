@@ -2,6 +2,7 @@ import {
   CREAR_PROVEEDOR,
   TRAER_PROVEEDORES,
   ERROR_PROVEEDORES,
+  BUSQUEDA_PROVEEDOR,
   ADD_PRODUCTO_PROVEEDOR,
 } from "../types/ProveedorTypes";
 
@@ -25,8 +26,12 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         Proveedores: action.payload,
-        Busqueda_proveedores: action.payload,
         cargar_proveedor: false,
+      };
+    case BUSQUEDA_PROVEEDOR:
+      return {
+        ...state,
+        Busqueda_proveedores: action.payload,
       };
     case ERROR_PROVEEDORES:
       return {

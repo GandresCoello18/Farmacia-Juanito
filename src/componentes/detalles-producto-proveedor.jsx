@@ -1,6 +1,7 @@
 import React from "react";
 import PropsType from "prop-types";
 import moment from "moment";
+import Edit from "../componentes/edit";
 import { connect } from "react-redux";
 import "../assest/css/detalle-product-proveedor.css";
 
@@ -15,6 +16,10 @@ class DetallesPP extends React.Component {
   };
 
   componentDidMount() {
+    this.filtrar_detalles_pp_unico();
+  }
+
+  filtrar_detalles_pp_unico = () => {
     let result = [];
     const data_pp = this.props.ProveedoresReducer.Producto_proveedor;
     for (let i = 0; i < data_pp.length; i++) {
@@ -25,22 +30,25 @@ class DetallesPP extends React.Component {
     this.setState({
       data_detalles_pp: result,
     });
-  }
+  };
 
   remover_pp = (id_pp, e) => {
     e.target.parentElement.parentElement.style.display = "none";
     this.props.eliminar_producto_proveedor(id_pp);
+    this.filtrar_detalles_pp_unico();
   };
 
   pagar_product = (id_pp, e) => {
     let element_total =
-      e.target.parentElement.parentElement.children[1].children[3];
+      e.target.parentElement.parentElement.children[1].children[4];
     element_total.classList.remove();
     element_total.classList.add("badge", "badge-success");
     element_total.innerHTML = `
         <b>Estado: </b> Pagado
         `;
-    this.props.pago_producto_proveedor(id_pp);
+    this.props.pago_producto_proveedor(id_pp).then(() => {
+      this.filtrar_detalles_pp_unico();
+    });
   };
 
   render() {
@@ -62,6 +70,9 @@ class DetallesPP extends React.Component {
               </p>
               <p>
                 <b>Total: </b>$ {item.total}
+              </p>
+              <p>
+                <b>Abono:</b> $ {item.abonado}
               </p>
               <p
                 className={
@@ -88,9 +99,7 @@ class DetallesPP extends React.Component {
               >
                 Pagado
               </button>
-              <button className="btn btn-mini btn-warning p-1 ml-1 mr-1">
-                Editar
-              </button>
+              <Edit form="detalles_pp" data={item} />
               <button
                 className="btn btn-mini btn-negative p-1 ml-1 mr-1"
                 onClick={(e) => this.remover_pp(item.id_product_proveedor, e)}

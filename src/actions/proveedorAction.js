@@ -2,6 +2,7 @@ import {
   CREAR_PROVEEDOR,
   ERROR_PROVEEDORES,
   TRAER_PROVEEDORES,
+  BUSQUEDA_PROVEEDOR,
   ADD_PRODUCTO_PROVEEDOR,
 } from "../types/ProveedorTypes";
 import { NOTIFICACION_ACTIVIVDAD } from "../types/ProductoTypes";
@@ -10,6 +11,7 @@ import {
   obtenerProveedores,
   eliminarProveedor,
   editarProveedor,
+  editarProductoProveedor,
   addNewProduct,
   obtenerProductoProveedor,
   eliminarProductoProveedor,
@@ -32,6 +34,11 @@ export const crear_proveedor = (
 
         dispatch({
           type: TRAER_PROVEEDORES,
+          payload: res.data,
+        });
+
+        dispatch({
+          type: BUSQUEDA_PROVEEDOR,
           payload: res.data,
         });
 
@@ -69,6 +76,11 @@ export const traer_proveedores = () => async (dispatch) => {
         type: TRAER_PROVEEDORES,
         payload: res.data,
       });
+
+      dispatch({
+        type: BUSQUEDA_PROVEEDOR,
+        payload: res.data,
+      });
     });
   } catch (error) {
     dispatch({
@@ -103,6 +115,11 @@ export const eliminar_proveedor = (id) => async (dispatch) => {
         obtenerProveedores().then((res) => {
           dispatch({
             type: TRAER_PROVEEDORES,
+            payload: res.data,
+          });
+
+          dispatch({
+            type: BUSQUEDA_PROVEEDOR,
             payload: res.data,
           });
 
@@ -161,6 +178,11 @@ export const editar_proveedor = (
             });
 
             dispatch({
+              type: BUSQUEDA_PROVEEDOR,
+              payload: res.data,
+            });
+
+            dispatch({
               type: NOTIFICACION_ACTIVIVDAD,
               payload: {
                 tipo: "EXITO",
@@ -187,6 +209,13 @@ export const editar_proveedor = (
       },
     });
   }
+};
+
+export const busqueda_en_proveedor = (array) => async (dispatch) => {
+  dispatch({
+    type: TRAER_PROVEEDORES,
+    payload: array,
+  });
 };
 
 export const traer_product_proveedor = () => async (dispatch) => {
@@ -219,19 +248,25 @@ export const add_new_product_proveedor = (
   fecha_pago,
   total,
   id_proveedor,
-  estado_pp
+  estado_pp,
+  abono
 ) => async (dispatch) => {
   try {
-    addNewProduct(descripcion, fecha_pago, total, id_proveedor, estado_pp).then(
-      (res) => {
-        obtenerProductoProveedor().then((res) => {
-          dispatch({
-            type: ADD_PRODUCTO_PROVEEDOR,
-            payload: res.data,
-          });
+    addNewProduct(
+      descripcion,
+      fecha_pago,
+      total,
+      id_proveedor,
+      estado_pp,
+      abono
+    ).then((res) => {
+      obtenerProductoProveedor().then((res) => {
+        dispatch({
+          type: ADD_PRODUCTO_PROVEEDOR,
+          payload: res.data,
         });
-      }
-    );
+      });
+    });
   } catch (error) {
     dispatch({
       type: ERROR_PROVEEDORES,
@@ -326,6 +361,68 @@ export const pago_producto_proveedor = (id) => async (dispatch) => {
       payload: {
         tipo: "ERROR",
         text: `(Proveedor) Error al pagar producto de proveedor ${error.message}`,
+        date: new Date(),
+      },
+    });
+  }
+  return true;
+};
+
+export const editar_producto_proveedor = (
+  id_pp,
+  descripcion,
+  fecha_pago,
+  total,
+  estado_pp,
+  abonado
+) => async (dispatch) => {
+  try {
+    editarProductoProveedor(
+      id_pp,
+      descripcion,
+      fecha_pago,
+      total,
+      estado_pp,
+      abonado
+    ).then((res) => {
+      if (res.data.feeback != undefined) {
+        dispatch({
+          type: NOTIFICACION_ACTIVIVDAD,
+          payload: {
+            tipo: "ERROR",
+            text: `${res.data.feeback}`,
+            date: new Date(),
+          },
+        });
+      } else {
+        obtenerProductoProveedor().then((res) => {
+          dispatch({
+            type: ADD_PRODUCTO_PROVEEDOR,
+            payload: res.data,
+          });
+
+          dispatch({
+            type: NOTIFICACION_ACTIVIVDAD,
+            payload: {
+              tipo: "EXITO",
+              text: `Se pago el producto del proveedor`,
+              date: new Date(),
+            },
+          });
+        });
+      }
+    });
+  } catch (error) {
+    dispatch({
+      type: ERROR_PROVEEDORES,
+      payload: `(Proveedor) Error al editar producto de proveedor ${error.message}`,
+    });
+
+    dispatch({
+      type: NOTIFICACION_ACTIVIVDAD,
+      payload: {
+        tipo: "ERROR",
+        text: `(Proveedor) Error al editar producto de proveedor ${error.message}`,
         date: new Date(),
       },
     });

@@ -33,18 +33,44 @@ class NewProductProveedor extends React.Component {
     let fecha_pago = document.getElementById(`fecha_pago_${id_proveedor}`)
       .value;
     let total = document.getElementById(`pago_${id_proveedor}`).value;
-    let estado_pp = document.getElementById(`estado_pp_${id_proveedor}`).value;
+    let valor_a_cancelar = document.getElementById(
+      `pago_a_cancelar_${id_proveedor}`
+    ).value;
 
-    if (descripcion == "" || fecha_pago == "" || total == "") {
+    if (
+      descripcion == "" ||
+      fecha_pago == "" ||
+      total == "" ||
+      valor_a_cancelar == ""
+    ) {
       alert("Campos vacios, revise y vuelva ha intentarlo");
     } else {
-      this.props.add_new_product_proveedor(
-        descripcion,
-        fecha_pago,
-        total,
-        id_proveedor,
-        estado_pp
-      );
+      let estado_pp = "";
+
+      if (Number(valor_a_cancelar) > Number(total)) {
+        alert("El valor a cancelar no puede ser mayor del total");
+      } else {
+        if (Number(valor_a_cancelar) == Number(total)) {
+          estado_pp = "Pagado";
+        } else if (Number(valor_a_cancelar) == 0) {
+          estado_pp = "Ingresado";
+        } else if (Number(valor_a_cancelar) < Number(total)) {
+          estado_pp = "Saldo pendiente";
+        } else {
+          estado_pp = "No especificado";
+        }
+
+        this.props.add_new_product_proveedor(
+          descripcion,
+          fecha_pago,
+          total,
+          id_proveedor,
+          estado_pp,
+          valor_a_cancelar
+        );
+
+        document.getElementById("form_new_pp").reset();
+      }
     }
   };
 
@@ -58,7 +84,7 @@ class NewProductProveedor extends React.Component {
           <x-button style={this.styles.btn_verde}>
             <x-label>New Product</x-label>
             <dialog style={this.styles.dialogo}>
-              <form>
+              <form id="form_new_pp">
                 <label className="mt-2">Descripcion:</label>
                 <br />
                 <textarea
@@ -89,16 +115,14 @@ class NewProductProveedor extends React.Component {
                 />
                 <br />
 
-                <label className="mt-2">Estado:</label>
+                <label className="mt-2">Pago a cancelar:</label>
                 <br />
-                <select
+                <input
+                  type="number"
                   className="form-control"
-                  id={`estado_pp_${this.props.id}`}
-                >
-                  <option>Ingresado</option>
-                  <option>Pagado</option>
-                  <option>Saldo de entrada</option>
-                </select>
+                  id={`pago_a_cancelar_${this.props.id}`}
+                  placeholder="Valor cancelado: $ 00"
+                />
                 <br />
 
                 <button

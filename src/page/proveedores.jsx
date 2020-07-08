@@ -17,6 +17,7 @@ import NewProductProveedor from "../componentes/new-product-proveedor";
 import {
   crear_proveedor,
   traer_proveedores,
+  busqueda_en_proveedor,
   traer_product_proveedor,
 } from "../actions/proveedorAction";
 import { obterner_name_laboratorio } from "../actions/productoAction";
@@ -53,6 +54,29 @@ class Proveedores extends React.Component {
       this.props.traer_product_proveedor();
     }
   }
+
+  search_proveedor = (e) => {
+    const respaldo = this.props.ProveedoresReducer.Proveedores;
+    let nuevo = [];
+
+    if (e.target.value == "") {
+      this.props.busqueda_en_proveedor(
+        this.props.ProveedoresReducer.Busqueda_proveedores
+      );
+    } else {
+      for (let i = 0; i < respaldo.length; i++) {
+        if (
+          respaldo[i].nombres.indexOf(e.target.value) != -1 ||
+          respaldo[i].nombre_laboratorio.indexOf(e.target.value) != -1 ||
+          respaldo[i].correo.indexOf(e.target.value) != -1
+          // respaldo[i].identificacion.indexOf(e.target.value) != -1
+        ) {
+          nuevo.push(respaldo[i]);
+        }
+      }
+      this.props.busqueda_en_proveedor(nuevo);
+    }
+  };
 
   add_proveedor = () => {
     if (
@@ -184,7 +208,7 @@ class Proveedores extends React.Component {
                     <div className="col-5">
                       <input
                         type="text"
-                        onChange={this.search_client}
+                        onChange={this.search_proveedor}
                         className="form-control input-buscar mt-5"
                         placeholder="Buscar Proveedor por: ----- Nombre ----- Correo ------"
                       />
@@ -315,6 +339,7 @@ Proveedores.prototypes = {
   crear_proveedor: PropsType.func,
   traer_proveedores: PropsType.func,
   obterner_name_laboratorio: PropsType.func,
+  busqueda_en_proveedor: PropsType.func,
   traer_product_proveedor: PropsType.func,
 };
 
@@ -326,6 +351,7 @@ const mapDispachToProps = {
   traer_proveedores,
   traer_product_proveedor,
   crear_proveedor,
+  busqueda_en_proveedor,
   obterner_name_laboratorio,
 };
 

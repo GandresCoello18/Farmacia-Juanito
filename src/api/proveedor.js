@@ -44,12 +44,13 @@ export const addNewProduct = async (
   fecha_pago,
   total,
   id_proveedor,
-  estado_pp
+  estado_pp,
+  abono
 ) => {
   return await axios({
     method: "POST",
     url: `${domain()}/api/proveedor/producto`,
-    data: { descripcion, fecha_pago, total, id_proveedor, estado_pp },
+    data: { descripcion, fecha_pago, total, id_proveedor, estado_pp, abono },
   });
 };
 
@@ -84,6 +85,22 @@ export const editarProveedor = async (
     method: "PUT",
     url: `${domain()}/api/proveedor/${id}`,
     data: { nombres, id_laboratorio, correo, telefono },
+    headers: { "access-token": Cookie.get("access_token") },
+  });
+};
+
+export const editarProductoProveedor = async (
+  id_pp,
+  descripcion,
+  fecha_pago,
+  total,
+  estado_pp,
+  abonado
+) => {
+  return await axios({
+    method: "PUT",
+    url: `${domain()}/api/proveedor/producto/${id_pp}`,
+    data: { descripcion, fecha_pago, total, estado_pp, abonado },
     headers: { "access-token": Cookie.get("access_token") },
   });
 };
