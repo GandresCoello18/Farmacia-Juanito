@@ -18,7 +18,7 @@ class Prestamo extends React.Component {
     },
     dialogo: {
       width: 300,
-      height: 300,
+      height: 350,
       border: 3,
       borderStyle: "solid",
       borderColor: "#212529",
@@ -33,8 +33,14 @@ class Prestamo extends React.Component {
     if (descripcion_p == "" || cantidad_p == "") {
       alert("Campos vacios, revise y vuelve a intentarlo");
     } else {
-      this.props.add_prestamo(descripcion_p, cantidad_p);
-      document.getElementById("form-create-prestamo").reset();
+      if (Number(cantidad_p) > this.props.ventasReducer.monto_total_por_fecha) {
+        alert(
+          "El prestamo es mayor que el saldo actual, revise y vuelve a intentarlo"
+        );
+      } else {
+        this.props.add_prestamo(descripcion_p, cantidad_p);
+        document.getElementById("form-create-prestamo").reset();
+      }
     }
   };
 
@@ -49,11 +55,19 @@ class Prestamo extends React.Component {
             <x-label>Tomar dinero prestado</x-label>
             <dialog style={this.styles.dialogo}>
               <form id="form-create-prestamo">
+                <span className="badge badge-info" style={{ fontSize: 20 }}>
+                  En caja:{" "}
+                  <strong>
+                    {this.props.ventasReducer.monto_total_por_fecha}
+                  </strong>
+                </span>
+                <br />
                 <label className="mt-2">Descripcion:</label>
                 <br />
                 <textarea
                   rows="3"
                   className="form-control"
+                  disabled={this.props.ventasReducer.monto_total_por_fecha == 0}
                   id="descripcion_prestamo"
                   placeholder="Especificaciones del prestamo"
                 ></textarea>
@@ -63,6 +77,9 @@ class Prestamo extends React.Component {
                 <br />
                 <input
                   type="number"
+                  min="0"
+                  max={this.props.ventasReducer.monto_total_por_fecha}
+                  disabled={this.props.ventasReducer.monto_total_por_fecha == 0}
                   placeholder="example: $ 100"
                   id="cantidad_prestamo"
                   className="form-control"
@@ -72,13 +89,14 @@ class Prestamo extends React.Component {
                 <button
                   type="button"
                   onClick={this.save_prestamo}
+                  disabled={this.props.ventasReducer.monto_total_por_fecha == 0}
                   className="btn btn-mini btn-primary mt-4 form-control"
                 >
                   Guardar
                 </button>
                 <br />
                 <p style={{ color: "red", padding: 1 }}>
-                  Se disminuye el salde de ingresos.
+                  Se disminuye el saldo actual de caja.
                 </p>
               </form>
             </dialog>
@@ -90,6 +108,7 @@ class Prestamo extends React.Component {
 }
 
 Prestamo.prototypes = {
+  ventasReducer: PropType.object,
   add_prestamo: PropType.func,
 };
 
@@ -97,4 +116,8 @@ const mapDisPachToProps = {
   add_prestamo,
 };
 
-export default connect(null, mapDisPachToProps)(Prestamo);
+const mapStateToProps = ({ ventasReducer }) => {
+  return { ventasReducer };
+};
+
+export default connect(mapStateToProps, mapDisPachToProps)(Prestamo);

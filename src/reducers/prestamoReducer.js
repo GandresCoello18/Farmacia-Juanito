@@ -2,12 +2,12 @@ import {
   ADD_PRESTAMOS,
   ERROR_PRESTAMOS,
   TRAER_PRESTAMOS,
-  TRAER_PRESTAMOS_HOY,
+  TRAER_PRESTAMOS_POR_FECHA,
 } from "../types/prestamosTypes";
 
 const INITIAL_STATE = {
   Prestamo: [],
-  Prestamo_hoy: [],
+  Prestamo_por_fecha: [],
   error_prestamo: "",
   mensaje_prestamo: "",
   cargar_prestamo: true,
@@ -26,10 +26,10 @@ export default (state = INITIAL_STATE, action) => {
         Prestamo: action.payload,
         cargar_prestamo: false,
       };
-    case TRAER_PRESTAMOS_HOY:
+    case TRAER_PRESTAMOS_POR_FECHA:
       return {
         ...state,
-        Prestamo_hoy: action.payload,
+        Prestamo_por_fecha: action.payload,
       };
     case ERROR_PRESTAMOS:
       return {

@@ -2,7 +2,9 @@ import React from "react";
 import PropType from "prop-types";
 import Head from "../componentes/head";
 import Nav from "../componentes/nav";
+import Footer from "../componentes/footer";
 import moment from "moment";
+import { Link } from "react-router-dom";
 import FlujoCajaYear from "../componentes/flujo-caja-year";
 import FlujoCajaHoy from "../componentes/flujo-caja-hoy";
 import PrestamoBtn from "../componentes/btn-prestamo";
@@ -11,20 +13,20 @@ import Preload from "../componentes/preload";
 import Alerta from "../componentes/alert";
 import { fecha_actual } from "../util/fecha";
 
-import { traer_prestamos_hoy } from "../actions/prestamoAction";
-
 class FlujoCaja extends React.Component {
   state = {
     comienzo_ano: 2020,
     select_year: "",
-    select_tipo_date: "por ano",
+    select_fecha: "",
+    select_tipo_date: "",
   };
 
   componentDidMount() {
     moment().lang("es");
-    if (this.props.PrestamoReducer.Prestamo_hoy.length == 0) {
-      this.props.traer_prestamos_hoy(fecha_actual());
-    }
+    this.setState({
+      select_fecha: fecha_actual(),
+      select_tipo_date: "por fecha",
+    });
   }
 
   /*insertar_option = () => {
@@ -44,6 +46,14 @@ class FlujoCaja extends React.Component {
   select_data_for_year = (e) => {
     this.setState({
       select_year: e.target.value,
+      select_tipo_date: "por ano",
+    });
+  };
+
+  select_fecha = (e) => {
+    this.setState({
+      select_fecha: e.target.value,
+      select_tipo_date: "por fecha",
     });
   };
 
@@ -60,8 +70,8 @@ class FlujoCaja extends React.Component {
                 className="form-control"
                 onChange={this.select_for_tipo_date}
               >
-                <option value="por ano">Por año</option>
                 <option value="por fecha">Por fecha</option>
+                <option value="por ano">Por año</option>
               </select>
             </div>
             <div className="col-2 p-2 mt-2">
@@ -80,35 +90,31 @@ class FlujoCaja extends React.Component {
                   type="date"
                   className="form-control"
                   max={fecha_actual()}
+                  onChange={this.select_fecha}
                 />
               )}
             </div>
             <div className="col-2 p-2 mt-2">
               <PrestamoBtn />
             </div>
+            <div className="col-2 p-2 mt-2">
+              <Link to="/prestamos" className="btn btn-mini btn-primary">
+                Ver prestamos
+              </Link>
+            </div>
           </div>
 
-          {this.state.select_year == "" || this.state.select_year == "0000" ? (
-            <FlujoCajaHoy />
+          {this.state.select_tipo_date == "por fecha" ? (
+            <FlujoCajaHoy fecha={this.props.select_fecha} />
           ) : (
             <FlujoCajaYear />
           )}
         </section>
+
+        <Footer />
       </>
     );
   }
 }
 
-FlujoCaja.prototypes = {
-  traer_prestamos_hoy: PropType.func,
-};
-
-const mapDisPachToProsp = {
-  traer_prestamos_hoy,
-};
-
-const mapStateToProsp = ({ PrestamoReducer }) => {
-  return { PrestamoReducer };
-};
-
-export default connect(mapStateToProsp, mapDisPachToProsp)(FlujoCaja);
+export default connect(null, null)(FlujoCaja);

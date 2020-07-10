@@ -12,6 +12,7 @@ import { eliminar_cliente } from "../actions/clienteAction";
 import { eliminar_venta, eliminar_factura } from "../actions/ventasActios";
 import { eliminar_ususario } from "../actions/usuariosActions";
 import { eliminar_proveedor } from "../actions/proveedorAction";
+import { eliminar_prestamo } from "../actions/prestamoAction";
 
 class Confirmacion extends React.Component {
   state = {
@@ -65,6 +66,8 @@ class Confirmacion extends React.Component {
       case "proveedor":
         this.props.eliminar_proveedor(id);
         break;
+      case "prestamo":
+        this.props.eliminar_prestamo(id);
     }
   };
 
@@ -130,6 +133,7 @@ Confirmacion.prototypes = {
   eliminar_factura: PropType.func,
   eliminar_ususario: PropType.func,
   eliminar_proveedor: PropType.func,
+  eliminar_prestamo: PropType.func,
 };
 
 const mapDispachToProps = {
@@ -142,6 +146,7 @@ const mapDispachToProps = {
   eliminar_factura,
   eliminar_ususario,
   eliminar_proveedor,
+  eliminar_prestamo,
 };
 
 export default connect(null, mapDispachToProps)(Confirmacion);

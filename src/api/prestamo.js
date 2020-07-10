@@ -28,3 +28,28 @@ export const addPrestamo = async (descripcion_prestamo, cantidad_prestamo) => {
     headers: { "access-token": Cookie.get("access_token") },
   });
 };
+
+////////////////  METODO DE PETICION DELETE
+
+export const eliminarPrestamo = async (id) => {
+  return await axios({
+    method: "DELETE",
+    url: `${domain()}/api/prestamo/${id}`,
+    headers: { "access-token": Cookie.get("access_token") },
+  });
+};
+
+////////////////  METODO DE PETICION PUT
+
+export const editarPrestamo = async (
+  id,
+  descripcion_prestamo,
+  cantidad_prestamo
+) => {
+  return await axios({
+    method: "PUT",
+    url: `${domain()}/api/prestamo/${id}`,
+    data: { descripcion_prestamo, cantidad_prestamo },
+    headers: { "access-token": Cookie.get("access_token") },
+  });
+};

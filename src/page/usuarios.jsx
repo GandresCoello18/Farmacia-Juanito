@@ -7,6 +7,7 @@ import Confir from "../componentes/confirmacion";
 import Edit from "../componentes/edit";
 import Preload from "../componentes/preload";
 import Alerta from "../componentes/alert";
+import Footer from "../componentes/footer";
 
 import { traer_usuarios } from "../actions/usuariosActions";
 
@@ -91,6 +92,8 @@ class Usuarios extends React.Component {
             </div>
           </div>
         </section>
+
+        <Footer />
       </>
     );
   }

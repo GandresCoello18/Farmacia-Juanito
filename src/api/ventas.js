@@ -21,6 +21,13 @@ export const obtenerVentas = async () => {
   });
 };
 
+export const obtenerMontoTotalPorFecha = async (fecha) => {
+  return await axios({
+    method: "GET",
+    url: `${domain()}/api/factura/monto_total/${fecha}`,
+  });
+};
+
 //////////////////// METODO DE PETICION DELETE
 
 export const eliminarVentas = async (id) => {

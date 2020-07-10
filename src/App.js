@@ -13,6 +13,7 @@ import Usuarios from "./page/usuarios";
 import FlujoCaja from "./page/flujo-caja";
 import Factura from "./page/factura";
 import Proveedores from "./page/proveedores";
+import Prestamos from "./page/prestamos";
 
 import history from "./util/history";
 
@@ -33,6 +34,7 @@ function App() {
           <Route exact path="/usuarios" component={Usuarios} />
           <Route exact path="/emitir-factura" component={Factura} />
           <Route exact path="/proveedores" component={Proveedores} />
+          <Route exact path="/prestamos" component={Prestamos} />
           <Route exact path="/flujo-caja" component={FlujoCaja} />
         </Switch>
       </Router>

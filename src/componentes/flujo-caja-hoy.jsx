@@ -1,6 +1,18 @@
 import React from "react";
+import PropType from "prop-types";
+import { connect } from "react-redux";
+
+import { traer_prestamos_hoy } from "../actions/prestamoAction";
+import { traer_monto_por_fecha } from "../actions/ventasActios";
 
 class FlujoCajaHoy extends React.Component {
+  componentDidMount() {
+    if (this.props.PrestamoReducer.Prestamo_por_fecha.length == 0) {
+      this.props.traer_prestamos_hoy(this.props.fecha);
+    }
+    this.props.traer_monto_por_fecha(this.props.fecha);
+  }
+
   render() {
     return (
       <>
@@ -22,8 +34,12 @@ class FlujoCajaHoy extends React.Component {
               </thead>
               <tbody>
                 <tr>
-                  <td className="badge-success">26</td>
-                  <td className="badge-success">200</td>
+                  <td className="badge-success">
+                    # {this.props.ventasReducer.cantidad_ventas_por_fecha}
+                  </td>
+                  <td className="badge-success">
+                    $ {this.props.ventasReducer.monto_total_por_fecha}
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -82,4 +98,20 @@ class FlujoCajaHoy extends React.Component {
   }
 }
 
-export default FlujoCajaHoy;
+const mapStateToProsp = ({ PrestamoReducer, ventasReducer }) => {
+  return { PrestamoReducer, ventasReducer };
+};
+
+FlujoCajaHoy.prototypes = {
+  ventasReducer: PropType.object,
+  PrestamoReducer: PropType.object,
+  traer_prestamos_hoy: PropType.func,
+  traer_monto_por_fecha: PropType.func,
+};
+
+const mapDisPachToProsp = {
+  traer_prestamos_hoy,
+  traer_monto_por_fecha,
+};
+
+export default connect(mapStateToProsp, mapDisPachToProsp)(FlujoCajaHoy);

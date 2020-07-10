@@ -16,6 +16,17 @@ class Nav extends React.Component {
   state = {};
 
   styles = {
+    exito_actividad: {
+      color: "#721c24",
+      backgroundColor: "#f8d7da",
+      borderColor: "#f5c6cb",
+      cursor: "pointer",
+    },
+    error_actividad: {
+      color: "#155724",
+      backgroundColor: "#d4edda",
+      borderColor: "#c3e6cb",
+    },
     dialog: {
       width: "30vw",
       height: "70vh",
@@ -268,9 +279,24 @@ class Nav extends React.Component {
 
           <div className="col-5">
             <x-button
-              style={{
-                cursor: "pointer",
-              }}
+              style={
+                this.props.ProductoReducer.notificaciones_actividades[
+                  this.props.ProductoReducer.notificaciones_actividades.length -
+                    1
+                ] == undefined
+                  ? {}
+                  : this.props.ProductoReducer.notificaciones_actividades[
+                      this.props.ProductoReducer.notificaciones_actividades
+                        .length - 1
+                    ].tipo == "ERROR"
+                  ? this.styles.exito_actividad
+                  : this.props.ProductoReducer.notificaciones_actividades[
+                      this.props.ProductoReducer.notificaciones_actividades
+                        .length - 1
+                    ].tipo == "EXITO"
+                  ? this.styles.error_actividad
+                  : {}
+              }
             >
               <span className="material-icons" style={{ marginRight: 5 }}>
                 sort

@@ -2,12 +2,15 @@ import {
   CREAR_VENTAS,
   TRAER_VENTAS,
   MOSTRAR_POR_FECHAS,
+  MONTO_TOTAL_POR_FECHA,
+  CANTIDAD_VENTAS_POR_FECHA,
   MENSAJE_VENTAS,
   ERROR_VENTAS,
 } from "../types/ventasTypes";
 import {
   createVenta,
   obtenerVentas,
+  obtenerMontoTotalPorFecha,
   eliminarVentas,
   eliminarFactura,
 } from "../api/ventas";
@@ -77,6 +80,39 @@ export const traer_ventas = () => async (dispatch) => {
       dispatch({
         type: TRAER_VENTAS,
         payload: res.data,
+      });
+    });
+  } catch (error) {
+    dispatch({
+      type: ERROR_VENTAS,
+      payload: `Error: ${error.message}`,
+    });
+
+    dispatch({
+      type: NOTIFICACION_ACTIVIVDAD,
+      payload: {
+        tipo: "ERROR",
+        text: `${error.message}`,
+        date: new Date(),
+      },
+    });
+  }
+};
+
+export const traer_monto_por_fecha = (fecha) => (dispatch) => {
+  try {
+    obtenerMontoTotalPorFecha(fecha).then((res) => {
+      let total = 0;
+      if (res.data[0].total != null) total = res.data[0].total;
+
+      dispatch({
+        type: MONTO_TOTAL_POR_FECHA,
+        payload: total,
+      });
+
+      dispatch({
+        type: CANTIDAD_VENTAS_POR_FECHA,
+        payload: res.data[0].cantidad,
       });
     });
   } catch (error) {
