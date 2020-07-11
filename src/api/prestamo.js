@@ -18,6 +18,13 @@ export const obtenerPrestamosPorFecha = async (fecha) => {
   });
 };
 
+export const obtenerMontoTotalPorFecha = async (fecha) => {
+  return await axios({
+    method: "GET",
+    url: `${domain()}/api/prestamo/monto_total/fecha/${fecha}`,
+  });
+};
+
 ////////////////  METDOD DE PETICION POST
 
 export const addPrestamo = async (descripcion_prestamo, cantidad_prestamo) => {

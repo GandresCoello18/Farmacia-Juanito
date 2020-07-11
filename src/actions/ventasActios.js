@@ -3,6 +3,7 @@ import {
   TRAER_VENTAS,
   MOSTRAR_POR_FECHAS,
   MONTO_TOTAL_POR_FECHA,
+  MONTO_VENTAS_TOTAL_HOY,
   CANTIDAD_VENTAS_POR_FECHA,
   MENSAJE_VENTAS,
   ERROR_VENTAS,
@@ -113,6 +114,34 @@ export const traer_monto_por_fecha = (fecha) => (dispatch) => {
       dispatch({
         type: CANTIDAD_VENTAS_POR_FECHA,
         payload: res.data[0].cantidad,
+      });
+    });
+  } catch (error) {
+    dispatch({
+      type: ERROR_VENTAS,
+      payload: `Error: ${error.message}`,
+    });
+
+    dispatch({
+      type: NOTIFICACION_ACTIVIVDAD,
+      payload: {
+        tipo: "ERROR",
+        text: `${error.message}`,
+        date: new Date(),
+      },
+    });
+  }
+};
+
+export const traer_monto_de_venta_hoy = (fecha) => (dispatch) => {
+  try {
+    obtenerMontoTotalPorFecha(fecha).then((res) => {
+      let total = 0;
+      if (res.data[0].total != null) total = res.data[0].total;
+
+      dispatch({
+        type: MONTO_VENTAS_TOTAL_HOY,
+        payload: total,
       });
     });
   } catch (error) {

@@ -1,8 +1,9 @@
 import React from "react";
 import PropType from "prop-types";
 import { connect } from "react-redux";
-
+import { fecha_actual } from "../util/fecha";
 import { add_prestamo } from "../actions/prestamoAction";
+import { traer_monto_de_venta_hoy } from "../actions/ventasActios";
 
 class Prestamo extends React.Component {
   styles = {
@@ -25,6 +26,10 @@ class Prestamo extends React.Component {
       color: "#000",
     },
   };
+
+  componentDidMount() {
+    this.props.traer_monto_de_venta_hoy(fecha_actual());
+  }
 
   save_prestamo = () => {
     let descripcion_p = document.getElementById("descripcion_prestamo").value;
@@ -58,7 +63,7 @@ class Prestamo extends React.Component {
                 <span className="badge badge-info" style={{ fontSize: 20 }}>
                   En caja:{" "}
                   <strong>
-                    {this.props.ventasReducer.monto_total_por_fecha}
+                    {this.props.ventasReducer.monto_venta_total_hoy}
                   </strong>
                 </span>
                 <br />
@@ -67,7 +72,7 @@ class Prestamo extends React.Component {
                 <textarea
                   rows="3"
                   className="form-control"
-                  disabled={this.props.ventasReducer.monto_total_por_fecha == 0}
+                  disabled={this.props.ventasReducer.monto_venta_total_hoy == 0}
                   id="descripcion_prestamo"
                   placeholder="Especificaciones del prestamo"
                 ></textarea>
@@ -78,8 +83,8 @@ class Prestamo extends React.Component {
                 <input
                   type="number"
                   min="0"
-                  max={this.props.ventasReducer.monto_total_por_fecha}
-                  disabled={this.props.ventasReducer.monto_total_por_fecha == 0}
+                  max={this.props.ventasReducer.monto_venta_total_hoy}
+                  disabled={this.props.ventasReducer.monto_venta_total_hoy == 0}
                   placeholder="example: $ 100"
                   id="cantidad_prestamo"
                   className="form-control"
@@ -89,7 +94,7 @@ class Prestamo extends React.Component {
                 <button
                   type="button"
                   onClick={this.save_prestamo}
-                  disabled={this.props.ventasReducer.monto_total_por_fecha == 0}
+                  disabled={this.props.ventasReducer.monto_venta_total_hoy == 0}
                   className="btn btn-mini btn-primary mt-4 form-control"
                 >
                   Guardar
@@ -110,10 +115,12 @@ class Prestamo extends React.Component {
 Prestamo.prototypes = {
   ventasReducer: PropType.object,
   add_prestamo: PropType.func,
+  traer_monto_de_venta_hoy: PropType.func,
 };
 
 const mapDisPachToProps = {
   add_prestamo,
+  traer_monto_de_venta_hoy,
 };
 
 const mapStateToProps = ({ ventasReducer }) => {

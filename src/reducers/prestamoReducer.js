@@ -3,11 +3,15 @@ import {
   ERROR_PRESTAMOS,
   TRAER_PRESTAMOS,
   TRAER_PRESTAMOS_POR_FECHA,
+  MONTO_TOTAL_POR_FECHA_PRESTAMOS,
+  COUNT_TOTAL_POR_FECHA_PRESTAMOS,
 } from "../types/prestamosTypes";
 
 const INITIAL_STATE = {
   Prestamo: [],
   Prestamo_por_fecha: [],
+  monto_total_por_fecha_prestamo: 0,
+  count_total_por_fecha_prestamo: 0,
   error_prestamo: "",
   mensaje_prestamo: "",
   cargar_prestamo: true,
@@ -30,6 +34,16 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         Prestamo_por_fecha: action.payload,
+      };
+    case MONTO_TOTAL_POR_FECHA_PRESTAMOS:
+      return {
+        ...state,
+        monto_total_por_fecha_prestamo: action.payload,
+      };
+    case COUNT_TOTAL_POR_FECHA_PRESTAMOS:
+      return {
+        ...state,
+        count_total_por_fecha_prestamo: action.payload,
       };
     case ERROR_PRESTAMOS:
       return {

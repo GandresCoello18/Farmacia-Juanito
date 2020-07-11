@@ -3,11 +3,14 @@ import {
   TRAER_PRESTAMOS,
   TRAER_PRESTAMOS_POR_FECHA,
   ERROR_PRESTAMOS,
+  MONTO_TOTAL_POR_FECHA_PRESTAMOS,
+  COUNT_TOTAL_POR_FECHA_PRESTAMOS,
 } from "../types/prestamosTypes";
 import { NOTIFICACION_ACTIVIVDAD } from "../types/ProductoTypes";
 import {
   obtenerPrestamos,
   obtenerPrestamosPorFecha,
+  obtenerMontoTotalPorFecha,
   addPrestamo,
   eliminarPrestamo,
   editarPrestamo,
@@ -50,6 +53,42 @@ export const traer_prestamos_hoy = (fecha) => async (dispatch) => {
     dispatch({
       type: ERROR_PRESTAMOS,
       payload: `Error en prestamos ${error.message}`,
+    });
+
+    dispatch({
+      type: NOTIFICACION_ACTIVIVDAD,
+      payload: {
+        tipo: "ERROR",
+        text: `(Prestamos) ${error.message}`,
+        date: new Date(),
+      },
+    });
+  }
+};
+
+export const traer_monto_total_por_fecha_prestamo = (fecha) => async (
+  dispatch
+) => {
+  try {
+    obtenerMontoTotalPorFecha(fecha).then((res) => {
+      console.log(res.data);
+      let total = 0;
+      if (res.data[0].total != null) total = res.data[0].total;
+
+      dispatch({
+        type: MONTO_TOTAL_POR_FECHA_PRESTAMOS,
+        payload: total,
+      });
+
+      dispatch({
+        type: COUNT_TOTAL_POR_FECHA_PRESTAMOS,
+        payload: res.data[0].count,
+      });
+    });
+  } catch (error) {
+    dispatch({
+      type: ERROR_PRESTAMOS,
+      payload: `Error en monto total de prestamos ${error.message}`,
     });
 
     dispatch({

@@ -756,6 +756,15 @@ export const editar_producto_completo = (
             payload: res.data,
           });
         });
+
+        dispatch({
+          type: NOTIFICACION_ACTIVIVDAD,
+          payload: {
+            tipo: "EXITO",
+            text: `Se edito el producto`,
+            date: new Date(),
+          },
+        });
       }
     });
   } catch (error) {

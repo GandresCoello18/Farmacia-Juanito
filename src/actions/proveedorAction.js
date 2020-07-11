@@ -4,6 +4,8 @@ import {
   TRAER_PROVEEDORES,
   BUSQUEDA_PROVEEDOR,
   ADD_PRODUCTO_PROVEEDOR,
+  MONTO_TOTAL_POR_FECHA_PP,
+  COUNT_TOTAL_POR_FECHA_PP,
 } from "../types/ProveedorTypes";
 import { NOTIFICACION_ACTIVIVDAD } from "../types/ProductoTypes";
 import {
@@ -14,6 +16,7 @@ import {
   editarProductoProveedor,
   addNewProduct,
   obtenerProductoProveedor,
+  obtenerMontoTotalPP,
   eliminarProductoProveedor,
   pagarProductProveedor,
 } from "../api/proveedor";
@@ -93,6 +96,40 @@ export const traer_proveedores = () => async (dispatch) => {
       payload: {
         tipo: "ERROR",
         text: `(Proveedor) Error al traer proveedor ${error.message}`,
+        date: new Date(),
+      },
+    });
+  }
+};
+
+export const traer_monto_total_por_fecha_pp = (fecha) => async (dispatch) => {
+  try {
+    obtenerMontoTotalPP(fecha).then((res) => {
+      console.log(res.data);
+      let total = 0;
+      if (res.data[0].total != null) total = res.data[0].total;
+
+      dispatch({
+        type: MONTO_TOTAL_POR_FECHA_PP,
+        payload: total,
+      });
+
+      dispatch({
+        type: COUNT_TOTAL_POR_FECHA_PP,
+        payload: res.data[0].count,
+      });
+    });
+  } catch (error) {
+    dispatch({
+      type: ERROR_PROVEEDORES,
+      payload: `(Proveedor) Error al traer monto total  ${error.message}`,
+    });
+
+    dispatch({
+      type: NOTIFICACION_ACTIVIVDAD,
+      payload: {
+        tipo: "ERROR",
+        text: `(Proveedor) Error al traer monto total ${error.message}`,
         date: new Date(),
       },
     });

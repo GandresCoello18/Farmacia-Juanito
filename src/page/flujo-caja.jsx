@@ -105,7 +105,7 @@ class FlujoCaja extends React.Component {
           </div>
 
           {this.state.select_tipo_date == "por fecha" ? (
-            <FlujoCajaHoy fecha={this.props.select_fecha} />
+            <FlujoCajaHoy fecha={this.state.select_fecha} />
           ) : (
             <FlujoCajaYear />
           )}

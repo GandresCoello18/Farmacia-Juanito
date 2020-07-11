@@ -18,6 +18,13 @@ export const obtenerProductoProveedor = async () => {
   });
 };
 
+export const obtenerMontoTotalPP = async (fecha) => {
+  return await axios({
+    method: "GET",
+    url: `${domain()}/api/proveedor/producto/monto_total/${fecha}`,
+  });
+};
+
 /////////////////  METODO DE PETICION POST
 
 export const crearProveedor = async (

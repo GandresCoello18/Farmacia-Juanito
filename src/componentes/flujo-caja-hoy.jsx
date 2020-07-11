@@ -2,7 +2,11 @@ import React from "react";
 import PropType from "prop-types";
 import { connect } from "react-redux";
 
-import { traer_prestamos_hoy } from "../actions/prestamoAction";
+import {
+  traer_prestamos_hoy,
+  traer_monto_total_por_fecha_prestamo,
+} from "../actions/prestamoAction";
+import { traer_monto_total_por_fecha_pp } from "../actions/proveedorAction";
 import { traer_monto_por_fecha } from "../actions/ventasActios";
 
 class FlujoCajaHoy extends React.Component {
@@ -10,7 +14,19 @@ class FlujoCajaHoy extends React.Component {
     if (this.props.PrestamoReducer.Prestamo_por_fecha.length == 0) {
       this.props.traer_prestamos_hoy(this.props.fecha);
     }
+    console.log(this.props.fecha);
     this.props.traer_monto_por_fecha(this.props.fecha);
+    this.props.traer_monto_total_por_fecha_pp(this.props.fecha);
+    this.props.traer_monto_total_por_fecha_prestamo(this.props.fecha);
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    if (nextProps.fecha != this.props.fecha) {
+      console.log(nextProps.fecha);
+      this.props.traer_monto_por_fecha(nextProps.fecha);
+      this.props.traer_monto_total_por_fecha_pp(nextProps.fecha);
+      this.props.traer_monto_total_por_fecha_prestamo(nextProps.fecha);
+    }
   }
 
   render() {
@@ -62,8 +78,16 @@ class FlujoCajaHoy extends React.Component {
               </thead>
               <tbody>
                 <tr>
-                  <td className="badge-warning">26</td>
-                  <td className="badge-warning">200</td>
+                  <td className="badge-warning">
+                    #{" "}
+                    {this.props.ProveedoresReducer.count_total_por_fecha_app +
+                      this.props.PrestamoReducer.count_total_por_fecha_prestamo}
+                  </td>
+                  <td className="badge-warning">
+                    ${" "}
+                    {this.props.ProveedoresReducer.monto_total_por_fecha_pp +
+                      this.props.PrestamoReducer.monto_total_por_fecha_prestamo}
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -80,14 +104,17 @@ class FlujoCajaHoy extends React.Component {
             >
               <thead>
                 <tr>
-                  <th>Saldo Neto</th>
-                  <th>Saldo acumulado</th>
+                  <th>Saldo Total</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td className="badge-info">26</td>
-                  <td className="badge-info">200</td>
+                  <td className="badge-info">
+                    {this.props.ventasReducer.monto_total_por_fecha -
+                      (this.props.ProveedoresReducer.monto_total_por_fecha_pp +
+                        this.props.PrestamoReducer
+                          .monto_total_por_fecha_prestamo)}
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -98,8 +125,12 @@ class FlujoCajaHoy extends React.Component {
   }
 }
 
-const mapStateToProsp = ({ PrestamoReducer, ventasReducer }) => {
-  return { PrestamoReducer, ventasReducer };
+const mapStateToProsp = ({
+  PrestamoReducer,
+  ventasReducer,
+  ProveedoresReducer,
+}) => {
+  return { PrestamoReducer, ventasReducer, ProveedoresReducer };
 };
 
 FlujoCajaHoy.prototypes = {
@@ -107,11 +138,15 @@ FlujoCajaHoy.prototypes = {
   PrestamoReducer: PropType.object,
   traer_prestamos_hoy: PropType.func,
   traer_monto_por_fecha: PropType.func,
+  traer_monto_total_por_fecha_prestamo: PropType.func,
+  traer_monto_total_por_fecha_pp: PropType.func,
 };
 
 const mapDisPachToProsp = {
   traer_prestamos_hoy,
   traer_monto_por_fecha,
+  traer_monto_total_por_fecha_prestamo,
+  traer_monto_total_por_fecha_pp,
 };
 
 export default connect(mapStateToProsp, mapDisPachToProsp)(FlujoCajaHoy);
