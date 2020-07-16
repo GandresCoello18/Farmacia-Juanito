@@ -165,7 +165,7 @@ class Stock extends React.Component {
 
       this.props.create_product(data);
       document.getElementById("form-stock").reset();
-      document.getElementById("fecha_caducidad").disabled = true;
+      // document.getElementById("fecha_caducidad").disabled = true;
     }
   };
 
