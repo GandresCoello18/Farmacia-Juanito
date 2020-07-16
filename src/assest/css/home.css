@@ -12,7 +12,12 @@
   max-height: 250px;
   overflow-y: scroll;
 }
+
 .seccion-table-por-caducar .table-caducar img {
   width: 40px;
   height: 40px;
+}
+
+.seccion-table-productos_all {
+  overflow-x: scroll;
 }

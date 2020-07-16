@@ -86,6 +86,12 @@ class Stock extends React.Component {
     if (name == "presentacion") {
       let c = 1;
 
+      if (value == "Insumos medicos") {
+        document.getElementById("select-principio_activo").disabled = true;
+      } else {
+        document.getElementById("select-principio_activo").disabled = false;
+      }
+
       if (value == "Tabletas" || value == "Ampollas") {
         c = 100;
       }
@@ -139,7 +145,6 @@ class Stock extends React.Component {
       this.state.registro_sanitario == "" ||
       this.state.dosis == "" ||
       this.state.tipo_dosis == "-----" ||
-      this.state.presentacion == "-----" ||
       this.state.fecha_elaboracion == "" ||
       this.state.fecha_caducidad == "" ||
       this.state.pvp == "" ||
@@ -360,11 +365,30 @@ class Stock extends React.Component {
                       </div>
                       <div className="col p-2">
                         <label>
+                          <b>Presentacion:</b>
+                        </label>
+                        <select
+                          className="form-control"
+                          name="presentacion"
+                          onChange={this.handleInputChange}
+                        >
+                          <option>-----</option>
+                          <option>Tabletas</option>
+                          <option>Suero</option>
+                          <option>Jarabe</option>
+                          <option>Gotas</option>
+                          <option>Ampollas</option>
+                          <option>Insumos medicos</option>
+                        </select>
+                      </div>
+                      <div className="col p-2">
+                        <label>
                           <b>Princ Activo:</b>
                         </label>
                         <select
                           className="form-control"
                           name="principio_activo"
+                          id="select-principio_activo"
                           onChange={this.handleInputChange}
                         >
                           <option>------</option>
@@ -378,22 +402,6 @@ class Stock extends React.Component {
                               </option>
                             )
                           )}
-                        </select>
-                      </div>
-                      <div className="col p-2">
-                        <label>
-                          <b>Presentacion:</b>
-                        </label>
-                        <select
-                          className="form-control"
-                          name="presentacion"
-                          onChange={this.handleInputChange}
-                        >
-                          <option>-----</option>
-                          <option>Tabletas</option>
-                          <option>Suero</option>
-                          <option>Jarabe</option>
-                          <option>Ampollas</option>
                         </select>
                       </div>
                       <div className="col p-2">
@@ -479,6 +487,8 @@ class Stock extends React.Component {
                           <option>Miligramos</option>
                           <option>Gramos</option>
                           <option>Litros</option>
+                          <option>Pulgadas</option>
+                          <option>Centimetros</option>
                           <option>Mililitros</option>
                         </select>
                       </div>
@@ -595,8 +605,8 @@ class Stock extends React.Component {
               <table className="table-striped mt-1 text-center">
                 <thead>
                   <tr>
-                    <th>Activo</th>
                     <th>Nombre</th>
+                    <th>Princ-Activo</th>
                     <th>Laboratorio</th>
                     <th>Cant</th>
                     <th>Present</th>
@@ -605,7 +615,6 @@ class Stock extends React.Component {
                     <th>Reg - Sanitario</th>
                     <th>PVP</th>
                     <th>PVF</th>
-                    <th>Status</th>
                     <th>Elaboracion</th>
                     <th>Caducidad</th>
                     <th>Opciones</th>
@@ -641,8 +650,8 @@ class Stock extends React.Component {
                         key={valor.id_producto}
                         className={validar_status(valor.estado)}
                       >
-                        <td>{valor.principio_activo}</td>
                         <td>{valor.product_name}</td>
+                        <td>{valor.principio_activo}</td>
                         <td>{valor.nombre_laboratorio}</td>
                         <td>{valor.cantidad}</td>
                         <td>{valor.presentacion}</td>
@@ -653,7 +662,6 @@ class Stock extends React.Component {
                         <td>{valor.registro_sanitario}</td>
                         <td>{valor.pvp}</td>
                         <td>{valor.pvf}</td>
-                        <td>{valor.estado}</td>
                         <td>{valor.fecha_elaboracion}</td>
                         <td>{valor.fecha_caducidad}</td>
                         <td>

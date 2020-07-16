@@ -102,8 +102,8 @@ class Productos extends React.Component {
               <table className="table-striped mt-1 text-center">
                 <thead>
                   <tr>
-                    <th>Activo</th>
                     <th>Nombre</th>
+                    <th>Activo</th>
                     <th>Laboratorio</th>
                     <th>Cantidad</th>
                     <th>Present</th>
@@ -145,8 +145,8 @@ class Productos extends React.Component {
                         item.estado == "Aun disponible"
                     ).map((valor) => (
                       <tr key={valor.id_producto}>
-                        <td>{valor.principio_activo}</td>
                         <td>{valor.product_name}</td>
+                        <td>{valor.principio_activo}</td>
                         <td>{valor.nombre_laboratorio}</td>
                         <td>{valor.cantidad}</td>
                         <td>{valor.presentacion}</td>
