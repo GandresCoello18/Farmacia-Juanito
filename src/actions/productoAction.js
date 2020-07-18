@@ -716,7 +716,8 @@ export const editar_producto_completo = (
   elaboracion,
   caducidad,
   pvp,
-  pvf
+  pvf,
+  cantidad_disponible
 ) => async (dispatch) => {
   try {
     editarProducto(
@@ -733,7 +734,8 @@ export const editar_producto_completo = (
       elaboracion,
       caducidad,
       pvp,
-      pvf
+      pvf,
+      cantidad_disponible
     ).then((res) => {
       if (res.data.feeback != undefined) {
         dispatch({

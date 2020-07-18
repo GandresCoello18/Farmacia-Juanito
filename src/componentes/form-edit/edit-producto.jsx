@@ -30,6 +30,9 @@ class EditProduct extends React.Component {
     ).value;
     let cantidad = document.getElementById(`cantidad_update_${id_producto}`)
       .value;
+    let cantidad_disponible = document.getElementById(
+      `cantidad_disponible_update_${id_producto}`
+    ).value;
     let lote = document.getElementById(`lote_update_${id_producto}`).value;
     let registro_sanitario = document.getElementById(
       `registro_sanitario_update_${id_producto}`
@@ -52,6 +55,7 @@ class EditProduct extends React.Component {
 
     if (
       cantidad == "" ||
+      cantidad_disponible == "" ||
       lote == "" ||
       registro_sanitario == "" ||
       medidas == "" ||
@@ -76,7 +80,8 @@ class EditProduct extends React.Component {
         elaboracion,
         caducidad,
         pvp,
-        pvf
+        pvf,
+        cantidad_disponible
       );
       this.setState({
         actualizado: true,
@@ -196,7 +201,7 @@ class EditProduct extends React.Component {
                   className="form-control"
                   id={`cantidad_update_${item.id_producto}`}
                   onChange={this.handleInputChange}
-                  placeholder="100"
+                  placeholder="000"
                   min="0"
                   max={this.state.cantidad_por_presentacion}
                   disabled={
@@ -204,6 +209,24 @@ class EditProduct extends React.Component {
                     this.state.presentacion == ""
                   }
                   defaultValue={item.cantidad}
+                />
+              </div>
+
+              <label className="ml-3 mt-1">Cantidad Disponible:</label>
+              <div className="col-12">
+                <input
+                  type="number"
+                  className="form-control"
+                  id={`cantidad_disponible_update_${item.id_producto}`}
+                  onChange={this.handleInputChange}
+                  placeholder="000"
+                  min="0"
+                  max={item.cantidad}
+                  disabled={
+                    this.state.presentacion == "-----" ||
+                    this.state.presentacion == ""
+                  }
+                  defaultValue={item.cantidad_disponible}
                 />
               </div>
 

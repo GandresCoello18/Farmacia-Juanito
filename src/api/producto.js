@@ -154,7 +154,8 @@ export const editarProducto = async (
   elaboracion,
   caducidad,
   pvp,
-  pvf
+  pvf,
+  cantidad_disponible
 ) => {
   return await axios({
     method: "PUT",
@@ -173,6 +174,7 @@ export const editarProducto = async (
       caducidad,
       pvp,
       pvf,
+      cantidad_disponible,
     },
     headers: { "access-token": Cookie.get("access_token") },
   });

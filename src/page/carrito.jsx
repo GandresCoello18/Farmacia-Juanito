@@ -128,7 +128,7 @@ class Carrito extends React.Component {
       }
 
       this.setState({
-        Total: Number(total),
+        Total: Number(total.toFixed(2)),
       });
     } else {
       for (let i = 0; i < celda_total.length; i++) {
@@ -338,7 +338,7 @@ class Carrito extends React.Component {
                     <th>Activo</th>
                     <th>Nombre</th>
                     <th>Laboratorio</th>
-                    <th>Cant</th>
+                    <th>Cant - Disp</th>
                     <th>Present</th>
                     <th>Medida</th>
                     <th>PVP</th>
@@ -375,7 +375,9 @@ class Carrito extends React.Component {
                         <td>{valor.principio_activo}</td>
                         <td>{valor.product_name}</td>
                         <td>{valor.nombre_laboratorio}</td>
-                        <td>{valor.cantidad}</td>
+                        <td>
+                          {valor.cantidad} / {valor.cantidad_disponible}
+                        </td>
                         <td>{valor.presentacion}</td>
                         <td>
                           {valor.medida} {valor.tipo_medida}
@@ -388,7 +390,7 @@ class Carrito extends React.Component {
                             onChange={(e) => this.formato(e, valor.id_producto)}
                             id={`formato_${valor.id_producto}`}
                             disabled={
-                              valor.presentacion != "Tabletas" ||
+                              valor.presentacion != "Tabletas" &&
                               valor.presentacion != "Ampollas"
                             }
                           >

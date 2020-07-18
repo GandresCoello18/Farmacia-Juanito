@@ -32,6 +32,7 @@ class Stock extends React.Component {
     laboratorio: "",
     principio_activo: "",
     cantidad: 0,
+    cantidad_disponible: 0,
     presentacion: "",
     lote: "",
     registro_sanitario: "",
@@ -141,6 +142,7 @@ class Stock extends React.Component {
       this.state.producto == "-----" ||
       this.state.laboratorio == "------" ||
       this.state.cantidad == "" ||
+      this.state.cantidad_disponible == "" ||
       this.state.lote == "" ||
       this.state.registro_sanitario == "" ||
       this.state.dosis == "" ||
@@ -166,6 +168,7 @@ class Stock extends React.Component {
         pvp: this.state.pvp,
         pvf: this.state.pvf,
         id_principio_activo: this.state.principio_activo,
+        cantidad_disponible: this.state.cantidad_disponible,
       };
 
       this.props.create_product(data);
@@ -425,14 +428,24 @@ class Stock extends React.Component {
                         />
                       </div>
                       <div className="col p-2">
-                        <label>PVP:</label>
+                        <label>
+                          <b>Cant Disponible:</b>
+                        </label>
                         <input
                           type="number"
-                          onChange={this.handleInputChange}
                           className="form-control"
-                          name="pvp"
+                          name="cantidad_disponible"
+                          id="cantidad-disponible"
+                          onChange={this.handleInputChange}
+                          placeholder="000"
                           min="0"
-                          placeholder="0.00"
+                          max={this.state.cantidad}
+                          disabled={
+                            this.state.presentacion == "-----" ||
+                            this.state.presentacion == "" ||
+                            this.state.cantidad == 0
+                          }
+                          defaultValue={this.state.cantidad}
                         />
                       </div>
                       <div className="col p-2">
@@ -442,6 +455,17 @@ class Stock extends React.Component {
                           onChange={this.handleInputChange}
                           className="form-control"
                           name="pvf"
+                          min="0"
+                          placeholder="0.00"
+                        />
+                      </div>
+                      <div className="col p-2">
+                        <label>PVP:</label>
+                        <input
+                          type="number"
+                          onChange={this.handleInputChange}
+                          className="form-control"
+                          name="pvp"
                           min="0"
                           placeholder="0.00"
                         />
@@ -608,13 +632,13 @@ class Stock extends React.Component {
                     <th>Nombre</th>
                     <th>Princ-Activo</th>
                     <th>Laboratorio</th>
-                    <th>Cant</th>
+                    <th>Cant - Disp</th>
                     <th>Present</th>
                     <th>Medidas</th>
                     <th># Lote</th>
                     <th>Reg - Sanitario</th>
-                    <th>PVP</th>
                     <th>PVF</th>
+                    <th>PVP</th>
                     <th>Elaboracion</th>
                     <th>Caducidad</th>
                     <th>Opciones</th>
@@ -653,15 +677,17 @@ class Stock extends React.Component {
                         <td>{valor.product_name}</td>
                         <td>{valor.principio_activo}</td>
                         <td>{valor.nombre_laboratorio}</td>
-                        <td>{valor.cantidad}</td>
+                        <td>
+                          {valor.cantidad} / {valor.cantidad_disponible}
+                        </td>
                         <td>{valor.presentacion}</td>
                         <td>
                           {valor.medida} {valor.tipo_medida}
                         </td>
                         <td>{valor.lote}</td>
                         <td>{valor.registro_sanitario}</td>
-                        <td>{valor.pvp}</td>
                         <td>{valor.pvf}</td>
+                        <td>{valor.pvp}</td>
                         <td>{valor.fecha_elaboracion}</td>
                         <td>{valor.fecha_caducidad}</td>
                         <td>
