@@ -489,7 +489,7 @@ class Stock extends React.Component {
                           <b>Lote:</b>
                         </label>
                         <input
-                          type="number"
+                          type="text"
                           name="lote"
                           onChange={this.handleInputChange}
                           className="form-control"
