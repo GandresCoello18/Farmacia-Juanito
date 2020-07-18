@@ -43,6 +43,7 @@ class Stock extends React.Component {
     pvp: 0,
     pvf: 0,
     limpiar_a_tiempo: null,
+    veces_de_ingreso: 1,
     ////////////////////
     cantidad_por_presentacion: 100,
   };
@@ -150,30 +151,36 @@ class Stock extends React.Component {
       this.state.fecha_elaboracion == "" ||
       this.state.fecha_caducidad == "" ||
       this.state.pvp == "" ||
-      this.state.pvf == ""
+      this.state.pvf == "" ||
+      this.state.veces_de_ingreso == ""
     ) {
       alert("Campos vacios en agregar productos a stock");
     } else {
-      let data = {
-        id_name_product: this.state.producto,
-        id_name_laboratorio: this.state.laboratorio,
-        cantidad: this.state.cantidad,
-        presentacion: this.state.presentacion,
-        lote: this.state.lote,
-        registro_sanitario: this.state.registro_sanitario,
-        dosis: this.state.dosis,
-        tipo_dosis: this.state.tipo_dosis,
-        fecha_elaboracion: this.state.fecha_elaboracion,
-        fecha_caducidad: this.state.fecha_caducidad,
-        pvp: this.state.pvp,
-        pvf: this.state.pvf,
-        id_principio_activo: this.state.principio_activo,
-        cantidad_disponible: this.state.cantidad_disponible,
-      };
-
-      this.props.create_product(data);
-      document.getElementById("form-stock").reset();
-      // document.getElementById("fecha_caducidad").disabled = true;
+      if(Number(this.state.veces_de_ingreso) < 1){
+        alert("Especifique las veces de ingreso del producto");
+      }else{
+        let data = {
+          id_name_product: this.state.producto,
+          id_name_laboratorio: this.state.laboratorio,
+          cantidad: this.state.cantidad,
+          presentacion: this.state.presentacion,
+          lote: this.state.lote,
+          registro_sanitario: this.state.registro_sanitario,
+          dosis: this.state.dosis,
+          tipo_dosis: this.state.tipo_dosis,
+          fecha_elaboracion: this.state.fecha_elaboracion,
+          fecha_caducidad: this.state.fecha_caducidad,
+          pvp: this.state.pvp,
+          pvf: this.state.pvf,
+          id_principio_activo: this.state.principio_activo,
+          cantidad_disponible: this.state.cantidad_disponible,
+          veces_ingreso: this.state.veces_de_ingreso,
+        };
+  
+        this.props.create_product(data);
+        document.getElementById("form-stock").reset();
+        // document.getElementById("fecha_caducidad").disabled = true;
+      }
     }
   };
 
@@ -429,7 +436,7 @@ class Stock extends React.Component {
                       </div>
                       <div className="col p-2">
                         <label>
-                          <b>Cant Disponib:</b>
+                          <b>Cant Disponi:</b>
                         </label>
                         <input
                           type="number"
@@ -555,6 +562,19 @@ class Stock extends React.Component {
                           id="fecha_caducidad"
                           disabled={this.state.fecha_elaboracion == "" && true}
                           min={this.state.fecha_elaboracion}
+                          onChange={this.handleInputChange}
+                        />
+                      </div>
+                      <div className="col p-2">
+                        <label>
+                          <b>Ingresar {this.state.veces_de_ingreso} veces:</b>
+                        </label>
+                        <input
+                          type="number"
+                          name="veces_de_ingreso"
+                          className="form-control"
+                          min="1"
+                          defaultValue={this.state.veces_de_ingreso}
                           onChange={this.handleInputChange}
                         />
                       </div>

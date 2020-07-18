@@ -36,7 +36,7 @@ class Login extends React.Component {
     }
     if (nextProps.cargando) {
       alert(
-        "Cuenta creada, confirma el mensaje en tu corre electronico, luego Iniciar session"
+        "Cuenta creada, espera que un administrador te de acceso"
       );
     }
     if (nextProps.token != "") {
