@@ -83,7 +83,7 @@ class Carrito extends React.Component {
       let cambio = "";
 
       if (value != "") {
-        cambio = (Number(value) - this.state.Total).toFixed(2);
+        cambio = Number(value) - this.state.Total;
       }
 
       this.setState({
@@ -128,7 +128,7 @@ class Carrito extends React.Component {
       }
 
       this.setState({
-        Total: Number(total.toFixed(2)),
+        Total: Number(total),
       });
     } else {
       for (let i = 0; i < celda_total.length; i++) {
@@ -137,7 +137,7 @@ class Carrito extends React.Component {
 
       if (descuento != null) {
         total = sub;
-        let desc = ((total * descuento) / 100).toFixed(2);
+        let desc = (total * descuento) / 100;
         total = total - desc;
       } else {
         total = sub;
@@ -171,9 +171,7 @@ class Carrito extends React.Component {
       data_iva = item_total - (sub * this.state.iva) / 100;
     }
 
-    document.getElementById(
-      `item_total_${id_producto}`
-    ).value = data_iva.toFixed(2);
+    document.getElementById(`item_total_${id_producto}`).value = data_iva;
     this.calcular_sub_total_de_pago(null, true);
     this.validar_aplicar_iva_not_descuento();
   };
@@ -240,7 +238,7 @@ class Carrito extends React.Component {
 
     sub = sub * Number(e.target.value);
 
-    item_total.value = sub.toFixed(2);
+    item_total.value = sub;
     this.calcular_sub_total_de_pago();
   };
 
@@ -389,7 +387,10 @@ class Carrito extends React.Component {
                             className="form-control"
                             onChange={(e) => this.formato(e, valor.id_producto)}
                             id={`formato_${valor.id_producto}`}
-                            disabled={valor.presentacion != "Tabletas"}
+                            disabled={
+                              valor.presentacion != "Tabletas" ||
+                              valor.presentacion != "Ampollas"
+                            }
                           >
                             <option value="Por Paquete">Por Paquete</option>
                             <option value="Por Unidad">Por Unidad</option>
