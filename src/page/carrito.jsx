@@ -234,6 +234,9 @@ class Carrito extends React.Component {
       }
     } else {
       sub = Number(data.pvp) / Number(data.cantidad);
+      document.getElementById(
+        `precio_por_unidad_${id_producto}`
+      ).innerText = sub.toFixed(2);
     }
 
     sub = sub * Number(e.target.value);
@@ -344,6 +347,7 @@ class Carrito extends React.Component {
                     <th>PVP</th>
                     <th>Caducidad</th>
                     <th>Formato</th>
+                    <th>$ Unid</th>
                     <th>Cantidad</th>
                     <th>¿ Iva ?</th>
                     <th>Total</th>
@@ -399,10 +403,15 @@ class Carrito extends React.Component {
                           </select>
                         </td>
                         <td>
+                          <b id={`precio_por_unidad_${valor.id_producto}`}>
+                            {valor.pvp}
+                          </b>
+                        </td>
+                        <td>
                           <input
                             type="number"
                             min="1"
-                            max={valor.cantidad}
+                            max={valor.cantidad_disponible}
                             onChange={(e) =>
                               this.cantidad(e, valor.id_producto)
                             }

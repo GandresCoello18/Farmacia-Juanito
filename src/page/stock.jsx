@@ -429,7 +429,7 @@ class Stock extends React.Component {
                       </div>
                       <div className="col p-2">
                         <label>
-                          <b>Cant Disponible:</b>
+                          <b>Cant Disponib:</b>
                         </label>
                         <input
                           type="number"
@@ -449,7 +449,9 @@ class Stock extends React.Component {
                         />
                       </div>
                       <div className="col p-2">
-                        <label>PVF:</label>
+                        <label>
+                          <b>PVF:</b>
+                        </label>
                         <input
                           type="number"
                           onChange={this.handleInputChange}
@@ -460,7 +462,9 @@ class Stock extends React.Component {
                         />
                       </div>
                       <div className="col p-2">
-                        <label>PVP:</label>
+                        <label>
+                          <b>PVP:</b>
+                        </label>
                         <input
                           type="number"
                           onChange={this.handleInputChange}
