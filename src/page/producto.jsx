@@ -8,6 +8,7 @@ import Alerta from "../componentes/alert";
 import Footer from "../componentes/footer";
 import Load from "../componentes/preload";
 import { connect } from "react-redux";
+import { validar_status } from "../util/util-status";
 import { exist_token } from "../util/verifi-local-token";
 import "../assest/css/producto.css";
 
@@ -144,7 +145,9 @@ class Productos extends React.Component {
                         item.estado == "Disponible" ||
                         item.estado == "Aun disponible"
                     ).map((valor) => (
-                      <tr key={valor.id_producto}>
+                      <tr key={valor.id_producto}
+                          className={validar_status(valor.estado)}
+                        >
                         <td>{valor.product_name}</td>
                         <td>{valor.principio_activo}</td>
                         <td>{valor.nombre_laboratorio}</td>

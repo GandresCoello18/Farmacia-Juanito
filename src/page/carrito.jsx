@@ -229,7 +229,7 @@ class Carrito extends React.Component {
       if (Number(e.target.value) < 2 && Number(e.target.value) > 0) {
         sub = sub + Number(data.pvp);
       } else {
-        e.target.value = 1;
+        // e.target.value = 1;
         sub = item_total.value;
       }
     } else {
