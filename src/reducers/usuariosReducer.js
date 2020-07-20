@@ -8,9 +8,10 @@ import {
 
 const INITIAL_STATE = {
   usuarios: [],
-  cargando: true,
+  cargando: false,
   error: "",
   token: "",
+  mensaje: "",
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -26,9 +27,9 @@ export default (state = INITIAL_STATE, action) => {
     case CREAR_USER:
       return {
         ...state,
-        usuarios: {},
+        mensaje: action.payload,
         error: "",
-        cargando: true,
+        cargando: false,
       };
 
     case CARGANDO:

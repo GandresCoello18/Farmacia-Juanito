@@ -99,12 +99,12 @@ class Productos extends React.Component {
               />
             </div>
 
-            <div className="col-12 seccion-table-productos_all">
+            <div className="col-12 seccion-table-productos_all mb-5">
               <table className="table-striped mt-1 text-center">
                 <thead>
                   <tr>
                     <th>Nombre</th>
-                    <th>Activo</th>
+                    <th>Principio Activo</th>
                     <th>Laboratorio</th>
                     <th>Cant - Disp</th>
                     <th>Present</th>
@@ -145,9 +145,10 @@ class Productos extends React.Component {
                         item.estado == "Disponible" ||
                         item.estado == "Aun disponible"
                     ).map((valor) => (
-                      <tr key={valor.id_producto}
-                          className={validar_status(valor.estado)}
-                        >
+                      <tr
+                        key={valor.id_producto}
+                        className={validar_status(valor.estado)}
+                      >
                         <td>{valor.product_name}</td>
                         <td>{valor.principio_activo}</td>
                         <td>{valor.nombre_laboratorio}</td>

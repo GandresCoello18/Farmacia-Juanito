@@ -41,8 +41,8 @@ class DetallesProduct extends React.Component {
         <Head titulo="Detalles de productos | Medical" />
         <Nav />
 
-        <section className="container p-3">
-          <div className="row justify-content-center">
+        <section className="container-fluid p-3">
+          <div className="row justify-content-center mb-5">
             <div className="col-12" style={{ marginBottom: 10 }}>
               <h4 className="text-center" style={{ fontWeight: "bold" }}>
                 Detalles de ( Productos, Principio Activo, Laboratorio )

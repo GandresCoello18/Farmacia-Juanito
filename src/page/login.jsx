@@ -2,6 +2,7 @@ import React from "react";
 import PropsType from "prop-types";
 import { connect } from "react-redux";
 import Cookie from "js-cookie";
+import Spinner from "../componentes/preload";
 import Notificacion from "../componentes/notificacion";
 import { exist_token } from "../util/verifi-local-token";
 import { Redirect } from "react-router-dom";
@@ -29,22 +30,6 @@ class Login extends React.Component {
     email_login: "",
     password_login: "",
   };
-
-  componentWillUpdate(nextProps, nextState) {
-    if (nextProps.error != "") {
-      alert(`Error: ${nextProps.error}`);
-    }
-    if (nextProps.cargando) {
-      alert(
-        "Cuenta creada, espera que un administrador te de acceso"
-      );
-    }
-    if (nextProps.token != "") {
-      Cookie.set("access_token", nextProps.token);
-      window.location.href = "/stock";
-    }
-    this.props.restaurar_user();
-  }
 
   handleInputChange = (event) => {
     const target = event.target;
@@ -109,10 +94,14 @@ class Login extends React.Component {
     if (this.state.email_login == "" || this.state.password_login == "") {
       this.cambio_notificacion(
         true,
-        "Se encontraron campos vacios, revise y vuelva ha intentarlo"
+        "Se encontraron campos vacios en login, revise y vuelva ha intentarlo"
       );
     } else {
-      this.props.login(this.state.email_login, this.state.password_login);
+      this.props
+        .login(this.state.email_login, this.state.password_login)
+        .then(() => {
+          this.props.restaurar_user();
+        });
     }
   };
 
@@ -257,6 +246,11 @@ class Login extends React.Component {
                           Entrar
                         </button>
                       </div>
+                      {this.props.usuariosReducer.cargando && (
+                        <div style={{ padding: 10 }}>
+                          <Spinner />
+                        </div>
+                      )}
                     </form>
                   </div>
                 </div>
@@ -268,6 +262,14 @@ class Login extends React.Component {
         {this.state.notificacion && (
           <Notificacion text={this.state.text_notificacion} />
         )}
+
+        {this.props.usuariosReducer.error != "" &&
+          alert(`Error: ${this.props.usuariosReducer.error}`)}
+        {this.props.usuariosReducer.token != "" &&
+          (Cookie.set("access_token", this.props.usuariosReducer.token),
+          (window.location.href = "/stock"))}
+        {this.props.usuariosReducer.mensaje != "" &&
+          alert(`${this.props.usuariosReducer.mensaje}`)}
       </>
     );
   }
@@ -279,8 +281,8 @@ Login.prototypes = {
   login: PropsType.func,
 };
 
-const mapStateToProps = (state) => {
-  return state.usuariosReducer;
+const mapStateToProps = ({ usuariosReducer }) => {
+  return { usuariosReducer };
 };
 
 const mapDispatchToProps = {

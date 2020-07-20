@@ -156,9 +156,9 @@ class Stock extends React.Component {
     ) {
       alert("Campos vacios en agregar productos a stock");
     } else {
-      if(Number(this.state.veces_de_ingreso) < 1){
+      if (Number(this.state.veces_de_ingreso) < 1) {
         alert("Especifique las veces de ingreso del producto");
-      }else{
+      } else {
         let data = {
           id_name_product: this.state.producto,
           id_name_laboratorio: this.state.laboratorio,
@@ -176,7 +176,7 @@ class Stock extends React.Component {
           cantidad_disponible: this.state.cantidad_disponible,
           veces_ingreso: this.state.veces_de_ingreso,
         };
-  
+
         this.props.create_product(data);
         document.getElementById("form-stock").reset();
         // document.getElementById("fecha_caducidad").disabled = true;
@@ -387,6 +387,8 @@ class Stock extends React.Component {
                           <option>Suero</option>
                           <option>Jarabe</option>
                           <option>Gotas</option>
+                          <option>Capsula</option>
+                          <option>Sobres</option>
                           <option>Ampollas</option>
                           <option>Insumos medicos</option>
                         </select>
@@ -649,7 +651,7 @@ class Stock extends React.Component {
               />
             </div>
 
-            <div className="col-12 seccion-table-productos_all mt-4">
+            <div className="col-12 seccion-table-productos_all mt-4 mb-5">
               <table className="table-striped mt-1 text-center">
                 <thead>
                   <tr>

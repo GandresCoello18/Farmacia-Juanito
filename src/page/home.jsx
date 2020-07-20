@@ -66,7 +66,7 @@ class Home extends React.Component {
     let dias = Math.abs(
       diferencias_de_dias_por_fecha(
         fecha_caducidad,
-        restar_fecha(fecha_actual(), -30)
+        restar_fecha(fecha_actual(), -100)
       )
     );
     if (dias <= 30) {

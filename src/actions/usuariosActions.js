@@ -39,7 +39,8 @@ export const crear_cuenta = (data, autorizacion) => async (dispatch) => {
           } else {
             dispatch({
               type: CREAR_USER,
-              payload: res.data,
+              payload:
+                "Cuenta creada, espera que un administrador te de acceso",
             });
             dispatch({
               type: CARGANDO,
@@ -65,6 +66,10 @@ export const crear_cuenta = (data, autorizacion) => async (dispatch) => {
 export const login = (email, password) => async (dispatch) => {
   try {
     verificarEmail(email).then((res) => {
+      dispatch({
+        type: CARGANDO,
+        payload: true,
+      });
       if (res.data == [] || res.data == 0) {
         dispatch({
           type: ERROR,
@@ -73,7 +78,7 @@ export const login = (email, password) => async (dispatch) => {
       } else if (res.data[0].email_on == 0) {
         dispatch({
           type: ERROR,
-          payload: `Este email (${email}) no esta verificado, ingrese a su tablero de mensajes para confirmarlo`,
+          payload: `Este email (${email}) no esta verificado, espera que un administrador lo admita`,
         });
       } else {
         loginAccess(email, password).then((res) => {
@@ -91,10 +96,18 @@ export const login = (email, password) => async (dispatch) => {
         });
       }
     });
+    dispatch({
+      type: CARGANDO,
+      payload: false,
+    });
   } catch (error) {
     dispatch({
       type: ERROR,
       payload: "Fallo en login, usuario Actions: " + error.message,
+    });
+    dispatch({
+      type: CARGANDO,
+      payload: false,
     });
   }
 };
