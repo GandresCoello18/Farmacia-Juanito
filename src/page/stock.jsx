@@ -193,14 +193,20 @@ class Stock extends React.Component {
         this.props.ProductoReducer.Busqueda_producto
       );
     } else {
-      for (let i = 0; i < respaldo.length; i++) {
-        if (
-          respaldo[i].product_name.indexOf(e.target.value) != -1 ||
-          respaldo[i].nombre_laboratorio.indexOf(e.target.value) != -1
-        ) {
-          nuevo.push(respaldo[i]);
+      respaldo.forEach((item) => {
+        if (item.nombre_laboratorio.indexOf(e.target.value) != -1) {
+          nuevo.push(item);
         }
-      }
+
+        if (item.product_name.indexOf(e.target.value) != -1) {
+          nuevo.push(item);
+        }
+
+        if (item.lote.indexOf(e.target.value) != -1) {
+          nuevo.push(item);
+        }
+      });
+
       this.props.busqueda_en_producto(nuevo);
     }
   };
@@ -647,7 +653,7 @@ class Stock extends React.Component {
                 style={{ borderRadius: 10 }}
                 onChange={this.search_product}
                 className="form-control input-buscar"
-                placeholder="Buscar por: ----- Nombre ----- Laboratorio"
+                placeholder="Buscar por: ----- Nombre ----- Laboratorio ----- Lote"
               />
             </div>
 

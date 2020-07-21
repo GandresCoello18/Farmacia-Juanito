@@ -31,6 +31,7 @@ class Proveedores extends React.Component {
     /////////
     notifico: false,
     select_detalles_proveedor: "",
+    filtrar_por: "Todos",
   };
 
   handleInputChange = (event) => {
@@ -55,6 +56,12 @@ class Proveedores extends React.Component {
     }
   }
 
+  select_filter_proveedor = (e) => {
+    this.setState({
+      filtrar_por: e.target.value,
+    });
+  };
+
   search_proveedor = (e) => {
     const respaldo = this.props.ProveedoresReducer.Proveedores;
     let nuevo = [];
@@ -64,16 +71,27 @@ class Proveedores extends React.Component {
         this.props.ProveedoresReducer.Busqueda_proveedores
       );
     } else {
-      for (let i = 0; i < respaldo.length; i++) {
-        if (
-          respaldo[i].nombres.indexOf(e.target.value) != -1 ||
-          respaldo[i].nombre_laboratorio.indexOf(e.target.value) != -1 ||
-          respaldo[i].correo.indexOf(e.target.value) != -1
-          // respaldo[i].identificacion.indexOf(e.target.value) != -1
-        ) {
-          nuevo.push(respaldo[i]);
-        }
+      switch (this.state.filtrar_por) {
+        case "Todos":
+          nuevo = respaldo;
+          break;
+        case "Nombres":
+          nuevo = respaldo.filter(
+            (item) => item.nombres.indexOf(e.target.value) != -1
+          );
+          break;
+        case "Laboratorio":
+          nuevo = respaldo.filter(
+            (item) => item.nombre_laboratorio.indexOf(e.target.value) != -1
+          );
+          break;
+        case "Correo electronico":
+          nuevo = respaldo.filter(
+            (item) => item.correo.indexOf(e.target.value) != -1
+          );
+          break;
       }
+
       this.props.busqueda_en_proveedor(nuevo);
     }
   };
@@ -205,13 +223,24 @@ class Proveedores extends React.Component {
                     >
                       Proveedores:
                     </h4>
-                    <div className="col-5">
+                    <div className="col-4">
                       <input
                         type="text"
                         onChange={this.search_proveedor}
                         className="form-control input-buscar mt-5"
-                        placeholder="Buscar Proveedor por: ----- Nombre ----- Correo ------"
+                        placeholder="Buscar Proveedor: "
                       />
+                    </div>
+                    <div className="col-2">
+                      <select
+                        className="form-control mt-5"
+                        onChange={this.select_filter_proveedor}
+                      >
+                        <option>Todos</option>
+                        <option>Nombres</option>
+                        <option>Laboratorio</option>
+                        <option>Correo electronico</option>
+                      </select>
                     </div>
                     <div className="col-8">
                       <table className="table-striped mt-2 table-vendidos_recientes text-center">

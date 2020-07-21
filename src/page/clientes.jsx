@@ -16,11 +16,21 @@ import { Redirect } from "react-router-dom";
 import { traer_clientes, busqueda_en_clientes } from "../actions/clienteAction";
 
 class Clientes extends React.Component {
+  state = {
+    filtrar_por: "Todos",
+  };
+
   componentDidMount() {
     if (this.props.clienteReducer.clientes.length == 0) {
       this.props.traer_clientes();
     }
   }
+
+  select_filtro_cliente = (e) => {
+    this.setState({
+      filtrar_por: e.target.value,
+    });
+  };
 
   search_client = (e) => {
     const respaldo = this.props.clienteReducer.clientes;
@@ -31,16 +41,32 @@ class Clientes extends React.Component {
         this.props.clienteReducer.busqueda_cliente
       );
     } else {
-      for (let i = 0; i < respaldo.length; i++) {
-        if (
-          respaldo[i].nombres.indexOf(e.target.value) != -1 ||
-          respaldo[i].apellidos.indexOf(e.target.value) != -1 ||
-          respaldo[i].correo.indexOf(e.target.value) != -1
-          // respaldo[i].identificacion.indexOf(e.target.value) != -1
-        ) {
-          nuevo.push(respaldo[i]);
-        }
+      switch (this.state.filtrar_por) {
+        case "Todos":
+          nuevo = respaldo;
+          break;
+        case "Nombres":
+          nuevo = respaldo.filter(
+            (item) => item.nombres.indexOf(e.target.value) != -1
+          );
+          break;
+        case "Apellidos":
+          nuevo = respaldo.filter(
+            (item) => item.apellidos.indexOf(e.target.value) != -1
+          );
+          break;
+        case "Identificacion (Ruc / CI)":
+          nuevo = respaldo.filter(
+            (item) => item.identificacion.indexOf(e.target.value) != -1
+          );
+          break;
+        case "Correo electronico":
+          nuevo = respaldo.filter(
+            (item) => item.correo.indexOf(e.target.value) != -1
+          );
+          break;
       }
+
       this.props.busqueda_en_clientes(nuevo);
     }
   };
@@ -74,14 +100,26 @@ class Clientes extends React.Component {
                     >
                       Clientes:
                     </h4>
-                    <div className="col-5">
+                    <div className="col-4">
                       <input
                         type="text"
                         onChange={this.search_client}
                         className="form-control input-buscar mt-5"
-                        placeholder="Buscar cliente por: ----- Nombre ----- Cedula / Ruc ------"
+                        placeholder="Buscar cliente por: --- Nombre --- Cedula / Ruc ---"
                       />
                     </div>
+                    <di className="col-2">
+                      <select
+                        className="form-control mt-5"
+                        onChange={this.select_filtro_cliente}
+                      >
+                        <option>Todos</option>
+                        <option>Nombres</option>
+                        <option>Apellidos</option>
+                        <option>Identificacion (Ruc / CI)</option>
+                        <option>Correo electronico</option>
+                      </select>
+                    </di>
                     <div className="col-8">
                       <table className="table-striped mt-2 table-vendidos_recientes text-center">
                         <thead>
