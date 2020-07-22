@@ -135,7 +135,11 @@ class Home extends React.Component {
                     </tr>
                   ) : (
                     this.state.data_ventas_limpios
-                      .filter((item) => item.estado == "Vendido")
+                      .filter(
+                        (item) =>
+                          item.estado == "Vendido" ||
+                          item.estado == "Aun disponible"
+                      )
                       .reverse()
                       .slice(0, 8)
                       .map((valor) => (

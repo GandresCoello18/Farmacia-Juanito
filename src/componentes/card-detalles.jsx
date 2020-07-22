@@ -59,7 +59,14 @@ class DetallesCard extends React.Component {
                         <b>Formato:</b> {item.formato}
                       </li>
                       <li>
-                        <b>Unidades:</b> {item.fact_cant}
+                        <div className="row justify-content-center">
+                          <div className="col-5">
+                            <b>Unidades:</b> {item.fact_cant}
+                          </div>
+                          <div className="col-5">
+                            <b>Iva:</b> {item.iva_product_fact} %
+                          </div>
+                        </div>
                       </li>
                       <li>
                         <div className="row justify-content-center">

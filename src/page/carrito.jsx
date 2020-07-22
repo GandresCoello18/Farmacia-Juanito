@@ -31,7 +31,7 @@ class Carrito extends React.Component {
     cliente_pago: "",
     descripcion_pago: "",
     efectivo_pago: 0,
-    cambio_pago: "$: Cambio",
+    cambio_pago: 0,
     ////////////
     time: null,
     slider: "carrito_pago",
@@ -174,6 +174,11 @@ class Carrito extends React.Component {
     document.getElementById(`item_total_${id_producto}`).value = data_iva;
     this.calcular_sub_total_de_pago(null, true);
     this.validar_aplicar_iva_not_descuento();
+
+    this.setState({ cambio_pago: 0 });
+
+    document.getElementById("cambio_pago").value = "";
+    document.getElementById("efectivo_pago").value = "";
   };
 
   validar_aplicar_iva_not_descuento = () => {
@@ -278,9 +283,18 @@ class Carrito extends React.Component {
         datosCarrito[i].item_total = document.getElementById(
           `item_total_${datosCarrito[i].id_producto}`
         ).value;
-        datosCarrito[i].iva = document.getElementById(
-          `iva_${datosCarrito[i].id_producto}`
-        ).checked;
+
+        datosCarrito[i].item_total = Number(datosCarrito[i].item_total).toFixed(
+          2
+        );
+
+        if (
+          document.getElementById(`iva_${datosCarrito[i].id_producto}`).checked
+        ) {
+          datosCarrito[i].iva = this.state.iva;
+        } else {
+          datosCarrito[i].iva = 0;
+        }
       }
 
       let cambio = 0;
@@ -313,6 +327,7 @@ class Carrito extends React.Component {
         "Factura",
         "width=530, height=540"
       );
+      this.props.limpiar_carrito();
       this.props.history.push("/producto");
     }
   };
@@ -550,6 +565,7 @@ class Carrito extends React.Component {
                           <select
                             className="form-control"
                             name="cliente_pago"
+                            onChange={this.handleInputChange}
                             disabled={
                               this.props.carritoReducer.carrito.length == 0
                             }
@@ -557,8 +573,8 @@ class Carrito extends React.Component {
                             <option>Clientes</option>
                             {this.props.clienteReducer.clientes.map((item) => (
                               <option
-                                key={item.identificacion}
-                                value={item.identificacion}
+                                key={item.id_cliente}
+                                value={item.id_cliente}
                               >
                                 {item.nombres} {item.apellidos}
                               </option>
@@ -568,6 +584,7 @@ class Carrito extends React.Component {
                         <li className="list-group-item">
                           <textarea
                             rows="3"
+                            onChange={this.handleInputChange}
                             disabled={
                               this.props.carritoReducer.carrito.length == 0
                             }
@@ -588,6 +605,8 @@ class Carrito extends React.Component {
                           <input
                             type="number"
                             name="efectivo_pago"
+                            id="efectivo_pago"
+                            defaultValue={this.state.efectivo_pago}
                             min="0"
                             onChange={this.validar_efectivo}
                             disabled={
@@ -606,7 +625,9 @@ class Carrito extends React.Component {
                             onChange={this.handleInputChange}
                             className="form-control"
                             disabled={true}
-                            placeholder={this.state.cambio_pago}
+                            placeholder={Number(this.state.cambio_pago).toFixed(
+                              2
+                            )}
                             style={{ width: 100 }}
                           />
                         </li>

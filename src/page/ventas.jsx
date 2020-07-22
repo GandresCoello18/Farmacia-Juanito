@@ -128,7 +128,7 @@ class Ventas extends React.Component {
                 </b>
               </h4>
               <h4 className="p-2">
-                Total: <b>$ {this.state.total_ventas.toFixed(2)}</b>
+                Total: <b>$ {this.state.total_ventas}</b>
               </h4>
             </div>
 
