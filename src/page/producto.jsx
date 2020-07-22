@@ -18,7 +18,7 @@ import {
   obterner_name_productos,
   obterner_name_laboratorio,
 } from "../actions/productoAction";
-import { add_carrito } from "../actions/carritoAction";
+import { add_carrito, quitar_del_carrito } from "../actions/carritoAction";
 
 class Productos extends React.Component {
   componentDidMount() {
@@ -71,10 +71,6 @@ class Productos extends React.Component {
 
       this.props.busqueda_en_producto(nuevo);
     }
-  };
-
-  agregar_a_carrito = (id_producto) => {
-    this.props.add_carrito(id_producto);
   };
 
   load = () => <Load />;
@@ -175,10 +171,31 @@ class Productos extends React.Component {
                             id={`btn_${valor.id_producto}`}
                             style={{ cursor: "pointer" }}
                             onClick={(e) => {
-                              e.target.disabled = true;
-                              e.target.classList.remove("btn-positive");
-                              e.target.classList.add("btn-primary");
-                              this.agregar_a_carrito(valor.id_producto);
+                              if (e.target.innerText == "Quitar del carrito") {
+                                e.target.classList.remove("btn-primary");
+                                e.target.classList.add("btn-positive");
+                                e.target.parentElement.parentElement.classList.remove(
+                                  "alert-primary"
+                                );
+                                e.target.parentElement.parentElement.classList.add(
+                                  "alert-success"
+                                );
+                                e.target.innerText = "Agregar al carrito";
+                                this.props.quitar_del_carrito(
+                                  valor.id_producto
+                                );
+                              } else {
+                                e.target.classList.remove("btn-positive");
+                                e.target.classList.add("btn-primary");
+                                e.target.parentElement.parentElement.classList.remove(
+                                  "alert-success"
+                                );
+                                e.target.parentElement.parentElement.classList.add(
+                                  "alert-primary"
+                                );
+                                e.target.innerText = "Quitar del carrito";
+                                this.props.add_carrito(valor.id_producto);
+                              }
                             }}
                           >
                             Agregar al carrito
@@ -207,6 +224,7 @@ Productos.prototypes = {
   busqueda_en_producto: PropsType.func,
   obterner_name_laboratorio: PropsType.func,
   add_carrito: PropsType.func,
+  quitar_del_carrito: PropsType.func,
 };
 
 const mapStateToProps = ({ ProductoReducer, carritoReducer }) => {
@@ -219,6 +237,7 @@ const mapDispachToProps = {
   busqueda_en_producto,
   obterner_name_laboratorio,
   add_carrito,
+  quitar_del_carrito,
 };
 
 export default connect(mapStateToProps, mapDispachToProps)(Productos);

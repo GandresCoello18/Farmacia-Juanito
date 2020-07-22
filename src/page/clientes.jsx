@@ -8,21 +8,46 @@ import { connect } from "react-redux";
 import Load from "../componentes/preload";
 import Confir from "../componentes/confirmacion";
 import Edit from "../componentes/edit";
+import DetalleCardClient from "../componentes/card-detalles-clientes";
 import Footer from "../componentes/footer";
 import Head from "../componentes/head";
 import FormCreateClient from "../componentes/form-create-cliente";
 import { Redirect } from "react-router-dom";
 
 import { traer_clientes, busqueda_en_clientes } from "../actions/clienteAction";
+import { traer_ventas } from "../actions/ventasActios";
 
 class Clientes extends React.Component {
   state = {
     filtrar_por: "Todos",
   };
 
+  styles = {
+    dialogo: {
+      width: 300,
+      height: "100%",
+      left: 0,
+      right: "auto",
+      overflowY: "scroll",
+    },
+    btn_azul: {
+      borderColor: "#388df8",
+      borderBottomColor: "#0866dc",
+      backgroundColor: "#6eb4f7",
+      paddingTop: 2,
+      paddingBottom: 2,
+      paddingLeft: 2,
+      paddingRight: 2,
+      color: "#fff",
+    },
+  };
+
   componentDidMount() {
     if (this.props.clienteReducer.clientes.length == 0) {
       this.props.traer_clientes();
+    }
+    if (this.props.ventasReducer.ventas.length == 0) {
+      this.props.traer_ventas();
     }
   }
 
@@ -175,8 +200,19 @@ class Clientes extends React.Component {
                                     id={valor.id_cliente}
                                     tabla="cliente"
                                   />
-                                  <button className="btn btn-mini btn-primary">
-                                    Detalles
+                                  <button
+                                    className="btn btn-mini"
+                                    style={{ backgroundColor: "trasparent" }}
+                                  >
+                                    <x-button style={this.styles.btn_azul}>
+                                      <x-label>Detalles</x-label>
+                                      <dialog style={this.styles.dialogo}>
+                                        <DetalleCardClient
+                                          id_cliente={valor.id_cliente}
+                                          data={this.props.ventasReducer.ventas}
+                                        />
+                                      </dialog>
+                                    </x-button>
                                   </button>
                                 </td>
                               </tr>
@@ -200,16 +236,19 @@ class Clientes extends React.Component {
 
 Clientes.prototypes = {
   clienteReducer: PropsType.object,
+  ventasReducer: PropsType.object,
   traer_clientes: PropsType.func,
+  traer_ventas: PropsType.func,
   busqueda_en_clientes: PropsType.func,
 };
 
-const mapStateToProps = ({ clienteReducer }) => {
-  return { clienteReducer };
+const mapStateToProps = ({ clienteReducer, ventasReducer }) => {
+  return { clienteReducer, ventasReducer };
 };
 
 const mapDispchToProps = {
   traer_clientes,
+  traer_ventas,
   busqueda_en_clientes,
 };
 

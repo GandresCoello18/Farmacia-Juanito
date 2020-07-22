@@ -38,6 +38,11 @@ body {
   background-color: #fff3cd;
   border-color: #ffeeba;
 }
+.alert-primary {
+  color: #004085;
+  background-color: #cce5ff;
+  border-color: #b8daff;
+}
 .list-notification {
   overflow-y: scroll;
   height: 350px;

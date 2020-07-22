@@ -8,6 +8,7 @@ import moment from "moment";
 import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import { exist_token } from "../util/verifi-local-token";
+import { dosDecimales } from "../util/numbers";
 import ImgFact from "../assest/logo-farmacia.jpeg";
 import Nav from "../componentes/nav";
 import Notificacion from "../componentes/notificacion";
@@ -69,8 +70,6 @@ class Carrito extends React.Component {
     this.calcular_sub_total_de_pago();
   }
 
-  componentWillUpdate(nextProps, nextState) {}
-
   handleInputChange = (event) => {
     const target = event.target;
     const value = target.value;
@@ -128,7 +127,7 @@ class Carrito extends React.Component {
       }
 
       this.setState({
-        Total: Number(total.toFixed(2)),
+        Total: dosDecimales(Number(total)),
       });
     } else {
       for (let i = 0; i < celda_total.length; i++) {
@@ -144,8 +143,8 @@ class Carrito extends React.Component {
       }
 
       this.setState({
-        subTotalCompra: Number(sub.toFixed(2)),
-        Total: Number(total.toFixed(2)),
+        subTotalCompra: dosDecimales(Number(sub)),
+        Total: dosDecimales(Number(total)),
       });
     }
   };
@@ -162,16 +161,27 @@ class Carrito extends React.Component {
 
     let datosCarrito = this.props.carritoReducer.carrito;
     let data = datosCarrito.find((item) => item.id_producto == id_producto);
-    sub = Number(data.pvp) / Number(data.cantidad);
+
+    if (
+      document.getElementById(`formato_${id_producto}`).value == "Por Paquete"
+    ) {
+      sub = sub + Number(data.pvp);
+    } else {
+      sub = Number(data.pvp) / Number(data.cantidad);
+    }
+
     sub = sub * Number(cantidad);
 
     if (document.getElementById(`iva_${id_producto}`).checked) {
       data_iva = item_total + (item_total * this.state.iva) / 100;
     } else {
       data_iva = item_total - (sub * this.state.iva) / 100;
+      data_iva = data_iva + 0.01;
     }
 
-    document.getElementById(`item_total_${id_producto}`).value = data_iva;
+    document.getElementById(`item_total_${id_producto}`).value = dosDecimales(
+      data_iva
+    );
     this.calcular_sub_total_de_pago(null, true);
     this.validar_aplicar_iva_not_descuento();
 
@@ -215,6 +225,7 @@ class Carrito extends React.Component {
   formato = (e, id_producto) => {
     document.getElementById("descuento").value = "";
     document.getElementById(`cantidad_${id_producto}`).value = 0;
+    document.getElementById(`iva_${id_producto}`).checked = false;
 
     this.setState({
       descuento: 0,
@@ -231,22 +242,34 @@ class Carrito extends React.Component {
     if (
       document.getElementById(`formato_${id_producto}`).value == "Por Paquete"
     ) {
-      if (Number(e.target.value) < 2 && Number(e.target.value) > 0) {
-        sub = sub + Number(data.pvp);
-      } else {
-        // e.target.value = 1;
-        sub = item_total.value;
+      sub = sub + Number(data.pvp);
+
+      document.getElementById(`precio_por_unidad_${id_producto}`).innerText =
+        data.pvp;
+
+      let maximo_cantidad_por_paquete =
+        Number(data.cantidad_disponible) / Number(data.cantidad);
+      let MCPT = Math.floor(Number(maximo_cantidad_por_paquete));
+
+      if (MCPT < 1) {
+        document.getElementById(`cantidad_${id_producto}`).value = MCPT;
+        item_total.value = 0;
       }
+
+      document.getElementById(`cantidad_${id_producto}`).max = MCPT;
     } else {
+      document.getElementById(`cantidad_${id_producto}`).max =
+        data.cantidad_disponible;
       sub = Number(data.pvp) / Number(data.cantidad);
+
       document.getElementById(
         `precio_por_unidad_${id_producto}`
-      ).innerText = sub.toFixed(2);
+      ).innerText = dosDecimales(sub);
     }
 
     sub = sub * Number(e.target.value);
 
-    item_total.value = sub;
+    item_total.value = dosDecimales(Number(sub));
     this.calcular_sub_total_de_pago();
   };
 
@@ -262,9 +285,9 @@ class Carrito extends React.Component {
         return false;
       }
       this.setState({
-        cambio_pago: (
+        cambio_pago: dosDecimales(
           Number(this.state.efectivo_pago) - this.state.Total
-        ).toFixed(2),
+        ),
       });
     }
 
@@ -284,8 +307,8 @@ class Carrito extends React.Component {
           `item_total_${datosCarrito[i].id_producto}`
         ).value;
 
-        datosCarrito[i].item_total = Number(datosCarrito[i].item_total).toFixed(
-          2
+        datosCarrito[i].item_total = dosDecimales(
+          Number(datosCarrito[i].item_total)
         );
 
         if (
@@ -299,8 +322,8 @@ class Carrito extends React.Component {
 
       let cambio = 0;
       if (this.state.efectivo_pago != "") {
-        cambio = Number(
-          (Number(this.state.efectivo_pago) - this.state.Total).toFixed(2)
+        cambio = dosDecimales(
+          Number(this.state.efectivo_pago) - Number(this.state.Total)
         );
       }
 
@@ -309,7 +332,7 @@ class Carrito extends React.Component {
         descripcion: this.state.descripcion_pago,
         descuento: this.state.descuento,
         iva: this.state.iva,
-        total: Number(this.state.Total),
+        total: dosDecimales(Number(this.state.Total)),
         efectivo: this.state.efectivo_pago,
         cambio,
         productos: datosCarrito,
@@ -408,10 +431,6 @@ class Carrito extends React.Component {
                             className="form-control"
                             onChange={(e) => this.formato(e, valor.id_producto)}
                             id={`formato_${valor.id_producto}`}
-                            disabled={
-                              valor.presentacion != "Tabletas" &&
-                              valor.presentacion != "Ampollas"
-                            }
                           >
                             <option value="Por Paquete">Por Paquete</option>
                             <option value="Por Unidad">Por Unidad</option>
@@ -434,7 +453,13 @@ class Carrito extends React.Component {
                             className="form-control celda_cantidad"
                             placeholder="Cantidad"
                             style={{ width: 60 }}
-                            defaultValue={1}
+                            defaultValue={
+                              Math.floor(
+                                valor.cantidad_disponible / valor.cantidad
+                              ) == 0
+                                ? 0
+                                : 1
+                            }
                           />
                         </td>
                         <td>
@@ -625,9 +650,7 @@ class Carrito extends React.Component {
                             onChange={this.handleInputChange}
                             className="form-control"
                             disabled={true}
-                            placeholder={Number(this.state.cambio_pago).toFixed(
-                              2
-                            )}
+                            placeholder={Number(this.state.cambio_pago)}
                             style={{ width: 100 }}
                           />
                         </li>
