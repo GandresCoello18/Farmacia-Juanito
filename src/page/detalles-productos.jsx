@@ -43,12 +43,12 @@ class DetallesProduct extends React.Component {
 
         <section className="container-fluid p-3">
           <div className="row justify-content-center mb-5">
-            <div className="col-12" style={{ marginBottom: 10 }}>
+            <div className="col-12" style={{ marginBottom: 30 }}>
               <h4 className="text-center" style={{ fontWeight: "bold" }}>
-                Detalles de ( Productos, Principio Activo, Laboratorio )
+                Detalles de (  Principio Activo, Productos, Laboratorio )
               </h4>
             </div>
-            <div className="col-4">
+            <div className="col-4" style={{ overflowY: 'scroll', height: 450 }}>
               <table className="table-striped text-center">
                 <thead>
                   <tr>
@@ -90,7 +90,7 @@ class DetallesProduct extends React.Component {
                 </tbody>
               </table>
             </div>
-            <div className="col-4">
+            <div className="col-4" style={{ overflowY: 'scroll', height: 450 }}>
               <table className="table-striped text-center">
                 <thead>
                   <tr>
@@ -131,7 +131,7 @@ class DetallesProduct extends React.Component {
                 </tbody>
               </table>
             </div>
-            <div className="col-4">
+            <div className="col-4" style={{ overflowY: 'scroll', height: 450 }}>
               <table className="table-striped text-center">
                 <thead>
                   <tr>
