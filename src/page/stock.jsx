@@ -46,6 +46,7 @@ class Stock extends React.Component {
     veces_de_ingreso: 1,
     ////////////////////
     cantidad_por_presentacion: 100,
+    filtrar_por: "",
   };
 
   styles = {
@@ -184,6 +185,12 @@ class Stock extends React.Component {
     }
   };
 
+  filtrar_productos = (e) => {
+    this.setState({
+      filtrar_por: e.target.value,
+    });
+  };
+
   search_product = (e) => {
     const respaldo = this.props.ProductoReducer.Producto;
     let nuevo = [];
@@ -193,19 +200,96 @@ class Stock extends React.Component {
         this.props.ProductoReducer.Busqueda_producto
       );
     } else {
-      respaldo.forEach((item) => {
-        if (item.nombre_laboratorio.indexOf(e.target.value) != -1) {
-          nuevo.push(item);
-        }
-
-        if (item.product_name.indexOf(e.target.value) != -1) {
-          nuevo.push(item);
-        }
-
-        if (item.lote.indexOf(e.target.value) != -1) {
-          nuevo.push(item);
-        }
-      });
+      switch (this.state.filtrar_por) {
+        case "Todos":
+          nuevo = respaldo;
+          break;
+        case "Nombre":
+          nuevo = respaldo.filter(
+            (item) => item.product_name.indexOf(e.target.value) != -1
+          );
+          break;
+        case "principio activo":
+          nuevo = respaldo.filter(
+            (item) => item.principio_activo.indexOf(e.target.value) != -1
+          );
+          break;
+        case "Laboratorio":
+          nuevo = respaldo.filter(
+            (item) => item.nombre_laboratorio.indexOf(e.target.value) != -1
+          );
+          break;
+        case "cantidad":
+          nuevo = respaldo.filter((item) => {
+            item.cantidad = item.cantidad + "";
+            if (item.cantidad.indexOf(e.target.value) != -1) {
+              return true;
+            }
+          });
+          break;
+        case "Cantidad disponible":
+          nuevo = respaldo.filter((item) => {
+            item.cantidad_disponible = item.cantidad_disponible + "";
+            if (item.cantidad_disponible.indexOf(e.target.value) != -1) {
+              return true;
+            }
+          });
+          break;
+        case "Presentacion":
+          nuevo = respaldo.filter(
+            (item) => item.presentacion.indexOf(e.target.value) != -1
+          );
+          break;
+        case "Tipo medidas":
+          nuevo = respaldo.filter(
+            (item) => item.tipo_medida.indexOf(e.target.value) != -1
+          );
+          break;
+        case "Medidas":
+          nuevo = respaldo.filter((item) => {
+            item.medida = item.medida + "";
+            if (item.medida.indexOf(e.target.value) != -1) {
+              return true;
+            }
+          });
+          break;
+        case "Lote":
+          nuevo = respaldo.filter(
+            (item) => item.lote.indexOf(e.target.value) != -1
+          );
+          break;
+        case "Reg Sanitario":
+          nuevo = respaldo.filter(
+            (item) => item.registro_sanitario.indexOf(e.target.value) != -1
+          );
+          break;
+        case "Pvp":
+          nuevo = respaldo.filter((item) => {
+            item.pvp = item.pvp + "";
+            if (item.pvp.indexOf(e.target.value) != -1) {
+              return true;
+            }
+          });
+          break;
+        case "PvF":
+          nuevo = respaldo.filter((item) => {
+            item.pvf = item.pvf + "";
+            if (item.pvf.indexOf(e.target.value) != -1) {
+              return true;
+            }
+          });
+          break;
+        case "Elaboracion":
+          nuevo = respaldo.filter(
+            (item) => item.fecha_elaboracion.indexOf(e.target.value) != -1
+          );
+          break;
+        case "Caducidad":
+          nuevo = respaldo.filter(
+            (item) => item.fecha_caducidad.indexOf(e.target.value) != -1
+          );
+          break;
+      }
 
       this.props.busqueda_en_producto(nuevo);
     }
@@ -649,14 +733,36 @@ class Stock extends React.Component {
                 </dialog>
               </x-button>
             </div>
-            <div className="col-3">
+            <div className="col-2">
               <input
                 type="text"
                 style={{ borderRadius: 10 }}
                 onChange={this.search_product}
                 className="form-control input-buscar"
-                placeholder="Buscar por: ----- Nombre ----- Laboratorio ----- Lote"
+                placeholder="Buscar producto..."
               />
+            </div>
+            <div className="col-1">
+              <select
+                className="form-control"
+                onChange={this.filtrar_productos}
+              >
+                <option>Todos</option>
+                <option>Nombre</option>
+                <option>principio activo</option>
+                <option>Laboratorio</option>
+                <option>cantidad</option>
+                <option>Cantidad disponible</option>
+                <option>Presentacion</option>
+                <option>Tipo medidas</option>
+                <option>Medidas</option>
+                <option>Lote</option>
+                <option>Reg Sanitario</option>
+                <option>Pvp</option>
+                <option>PvF</option>
+                <option>Elaboracion</option>
+                <option>Caducidad</option>
+              </select>
             </div>
 
             <div className="col-12 seccion-table-productos_all mt-4 mb-5">

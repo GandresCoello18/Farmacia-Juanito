@@ -21,6 +21,10 @@ import {
 import { add_carrito, quitar_del_carrito } from "../actions/carritoAction";
 
 class Productos extends React.Component {
+  state = {
+    filtrar_por: "",
+  };
+
   componentDidMount() {
     const datos_carrito = this.props.carritoReducer.carrito;
 
@@ -46,6 +50,12 @@ class Productos extends React.Component {
     }
   }
 
+  filtrar_productos = (e) => {
+    this.setState({
+      filtrar_por: e.target.value,
+    });
+  };
+
   search_product = (e) => {
     const respaldo = this.props.ProductoReducer.Producto;
     let nuevo = [];
@@ -55,19 +65,96 @@ class Productos extends React.Component {
         this.props.ProductoReducer.Busqueda_producto
       );
     } else {
-      respaldo.forEach((item) => {
-        if (item.nombre_laboratorio.indexOf(e.target.value) != -1) {
-          nuevo.push(item);
-        }
-
-        if (item.product_name.indexOf(e.target.value) != -1) {
-          nuevo.push(item);
-        }
-
-        if (item.lote.indexOf(e.target.value) != -1) {
-          nuevo.push(item);
-        }
-      });
+      switch (this.state.filtrar_por) {
+        case "Todos":
+          nuevo = respaldo;
+          break;
+        case "Nombre":
+          nuevo = respaldo.filter(
+            (item) => item.product_name.indexOf(e.target.value) != -1
+          );
+          break;
+        case "principio activo":
+          nuevo = respaldo.filter(
+            (item) => item.principio_activo.indexOf(e.target.value) != -1
+          );
+          break;
+        case "Laboratorio":
+          nuevo = respaldo.filter(
+            (item) => item.nombre_laboratorio.indexOf(e.target.value) != -1
+          );
+          break;
+        case "cantidad":
+          nuevo = respaldo.filter((item) => {
+            item.cantidad = item.cantidad + "";
+            if (item.cantidad.indexOf(e.target.value) != -1) {
+              return true;
+            }
+          });
+          break;
+        case "Cantidad disponible":
+          nuevo = respaldo.filter((item) => {
+            item.cantidad_disponible = item.cantidad_disponible + "";
+            if (item.cantidad_disponible.indexOf(e.target.value) != -1) {
+              return true;
+            }
+          });
+          break;
+        case "Presentacion":
+          nuevo = respaldo.filter(
+            (item) => item.presentacion.indexOf(e.target.value) != -1
+          );
+          break;
+        case "Tipo medidas":
+          nuevo = respaldo.filter(
+            (item) => item.tipo_medida.indexOf(e.target.value) != -1
+          );
+          break;
+        case "Medidas":
+          nuevo = respaldo.filter((item) => {
+            item.medida = item.medida + "";
+            if (item.medida.indexOf(e.target.value) != -1) {
+              return true;
+            }
+          });
+          break;
+        case "Lote":
+          nuevo = respaldo.filter(
+            (item) => item.lote.indexOf(e.target.value) != -1
+          );
+          break;
+        case "Reg Sanitario":
+          nuevo = respaldo.filter(
+            (item) => item.registro_sanitario.indexOf(e.target.value) != -1
+          );
+          break;
+        case "Pvp":
+          nuevo = respaldo.filter((item) => {
+            item.pvp = item.pvp + "";
+            if (item.pvp.indexOf(e.target.value) != -1) {
+              return true;
+            }
+          });
+          break;
+        case "PvF":
+          nuevo = respaldo.filter((item) => {
+            item.pvf = item.pvf + "";
+            if (item.pvf.indexOf(e.target.value) != -1) {
+              return true;
+            }
+          });
+          break;
+        case "Elaboracion":
+          nuevo = respaldo.filter(
+            (item) => item.fecha_elaboracion.indexOf(e.target.value) != -1
+          );
+          break;
+        case "Caducidad":
+          nuevo = respaldo.filter(
+            (item) => item.fecha_caducidad.indexOf(e.target.value) != -1
+          );
+          break;
+      }
 
       this.props.busqueda_en_producto(nuevo);
     }
@@ -89,17 +176,39 @@ class Productos extends React.Component {
             Todo los productos ingresados
           </h4>
           <div className="row justify-content-center">
-            <div className="col-5">
+            <div className="col-3">
               <input
                 type="text"
                 id="search_producto"
                 onChange={this.search_product}
                 className="form-control input-buscar"
-                placeholder="Buscar producto por: ----- Nombre ----- Laboratorio ----- Lote"
+                placeholder="Buscar producto......"
               />
             </div>
+            <div className="col-2">
+              <select
+                className="form-control"
+                onChange={this.filtrar_productos}
+              >
+                <option>Todos</option>
+                <option>Nombre</option>
+                <option>principio activo</option>
+                <option>Laboratorio</option>
+                <option>cantidad</option>
+                <option>Cantidad disponible</option>
+                <option>Presentacion</option>
+                <option>Tipo medidas</option>
+                <option>Medidas</option>
+                <option>Lote</option>
+                <option>Reg Sanitario</option>
+                <option>Pvp</option>
+                <option>PvF</option>
+                <option>Elaboracion</option>
+                <option>Caducidad</option>
+              </select>
+            </div>
 
-            <div className="col-12 seccion-table-productos_all mb-5">
+            <div className="col-12 seccion-table-productos_all mt-3 mb-5">
               <table className="table-striped mt-1 text-center">
                 <thead>
                   <tr>
@@ -129,7 +238,7 @@ class Productos extends React.Component {
                       (item) =>
                         (item.estado == "Disponible" ||
                           item.estado == "Aun disponible") &&
-                        item.cantidad > 0
+                        item.cantidad_disponible > 0
                     ).length == 0 ? (
                     <tr>
                       <td colSpan="13">
@@ -144,65 +253,77 @@ class Productos extends React.Component {
                       (item) =>
                         item.estado == "Disponible" ||
                         item.estado == "Aun disponible"
-                    ).map((valor) => (
-                      <tr
-                        key={valor.id_producto}
-                        className={validar_status(valor.estado)}
-                      >
-                        <td>{valor.product_name}</td>
-                        <td>{valor.principio_activo}</td>
-                        <td>{valor.nombre_laboratorio}</td>
-                        <td>
-                          {valor.cantidad} / {valor.cantidad_disponible}
-                        </td>
-                        <td>{valor.presentacion}</td>
-                        <td>
-                          {valor.medida} {valor.tipo_medida}
-                        </td>
-                        <td>{valor.lote}</td>
-                        <td>{valor.registro_sanitario}</td>
-                        <td>{valor.pvp}</td>
-                        <td>{valor.pvf}</td>
-                        <td>{valor.fecha_elaboracion}</td>
-                        <td>{valor.fecha_caducidad}</td>
-                        <td>
-                          <button
-                            className="btn btn-mini btn-positive"
-                            id={`btn_${valor.id_producto}`}
-                            style={{ cursor: "pointer" }}
-                            onClick={(e) => {
-                              if (e.target.innerText == "Quitar del carrito") {
-                                e.target.classList.remove("btn-primary");
-                                e.target.classList.add("btn-positive");
-                                e.target.parentElement.parentElement.classList.remove(
-                                  "alert-primary"
-                                );
-                                e.target.parentElement.parentElement.classList.add(
-                                  "alert-success"
-                                );
-                                e.target.innerText = "Agregar al carrito";
-                                this.props.quitar_del_carrito(
-                                  valor.id_producto
-                                );
-                              } else {
-                                e.target.classList.remove("btn-positive");
-                                e.target.classList.add("btn-primary");
-                                e.target.parentElement.parentElement.classList.remove(
-                                  "alert-success"
-                                );
-                                e.target.parentElement.parentElement.classList.add(
-                                  "alert-primary"
-                                );
-                                e.target.innerText = "Quitar del carrito";
-                                this.props.add_carrito(valor.id_producto);
-                              }
-                            }}
-                          >
-                            Agregar al carrito
-                          </button>
-                        </td>
-                      </tr>
-                    ))
+                    )
+                      .sort((a, b) => {
+                        if (a.product_name > b.product_name) {
+                          return 1;
+                        }
+                        if (a.product_name < b.product_name) {
+                          return -1;
+                        }
+                        return 0;
+                      })
+                      .map((valor) => (
+                        <tr
+                          key={valor.id_producto}
+                          className={validar_status(valor.estado)}
+                        >
+                          <td>{valor.product_name}</td>
+                          <td>{valor.principio_activo}</td>
+                          <td>{valor.nombre_laboratorio}</td>
+                          <td>
+                            {valor.cantidad} / {valor.cantidad_disponible}
+                          </td>
+                          <td>{valor.presentacion}</td>
+                          <td>
+                            {valor.medida} {valor.tipo_medida}
+                          </td>
+                          <td>{valor.lote}</td>
+                          <td>{valor.registro_sanitario}</td>
+                          <td>{valor.pvp}</td>
+                          <td>{valor.pvf}</td>
+                          <td>{valor.fecha_elaboracion}</td>
+                          <td>{valor.fecha_caducidad}</td>
+                          <td>
+                            <button
+                              className="btn btn-mini btn-positive"
+                              id={`btn_${valor.id_producto}`}
+                              style={{ cursor: "pointer" }}
+                              onClick={(e) => {
+                                if (
+                                  e.target.innerText == "Quitar del carrito"
+                                ) {
+                                  e.target.classList.remove("btn-primary");
+                                  e.target.classList.add("btn-positive");
+                                  e.target.parentElement.parentElement.classList.remove(
+                                    "alert-primary"
+                                  );
+                                  e.target.parentElement.parentElement.classList.add(
+                                    "alert-success"
+                                  );
+                                  e.target.innerText = "Agregar al carrito";
+                                  this.props.quitar_del_carrito(
+                                    valor.id_producto
+                                  );
+                                } else {
+                                  e.target.classList.remove("btn-positive");
+                                  e.target.classList.add("btn-primary");
+                                  e.target.parentElement.parentElement.classList.remove(
+                                    "alert-success"
+                                  );
+                                  e.target.parentElement.parentElement.classList.add(
+                                    "alert-primary"
+                                  );
+                                  e.target.innerText = "Quitar del carrito";
+                                  this.props.add_carrito(valor.id_producto);
+                                }
+                              }}
+                            >
+                              Agregar al carrito
+                            </button>
+                          </td>
+                        </tr>
+                      ))
                   )}
                 </tbody>
               </table>
