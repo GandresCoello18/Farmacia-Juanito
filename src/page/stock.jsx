@@ -370,7 +370,7 @@ class Stock extends React.Component {
                     width: 400,
                   }}
                 >
-                  <form className="p-2">
+                  <form className="p-1">
                     <label>
                       <b>Registrar Laboratorio:</b>
                     </label>
@@ -763,6 +763,11 @@ class Stock extends React.Component {
                 <option>Elaboracion</option>
                 <option>Caducidad</option>
               </select>
+            </div>
+            <div className="col-1">
+              <Link to="/reportesPdf" className="btn btn-positive">
+                Generar pdf
+              </Link>
             </div>
 
             <div className="col-12 seccion-table-productos_all mt-4 mb-5">

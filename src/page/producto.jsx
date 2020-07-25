@@ -22,7 +22,7 @@ import { add_carrito, quitar_del_carrito } from "../actions/carritoAction";
 
 class Productos extends React.Component {
   state = {
-    filtrar_por: "",
+    filtrar_por: "Todos",
   };
 
   componentDidMount() {

@@ -44,7 +44,7 @@ export const crear_cuenta = (data, autorizacion) => async (dispatch) => {
             });
             dispatch({
               type: CARGANDO,
-              payload: true,
+              payload: false,
             });
           }
         });
