@@ -267,7 +267,7 @@ class EditProduct extends React.Component {
               <label className="ml-3 mt-1">Lote</label>
               <div className="col-12">
                 <input
-                  type="number"
+                  type="text"
                   id={`lote_update_${item.id_producto}`}
                   onChange={this.handleInputChange}
                   className="form-control"

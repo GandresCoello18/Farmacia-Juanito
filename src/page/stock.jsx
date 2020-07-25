@@ -394,6 +394,8 @@ class Stock extends React.Component {
                           <option>Jarabe</option>
                           <option>Gotas</option>
                           <option>Capsula</option>
+                          <option>Cosmeticos</option>
+                          <option>Cremas</option>
                           <option>Sobres</option>
                           <option>Ampollas</option>
                           <option>Insumos medicos</option>
@@ -694,10 +696,10 @@ class Stock extends React.Component {
                     </tr>
                   ) : (
                     this.props.ProductoReducer.Producto.sort((a, b) => {
-                      if (a.estado > b.estado) {
+                      if (a.product_name > b.product_name) {
                         return 1;
                       }
-                      if (a.estado < b.estado) {
+                      if (a.product_name < b.product_name) {
                         return -1;
                       }
                       return 0;
