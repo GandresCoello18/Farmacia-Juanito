@@ -42,13 +42,13 @@ class Usuarios extends React.Component {
                 <tbody>
                   {this.props.usuariosReducer.cargando ? (
                     <tr>
-                      <td colSpan="3" className="p-2">
+                      <td colSpan="5" className="p-2">
                         {this.load()}
                       </td>
                     </tr>
                   ) : this.props.usuariosReducer.usuarios.length == 0 ? (
                     <tr>
-                      <td colSpan="3">
+                      <td colSpan="5">
                         <Alerta
                           titulo="No existen datos para mostrar"
                           contenido="Por el momento no existen usuarios."

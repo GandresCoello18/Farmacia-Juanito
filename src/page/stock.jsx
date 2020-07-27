@@ -89,7 +89,7 @@ class Stock extends React.Component {
     if (name == "presentacion") {
       let c = 1;
 
-      if (value == "Insumos medicos") {
+      if (value == "Insumos medicos" || value == "Cosmeticos") {
         document.getElementById("select-principio_activo").disabled = true;
       } else {
         document.getElementById("select-principio_activo").disabled = false;
@@ -479,6 +479,7 @@ class Stock extends React.Component {
                           <option>Gotas</option>
                           <option>Capsula</option>
                           <option>Cosmeticos</option>
+                          <option>Ovulos</option>
                           <option>Cremas</option>
                           <option>Sobres</option>
                           <option>Ampollas</option>
