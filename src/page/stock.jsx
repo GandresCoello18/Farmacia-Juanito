@@ -484,6 +484,7 @@ class Stock extends React.Component {
                           <option>Sobres</option>
                           <option>Ampollas</option>
                           <option>Insumos medicos</option>
+                          <option>Comprimidos recubiertos</option>
                         </select>
                       </div>
                       <div className="col p-2">
