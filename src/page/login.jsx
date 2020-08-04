@@ -66,6 +66,7 @@ class Login extends React.Component {
           };
 
           this.props.crear_cuenta(data, this.state.Autorizacion);
+          this.props.restaurar_user();
           document.getElementById("create_cuenta").reset();
         } else {
           this.cambio_notificacion(
@@ -269,7 +270,7 @@ class Login extends React.Component {
           (Cookie.set("access_token", this.props.usuariosReducer.token),
           (window.location.href = "/stock"))}
         {this.props.usuariosReducer.mensaje != "" &&
-          alert(`${this.props.usuariosReducer.mensaje}`)}
+        <Notificacion text={this.props.usuariosReducer.mensaje} />}
       </>
     );
   }
