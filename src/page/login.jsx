@@ -265,7 +265,7 @@ class Login extends React.Component {
         )}
 
         {this.props.usuariosReducer.error != "" &&
-          alert(`Error: ${this.props.usuariosReducer.error}`)}
+        <Notificacion text={`Error: ${this.props.usuariosReducer.error}`} />}
         {this.props.usuariosReducer.token != "" &&
           (Cookie.set("access_token", this.props.usuariosReducer.token),
           (window.location.href = "/stock"))}

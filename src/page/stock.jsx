@@ -46,7 +46,7 @@ class Stock extends React.Component {
     veces_de_ingreso: 1,
     ////////////////////
     cantidad_por_presentacion: 100,
-    filtrar_por: "",
+    filtrar_por: "Nombre",
   };
 
   styles = {
@@ -201,9 +201,6 @@ class Stock extends React.Component {
       );
     } else {
       switch (this.state.filtrar_por) {
-        case "Todos":
-          nuevo = respaldo;
-          break;
         case "Nombre":
           nuevo = respaldo.filter(
             (item) => item.product_name.indexOf(e.target.value) != -1
@@ -288,6 +285,9 @@ class Stock extends React.Component {
           nuevo = respaldo.filter(
             (item) => item.fecha_caducidad.indexOf(e.target.value) != -1
           );
+          break;
+        case "Todos":
+          nuevo = respaldo;
           break;
       }
 
